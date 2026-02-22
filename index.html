@@ -1,0 +1,2402 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Rafael Fashion — חנות חליפות יוקרתית בנתניה. חליפות ובגדים ייחודיים לגברים וילדים, ייעוץ אישי לאירועים.">
+    <meta property="og:title" content="Rafael Fashion | חליפות יוקרתיות בנתניה">
+    <meta property="og:description" content="חליפות ובגדים ייחודיים שלא תמצאו בשום מקום אחר בישראל. ייעוץ אישי, משלוחים, הזמנות בוואטסאפ.">
+    <!-- iOS / Apple -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Rafael Fashion">
+    <meta name="format-detection" content="telephone=yes">
+    <title>Rafael Fashion | חליפות יוקרתיות בנתניה</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================
+           CSS VARIABLES
+           ============================================ */
+        :root {
+            --gold: #C9A84C;
+            --gold-light: #E8C97A;
+            --gold-pale: #F5E6C0;
+            --dark: #0D0D0D;
+            --dark-2: #1A1A1A;
+            --dark-3: #252525;
+            --mid: #3A3A3A;
+            --white: #FDFCFA;
+            --text-muted: rgba(255,255,255,0.55);
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'Heebo', sans-serif;
+        }
+
+        /* ============================================
+           RESET & BASE
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+            /* iOS safe areas */
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--dark);
+            color: var(--white);
+            font-weight: 300;
+            line-height: 1.8;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            /* iOS: prevent text size adjustment on orientation change */
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            /* iOS: disable tap highlight */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ============================================
+           NOISE TEXTURE OVERLAY
+           ============================================ */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 200px 200px;
+        }
+
+        /* ============================================
+           SCROLLBAR
+           ============================================ */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--dark); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+        /* ============================================
+           UTILITY & COMMON
+           ============================================ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 48px;
+        }
+
+        section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Section Label */
+        .section-label {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold);
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 300;
+            line-height: 1.2;
+            margin-bottom: 24px;
+        }
+
+        .section-title em {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        /* Section Divider */
+        .section-divider {
+            width: 60px;
+            height: 2px;
+            background: var(--gold);
+            margin-bottom: 32px;
+        }
+
+        /* Language toggling */
+        .en-text { display: none; }
+
+        [dir="ltr"] .he-text { display: none !important; }
+        [dir="ltr"] .en-text { display: block !important; }
+        [dir="ltr"] span.en-text,
+        [dir="ltr"] a.en-text { display: inline !important; }
+        [dir="ltr"] .en-text.stat-item { display: flex !important; }
+        [dir="ltr"] .en-text.contact-btn { display: flex !important; }
+        [dir="ltr"] .en-text.review-card { display: flex !important; }
+        [dir="ltr"] .en-text.feature-item { display: flex !important; }
+        [dir="ltr"] .en-text.info-row { display: flex !important; }
+        [dir="ltr"] .en-text.hour-row { display: flex !important; }
+
+        /* ============================================
+           SCROLL REVEAL
+           ============================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        .reveal-delay-5 { transition-delay: 0.5s; }
+
+        /* ============================================
+           KEYFRAME ANIMATIONS
+           ============================================ */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scrollLine {
+            0% { transform: scaleY(0); transform-origin: top; }
+            50% { transform: scaleY(1); transform-origin: top; }
+            50.1% { transform: scaleY(1); transform-origin: bottom; }
+            100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+
+        .hero-anim-1 { opacity: 0; animation: fadeUp 0.8s ease forwards; animation-delay: 0.2s; }
+        .hero-anim-2 { opacity: 0; animation: fadeUp 0.9s ease forwards; animation-delay: 0.4s; }
+        .hero-anim-3 { opacity: 0; animation: fadeUp 0.9s ease forwards; animation-delay: 0.6s; }
+        .hero-anim-4 { opacity: 0; animation: fadeUp 0.9s ease forwards; animation-delay: 0.8s; }
+        .hero-anim-5 { opacity: 0; animation: fadeUp 0.9s ease forwards; animation-delay: 1.0s; }
+        .hero-anim-6 { opacity: 0; animation: fadeIn 1s ease forwards; animation-delay: 1.2s; }
+
+        /* ============================================
+           NAVBAR
+           ============================================ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.4s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(13, 13, 13, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gold);
+            padding: 14px 0;
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 400;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .nav-logo .logo-rafael {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .nav-logo .logo-fashion {
+            color: var(--white);
+            font-weight: 300;
+            font-size: 1.3rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--white);
+            position: relative;
+            padding-bottom: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .lang-toggle {
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--white);
+            background: transparent;
+            border: 1px solid var(--mid);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .lang-toggle:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .nav-cta {
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--dark);
+            background: var(--gold);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-cta:hover {
+            background: var(--gold-light);
+            box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3);
+        }
+
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 26px;
+            height: 2px;
+            background: var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(13, 13, 13, 0.97);
+            backdrop-filter: blur(20px);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 36px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .mobile-menu a {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 400;
+            color: var(--white);
+            transition: color 0.3s ease;
+        }
+
+        .mobile-menu a:hover { color: var(--gold); }
+
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        .hero {
+            min-height: 100vh;
+            /* iOS Safari 100vh fix */
+            min-height: -webkit-fill-available;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 0;
+            background: var(--dark);
+            background-image: radial-gradient(ellipse at 70% 50%, rgba(201, 168, 76, 0.06) 0%, transparent 60%),
+                              radial-gradient(ellipse at 30% 80%, rgba(201, 168, 76, 0.03) 0%, transparent 50%);
+        }
+
+        /* Geometric pattern overlay */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 80px,
+                    rgba(201, 168, 76, 0.02) 80px,
+                    rgba(201, 168, 76, 0.02) 81px
+                ),
+                repeating-linear-gradient(
+                    -45deg,
+                    transparent,
+                    transparent 80px,
+                    rgba(201, 168, 76, 0.02) 80px,
+                    rgba(201, 168, 76, 0.02) 81px
+                );
+            pointer-events: none;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            padding-top: 120px;
+            padding-bottom: 80px;
+        }
+
+        .hero-tag {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 24px;
+        }
+
+        .hero-headline {
+            font-family: var(--font-display);
+            font-size: clamp(3.5rem, 7vw, 6.5rem);
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 28px;
+        }
+
+        .hero-headline strong {
+            font-weight: 700;
+        }
+
+        .hero-headline .hero-italic {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .hero-sub {
+            font-size: 1rem;
+            font-weight: 300;
+            color: var(--text-muted);
+            max-width: 480px;
+            line-height: 1.85;
+            margin-bottom: 40px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--dark);
+            background: var(--gold);
+            padding: 14px 36px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-light);
+            box-shadow: 0 6px 30px rgba(201, 168, 76, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--white);
+            background: transparent;
+            padding: 14px 36px;
+            border: 1px solid var(--mid);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* Hero Stats */
+        .hero-stats {
+            position: absolute;
+            bottom: 80px;
+            left: 48px;
+            display: flex;
+            gap: 48px;
+        }
+
+        [dir="ltr"] .hero-stats {
+            left: auto;
+            right: 48px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            right: 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        [dir="ltr"] .scroll-indicator {
+            right: auto;
+            left: 48px;
+        }
+
+        .scroll-indicator span {
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            writing-mode: vertical-rl;
+        }
+
+        .scroll-indicator .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: var(--gold);
+            animation: scrollLine 2s ease-in-out infinite;
+        }
+
+        /* ============================================
+           ABOUT SECTION
+           ============================================ */
+        #about {
+            background: var(--dark);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .about-image-placeholder {
+            position: relative;
+            aspect-ratio: 3/4;
+            border: 1px solid var(--mid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        /* Inner frame */
+        .about-image-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            right: 16px;
+            bottom: 16px;
+            border: 1px solid rgba(201, 168, 76, 0.2);
+            pointer-events: none;
+        }
+
+        /* Diagonal lines pattern */
+        .about-image-placeholder::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 20px,
+                rgba(201, 168, 76, 0.03) 20px,
+                rgba(201, 168, 76, 0.03) 21px
+            );
+            pointer-events: none;
+        }
+
+        .about-image-placeholder .placeholder-icon {
+            width: 48px;
+            height: 48px;
+            color: var(--gold);
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        .about-image-placeholder .placeholder-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            z-index: 1;
+        }
+
+        .about-badge {
+            position: absolute;
+            bottom: -20px;
+            left: -20px;
+            background: var(--gold);
+            color: var(--dark);
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 16px 24px;
+            text-align: center;
+            line-height: 1.3;
+            z-index: 3;
+        }
+
+        [dir="ltr"] .about-badge {
+            left: auto;
+            right: -20px;
+        }
+
+        .about-text p {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.85;
+            margin-bottom: 20px;
+        }
+
+        .about-features {
+            list-style: none;
+            margin-top: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .feature-diamond {
+            width: 10px;
+            height: 10px;
+            background: var(--gold);
+            transform: rotate(45deg);
+            flex-shrink: 0;
+        }
+
+        /* ============================================
+           SERVICES SECTION
+           ============================================ */
+        #services {
+            background: var(--dark-2);
+        }
+
+        .services-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .service-card {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 48px 32px 40px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: default;
+        }
+
+        .service-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s ease;
+        }
+
+        [dir="ltr"] .service-card::after {
+            transform-origin: left;
+        }
+
+        .service-card:hover {
+            background: var(--dark-3);
+        }
+
+        .service-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover .service-icon-frame {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .service-card:hover .service-icon-frame svg {
+            color: var(--dark);
+        }
+
+        /* Hero service (Event Styling) */
+        .service-card.hero-service {
+            border-color: var(--gold);
+        }
+
+        .service-card.hero-service::after {
+            transform: scaleX(1);
+        }
+
+        .service-number {
+            position: absolute;
+            top: 16px;
+            left: 20px;
+            font-family: var(--font-display);
+            font-size: 4rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.03);
+            line-height: 1;
+        }
+
+        [dir="ltr"] .service-number {
+            left: auto;
+            right: 20px;
+        }
+
+        .service-icon-frame {
+            width: 52px;
+            height: 52px;
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            transition: all 0.4s ease;
+        }
+
+        .service-icon-frame svg {
+            width: 24px;
+            height: 24px;
+            color: var(--gold);
+            transition: color 0.4s ease;
+        }
+
+        .service-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .service-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.75;
+        }
+
+        /* ============================================
+           PRICING BANNER
+           ============================================ */
+        #pricing {
+            background: linear-gradient(135deg, var(--dark-2) 0%, var(--dark-3) 50%, var(--dark-2) 100%);
+            text-align: center;
+        }
+
+        .pricing-price {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 300;
+            margin: 24px 0 16px;
+        }
+
+        .pricing-price .gold {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .pricing-sub {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        /* ============================================
+           HOURS & LOCATION
+           ============================================ */
+        #hours {
+            background: var(--dark);
+        }
+
+        .hours-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+        }
+
+        .hours-table {
+            border: 1px solid rgba(201, 168, 76, 0.15);
+            margin-top: 32px;
+        }
+
+        .hour-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 24px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            transition: background 0.3s ease;
+        }
+
+        .hour-row:last-child { border-bottom: none; }
+
+        .hour-row:hover {
+            background: rgba(201, 168, 76, 0.04);
+        }
+
+        .hour-day { color: rgba(255,255,255,0.8); }
+
+        .hour-time { color: var(--gold); font-weight: 400; }
+
+        .hour-time.closed { color: var(--text-muted); }
+
+        /* Location Info */
+        .location-card {
+            margin-top: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .info-row:last-child { border-bottom: none; }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-icon svg {
+            width: 20px;
+            height: 20px;
+            color: var(--gold);
+        }
+
+        .info-text {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.7;
+        }
+
+        .info-text a {
+            color: var(--gold);
+            transition: color 0.3s;
+        }
+
+        .info-text a:hover { color: var(--gold-light); }
+
+        /* ============================================
+           REVIEWS SECTION
+           ============================================ */
+        #reviews {
+            background: var(--dark-2);
+        }
+
+        .reviews-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .review-card {
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 40px 32px;
+            background: var(--dark);
+            transition: border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .review-card:hover {
+            border-color: rgba(201, 168, 76, 0.3);
+        }
+
+        .review-stars {
+            color: var(--gold);
+            font-size: 1rem;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .review-quote {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-style: italic;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.8);
+            flex-grow: 1;
+            margin-bottom: 24px;
+        }
+
+        .review-author {
+            font-size: 0.8rem;
+            color: var(--gold);
+            font-weight: 500;
+            letter-spacing: 1px;
+            font-variant: small-caps;
+        }
+
+        /* ============================================
+           CONTACT SECTION
+           ============================================ */
+        #contact {
+            background: var(--dark);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .contact-btn {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 24px;
+            border: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        .contact-btn:hover {
+            transform: translateX(4px);
+            border-color: var(--gold);
+        }
+
+        [dir="ltr"] .contact-btn:hover {
+            transform: translateX(-4px);
+        }
+
+        .contact-btn-icon {
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-btn-icon.phone-icon {
+            background: var(--gold);
+        }
+
+        .contact-btn-icon.whatsapp-icon {
+            background: #25D366;
+        }
+
+        .contact-btn-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--white);
+        }
+
+        .contact-btn-label {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .contact-btn-number {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        /* Decorative Quote */
+        .contact-quote-wrap {
+            position: relative;
+            padding: 48px;
+        }
+
+        .contact-quote-wrap::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            border-top: 2px solid var(--gold);
+            border-right: 2px solid var(--gold);
+        }
+
+        [dir="ltr"] .contact-quote-wrap::before {
+            right: auto;
+            left: 0;
+            border-right: none;
+            border-left: 2px solid var(--gold);
+        }
+
+        .contact-quote {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            font-style: italic;
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
+        .contact-quote .gold { color: var(--gold); }
+
+        .contact-attribution {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 24px;
+            letter-spacing: 1px;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            background: var(--dark);
+            border-top: 1px solid var(--gold);
+            padding: 48px 0;
+        }
+
+        .footer .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-logo {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+        }
+
+        .footer-logo .logo-rafael { color: var(--gold); font-weight: 600; }
+        .footer-logo .logo-fashion { color: var(--white); font-weight: 300; }
+
+        .footer-copy {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .footer-links a {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover { color: var(--gold); }
+
+        /* ============================================
+           WHATSAPP FAB
+           ============================================ */
+        .whatsapp-fab {
+            position: fixed;
+            bottom: 32px;
+            left: 32px;
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            z-index: 998;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .whatsapp-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
+        }
+
+        .whatsapp-fab svg {
+            width: 30px;
+            height: 30px;
+            color: white;
+        }
+
+        .whatsapp-fab .fab-tooltip {
+            position: absolute;
+            bottom: 72px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark-3);
+            color: var(--white);
+            font-size: 0.75rem;
+            padding: 8px 14px;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            border: 1px solid var(--mid);
+        }
+
+        .whatsapp-fab:hover .fab-tooltip {
+            opacity: 1;
+        }
+
+        /* ============================================
+           RESPONSIVE — MOBILE (≤900px)
+           ============================================ */
+        @media (max-width: 900px) {
+            .container {
+                padding: 0 24px;
+            }
+
+            section {
+                padding: 80px 0;
+            }
+
+            .nav-links,
+            .nav-cta {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            /* Hero */
+            .hero-headline {
+                font-size: clamp(2.8rem, 10vw, 4rem);
+            }
+
+            .hero-stats {
+                display: none !important;
+            }
+
+            .scroll-indicator {
+                display: none !important;
+            }
+
+            .hero-sub {
+                font-size: 0.9rem;
+            }
+
+            /* About */
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .about-image-col {
+                display: none;
+            }
+
+            /* Services */
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* Hours */
+            .hours-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            /* Reviews */
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* Contact */
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .contact-quote-wrap {
+                padding: 32px 24px;
+            }
+
+            /* Footer */
+            .footer .container {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+
+            /* WhatsApp FAB */
+            .whatsapp-fab {
+                width: 52px;
+                height: 52px;
+                bottom: 24px;
+                left: 24px;
+            }
+
+            .whatsapp-fab svg {
+                width: 26px;
+                height: 26px;
+            }
+        }
+
+        /* ============================================
+           IPHONE SPECIFIC (≤430px)
+           Covers: iPhone SE (375), iPhone 14/15 (393),
+           iPhone Pro Max (430)
+           ============================================ */
+        @media (max-width: 430px) {
+            .container {
+                padding: 0 18px;
+            }
+
+            section {
+                padding: 64px 0;
+            }
+
+            /* Navbar */
+            .navbar .container {
+                padding: 0 16px;
+            }
+
+            .nav-logo {
+                font-size: 1.35rem;
+            }
+
+            .nav-logo .logo-fashion {
+                font-size: 1.1rem;
+            }
+
+            .lang-toggle {
+                padding: 5px 10px;
+                font-size: 0.75rem;
+            }
+
+            /* Hero */
+            .hero .container {
+                padding-top: 100px;
+                padding-bottom: 48px;
+            }
+
+            .hero-tag {
+                font-size: 0.65rem;
+                letter-spacing: 2px;
+                margin-bottom: 16px;
+            }
+
+            .hero-headline {
+                font-size: clamp(2.4rem, 12vw, 3.2rem);
+                margin-bottom: 20px;
+            }
+
+            .hero-sub {
+                font-size: 0.85rem;
+                line-height: 1.75;
+                margin-bottom: 28px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                text-align: center;
+                padding: 16px 24px;
+                font-size: 0.9rem;
+                /* iOS: minimum 44px touch target */
+                min-height: 48px;
+            }
+
+            /* About */
+            .section-title {
+                font-size: clamp(1.7rem, 7vw, 2.2rem);
+            }
+
+            .about-text p {
+                font-size: 0.9rem;
+            }
+
+            .feature-item {
+                font-size: 0.85rem;
+            }
+
+            /* Services */
+            .service-card {
+                padding: 36px 24px 32px;
+            }
+
+            .service-title {
+                font-size: 1.15rem;
+            }
+
+            .service-desc {
+                font-size: 0.82rem;
+            }
+
+            /* Pricing */
+            .pricing-price {
+                font-size: clamp(2.2rem, 10vw, 3.5rem);
+            }
+
+            .pricing-sub {
+                font-size: 0.88rem;
+                padding: 0 8px;
+            }
+
+            /* Hours */
+            .hour-row {
+                padding: 14px 16px;
+                font-size: 0.85rem;
+            }
+
+            .info-row {
+                padding: 16px 0;
+            }
+
+            .info-text {
+                font-size: 0.85rem;
+            }
+
+            /* Reviews */
+            .review-card {
+                padding: 32px 24px;
+            }
+
+            .review-quote {
+                font-size: 1rem;
+            }
+
+            /* Contact */
+            .contact-btn {
+                padding: 16px 18px;
+                /* iOS: minimum 44px touch target */
+                min-height: 48px;
+            }
+
+            .contact-btn-label {
+                font-size: 0.9rem;
+            }
+
+            .contact-quote {
+                font-size: clamp(1.3rem, 5vw, 1.7rem);
+            }
+
+            .contact-quote-wrap {
+                padding: 24px 16px;
+            }
+
+            .contact-quote-wrap::before {
+                width: 50px;
+                height: 50px;
+            }
+
+            /* Footer */
+            .footer {
+                padding: 36px 0;
+                /* iOS safe area for home indicator */
+                padding-bottom: calc(36px + env(safe-area-inset-bottom));
+            }
+
+            .footer-logo {
+                font-size: 1.15rem;
+            }
+
+            .footer-copy {
+                font-size: 0.7rem;
+            }
+
+            /* WhatsApp FAB — safe area aware */
+            .whatsapp-fab {
+                bottom: calc(20px + env(safe-area-inset-bottom));
+                left: 18px;
+                width: 50px;
+                height: 50px;
+            }
+
+            .whatsapp-fab svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .whatsapp-fab .fab-tooltip {
+                font-size: 0.7rem;
+                bottom: 60px;
+            }
+
+            /* Mobile menu */
+            .mobile-menu a {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* ============================================
+           IPHONE SE / SMALL SCREENS (≤375px)
+           ============================================ */
+        @media (max-width: 375px) {
+            .container {
+                padding: 0 14px;
+            }
+
+            .hero-headline {
+                font-size: 2.2rem;
+            }
+
+            .hero-sub {
+                font-size: 0.8rem;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                padding: 14px 20px;
+                font-size: 0.85rem;
+            }
+
+            .pricing-price {
+                font-size: 2rem;
+            }
+
+            .service-card {
+                padding: 32px 20px 28px;
+            }
+
+            .contact-quote {
+                font-size: 1.2rem;
+            }
+
+            .hour-row {
+                padding: 12px 14px;
+                font-size: 0.8rem;
+            }
+
+            .mobile-menu a {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* ============================================
+           iOS-SPECIFIC FIXES
+           ============================================ */
+        /* Prevent iOS zoom on input focus (keep font-size >= 16px) */
+        @supports (-webkit-touch-callout: none) {
+            /* iOS-only styles */
+            body {
+                /* Smooth momentum scrolling */
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Fix position:fixed elements with safe areas */
+            .navbar {
+                padding-top: max(20px, env(safe-area-inset-top));
+            }
+
+            .navbar.scrolled {
+                padding-top: max(14px, env(safe-area-inset-top));
+            }
+
+            /* Touch-friendly: remove hover effects on touch */
+            @media (hover: none) and (pointer: coarse) {
+                .btn-primary:hover {
+                    transform: none;
+                    box-shadow: none;
+                }
+
+                .contact-btn:hover {
+                    transform: none;
+                }
+
+                /* Active states instead of hover for touch */
+                .btn-primary:active {
+                    background: var(--gold-light);
+                    transform: scale(0.97);
+                }
+
+                .btn-secondary:active {
+                    border-color: var(--gold);
+                    color: var(--gold);
+                }
+
+                .contact-btn:active {
+                    border-color: var(--gold);
+                    background: rgba(201, 168, 76, 0.05);
+                }
+
+                .service-card:active {
+                    background: var(--dark-3);
+                }
+
+                .whatsapp-fab:active {
+                    transform: scale(0.95);
+                }
+
+                .nav-links a:active {
+                    color: var(--gold);
+                }
+            }
+        }
+
+        /* Landscape iPhone */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .hero {
+                min-height: auto;
+                padding: 80px 0 40px;
+            }
+
+            .hero .container {
+                padding-top: 60px;
+                padding-bottom: 32px;
+            }
+
+            .hero-headline {
+                font-size: 2.4rem;
+            }
+
+            .hero-sub {
+                margin-bottom: 20px;
+            }
+
+            section {
+                padding: 48px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+         NAVBAR
+         ========================================== -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="#" class="nav-logo">
+                <span class="logo-rafael">Rafael</span>
+                <span class="logo-fashion">Fashion</span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#about" class="he-text">אודות</a><a href="#about" class="en-text">About</a></li>
+                <li><a href="#services" class="he-text">שירותים</a><a href="#services" class="en-text">Services</a></li>
+                <li><a href="#pricing" class="he-text">מחירים</a><a href="#pricing" class="en-text">Pricing</a></li>
+                <li><a href="#hours" class="he-text">שעות</a><a href="#hours" class="en-text">Hours</a></li>
+                <li><a href="#reviews" class="he-text">חוות דעת</a><a href="#reviews" class="en-text">Reviews</a></li>
+                <li><a href="#contact" class="he-text">צור קשר</a><a href="#contact" class="en-text">Contact</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="lang-toggle" id="langToggle" aria-label="Toggle language">
+                    <span class="he-text">EN</span>
+                    <span class="en-text">עב</span>
+                </button>
+                <a href="tel:0546398638" class="nav-cta">
+                    <span class="he-text">התקשרו עכשיו</span>
+                    <span class="en-text">Call Now</span>
+                </a>
+                <button class="hamburger" id="hamburger" aria-label="Open menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#about" class="mobile-link he-text">אודות</a>
+        <a href="#about" class="mobile-link en-text">About</a>
+        <a href="#services" class="mobile-link he-text">שירותים</a>
+        <a href="#services" class="mobile-link en-text">Services</a>
+        <a href="#pricing" class="mobile-link he-text">מחירים</a>
+        <a href="#pricing" class="mobile-link en-text">Pricing</a>
+        <a href="#hours" class="mobile-link he-text">שעות</a>
+        <a href="#hours" class="mobile-link en-text">Hours</a>
+        <a href="#reviews" class="mobile-link he-text">חוות דעת</a>
+        <a href="#reviews" class="mobile-link en-text">Reviews</a>
+        <a href="#contact" class="mobile-link he-text">צור קשר</a>
+        <a href="#contact" class="mobile-link en-text">Contact</a>
+    </div>
+
+    <!-- ==========================================
+         HERO SECTION
+         ========================================== -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <!-- Hebrew Hero -->
+            <div class="he-text">
+                <div class="hero-tag hero-anim-1">נתניה | חנות חליפות יוקרתית</div>
+                <h1 class="hero-headline hero-anim-2">
+                    חליפות<br>
+                    <strong>מיוחדות</strong><br>
+                    <span class="hero-italic">לכל אירוע</span>
+                </h1>
+                <p class="hero-sub hero-anim-3">
+                    קולקציה בלעדית של חליפות ובגדים לגברים וילדים, בעיצובים וצבעים ייחודיים שלא תמצאו בשום מקום אחר בישראל. ייעוץ אישי לכל אירוע.
+                </p>
+                <div class="hero-buttons hero-anim-4">
+                    <a href="tel:0546398638" class="btn-primary">התקשרו לייעוץ חינם</a>
+                    <a href="#services" class="btn-secondary">גלו את הקולקציה</a>
+                </div>
+            </div>
+
+            <!-- English Hero -->
+            <div class="en-text">
+                <div class="hero-tag hero-anim-1">Netanya | Luxury Suit Boutique</div>
+                <h1 class="hero-headline hero-anim-2">
+                    Unique<br>
+                    <strong>Suits</strong><br>
+                    <span class="hero-italic">For Every Event</span>
+                </h1>
+                <p class="hero-sub hero-anim-3">
+                    An exclusive collection of suits and clothing for men and children, in unique designs and colors you won't find anywhere else in Israel. Personal styling for every occasion.
+                </p>
+                <div class="hero-buttons hero-anim-4">
+                    <a href="tel:+972546398638" class="btn-primary">Call for Free Consultation</a>
+                    <a href="#services" class="btn-secondary">Discover the Collection</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="hero-stats hero-anim-5">
+            <div class="stat-item he-text">
+                <span class="stat-number">100+</span>
+                <span class="stat-label">דגמים</span>
+            </div>
+            <div class="stat-item he-text">
+                <span class="stat-number">2024</span>
+                <span class="stat-label">נוסד</span>
+            </div>
+            <div class="stat-item he-text">
+                <span class="stat-number">₪30</span>
+                <span class="stat-label">החל מ</span>
+            </div>
+
+            <div class="stat-item en-text">
+                <span class="stat-number">100+</span>
+                <span class="stat-label">Models</span>
+            </div>
+            <div class="stat-item en-text">
+                <span class="stat-number">2024</span>
+                <span class="stat-label">Founded</span>
+            </div>
+            <div class="stat-item en-text">
+                <span class="stat-number">₪30</span>
+                <span class="stat-label">Starting at</span>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator hero-anim-6">
+            <span class="he-text">גלול</span>
+            <span class="en-text">Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         ABOUT SECTION
+         ========================================== -->
+    <section id="about">
+        <div class="container">
+            <div class="about-grid">
+                <!-- Image Placeholder -->
+                <div class="about-image-col reveal">
+                    <div class="about-image-placeholder">
+                        <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <path d="m21 15-5-5L5 21"/>
+                        </svg>
+                        <span class="placeholder-text he-text">תמונה תיווסף בקרוב</span>
+                        <span class="placeholder-text en-text">Photo coming soon</span>
+                        <div class="about-badge">
+                            <span class="he-text">2024<br>נוסד</span>
+                            <span class="en-text">Est.<br>2024</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Text -->
+                <div class="about-text">
+                    <div class="he-text">
+                        <span class="section-label reveal">אודות</span>
+                        <h2 class="section-title reveal reveal-delay-1">הסיפור של <em>Rafael Fashion</em></h2>
+                        <div class="section-divider reveal reveal-delay-2"></div>
+                        <p class="reveal reveal-delay-2">
+                            Rafael Fashion היא בוטיק יוקרתי בלב נתניה, המציע מגוון רחב של חליפות ובגדים ייחודיים לגברים וילדים. הבוטיק הוקם בשנת 2024 על ידי רפאל אטאדגי, מתוך תשוקה לאופנה ומחויבות למתן חוויית לבוש מושלמת.
+                        </p>
+                        <p class="reveal reveal-delay-3">
+                            מה שמייחד אותנו הוא הקולקציה הבלעדית שלנו — עיצובים וצבעים שלא תמצאו בשום חנות אחרת בישראל. אנחנו מאמינים שלכל אירוע מגיע לבוש מושלם, ולכן אנו מציעים ייעוץ אישי להלבשה לכל אירוע.
+                        </p>
+                        <ul class="about-features">
+                            <li class="feature-item reveal reveal-delay-3"><span class="feature-diamond"></span>דגמים וצבעים בלעדיים שאין לאף אחד</li>
+                            <li class="feature-item reveal reveal-delay-3"><span class="feature-diamond"></span>ייעוץ אישי להלבשה לאירוע מתאים</li>
+                            <li class="feature-item reveal reveal-delay-4"><span class="feature-diamond"></span>מגוון לגברים וילדים תחת קורת גג אחת</li>
+                            <li class="feature-item reveal reveal-delay-4"><span class="feature-diamond"></span>הזמנה נוחה בוואטסאפ או טלפון</li>
+                        </ul>
+                    </div>
+
+                    <div class="en-text">
+                        <span class="section-label reveal">About</span>
+                        <h2 class="section-title reveal reveal-delay-1">The Story of <em>Rafael Fashion</em></h2>
+                        <div class="section-divider reveal reveal-delay-2"></div>
+                        <p class="reveal reveal-delay-2">
+                            Rafael Fashion is a luxury boutique in the heart of Netanya, offering a wide range of unique suits and clothing for men and children. The boutique was founded in 2024 by Rafael Atadgi, driven by a passion for fashion and a commitment to delivering the perfect outfit experience.
+                        </p>
+                        <p class="reveal reveal-delay-3">
+                            What sets us apart is our exclusive collection — designs and colors you won't find in any other store in Israel. We believe every event deserves the perfect outfit, which is why we offer personal styling consultations for every occasion.
+                        </p>
+                        <ul class="about-features">
+                            <li class="feature-item en-text reveal reveal-delay-3"><span class="feature-diamond"></span>Exclusive designs and colors no one else has</li>
+                            <li class="feature-item en-text reveal reveal-delay-3"><span class="feature-diamond"></span>Personal styling consultation for every event</li>
+                            <li class="feature-item en-text reveal reveal-delay-4"><span class="feature-diamond"></span>Men's and children's wear under one roof</li>
+                            <li class="feature-item en-text reveal reveal-delay-4"><span class="feature-diamond"></span>Easy ordering via WhatsApp or phone</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         SERVICES SECTION
+         ========================================== -->
+    <section id="services">
+        <div class="container">
+            <div class="services-header">
+                <span class="section-label reveal he-text">מה אנחנו מציעים</span>
+                <span class="section-label reveal en-text">What We Offer</span>
+                <h2 class="section-title reveal reveal-delay-1">
+                    <span class="he-text">השירותים <em>שלנו</em></span>
+                    <span class="en-text">Our <em>Services</em></span>
+                </h2>
+            </div>
+
+            <div class="services-grid">
+                <!-- Service 1: Men's Suits -->
+                <div class="service-card reveal">
+                    <span class="service-number">01</span>
+                    <div class="service-icon-frame">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L8 6h3v6H5l-3 4 2 1 2-2v7h12v-7l2 2 2-1-3-4h-6V6h3l-4-4z"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title he-text">חליפות גברים</h3>
+                    <h3 class="service-title en-text">Men's Suits</h3>
+                    <p class="service-desc he-text">עיצובים ייחודיים בצבעים וסגנונות בלעדיים שלא תמצאו בשום מקום אחר.</p>
+                    <p class="service-desc en-text">Unique designs in exclusive colors and styles unavailable elsewhere.</p>
+                </div>
+
+                <!-- Service 2: Children's Clothing -->
+                <div class="service-card reveal reveal-delay-1">
+                    <span class="service-number">02</span>
+                    <div class="service-icon-frame">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 12h6M12 9v6"/>
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M8 3.5A2.5 2.5 0 0 1 12 3.5 2.5 2.5 0 0 1 16 3.5"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title he-text">בגדי ילדים</h3>
+                    <h3 class="service-title en-text">Children's Clothing</h3>
+                    <p class="service-desc he-text">בגדי אירועים לילדים — נוחים, אופנתיים וייחודיים לכל אירוע מיוחד.</p>
+                    <p class="service-desc en-text">Special occasion wear for kids — comfortable, stylish, and unique.</p>
+                </div>
+
+                <!-- Service 3: Event Styling — HERO SERVICE -->
+                <div class="service-card hero-service reveal reveal-delay-2">
+                    <span class="service-number">03</span>
+                    <div class="service-icon-frame">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title he-text">★ ייעוץ הלבשה לאירועים</h3>
+                    <h3 class="service-title en-text">★ Event Styling Consultation</h3>
+                    <p class="service-desc he-text">ייעוץ אישי ומקצועי אחד-על-אחד למציאת הלוק המושלם לכל אירוע — חתונות, בר מצוות, מסיבות ועוד.</p>
+                    <p class="service-desc en-text">Personal one-on-one consultation to find the perfect outfit for any event — weddings, bar mitzvahs, parties, and more.</p>
+                </div>
+
+                <!-- Service 4: Home Delivery -->
+                <div class="service-card reveal reveal-delay-1">
+                    <span class="service-number">04</span>
+                    <div class="service-icon-frame">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="1" y="6" width="15" height="13" rx="1"/>
+                            <path d="M16 10h4l3 4v5h-3"/>
+                            <circle cx="5.5" cy="19.5" r="2.5"/>
+                            <circle cx="18.5" cy="19.5" r="2.5"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title he-text">משלוח עד הבית</h3>
+                    <h3 class="service-title en-text">Home Delivery</h3>
+                    <p class="service-desc he-text">משלוח נוח ומהיר ישירות עד פתח הדלת שלכם.</p>
+                    <p class="service-desc en-text">Convenient delivery directly to your door.</p>
+                </div>
+
+                <!-- Service 5: Online Orders -->
+                <div class="service-card reveal reveal-delay-2">
+                    <span class="service-number">05</span>
+                    <div class="service-icon-frame">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title he-text">הזמנות אונליין</h3>
+                    <h3 class="service-title en-text">Online Orders</h3>
+                    <p class="service-desc he-text">הזמינו מכל מקום ובכל זמן, בנוחות מלאה.</p>
+                    <p class="service-desc en-text">Browse and order from anywhere, at any time.</p>
+                </div>
+
+                <!-- Service 6: WhatsApp & Phone Orders -->
+                <div class="service-card reveal reveal-delay-3">
+                    <span class="service-number">06</span>
+                    <div class="service-icon-frame">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title he-text">הזמנות בוואטסאפ וטלפון</h3>
+                    <h3 class="service-title en-text">WhatsApp & Phone Orders</h3>
+                    <p class="service-desc he-text">הזמנה פשוטה ונוחה דרך הודעת וואטסאפ או שיחת טלפון.</p>
+                    <p class="service-desc en-text">Simple ordering via WhatsApp message or phone call.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         PRICING BANNER
+         ========================================== -->
+    <section id="pricing">
+        <div class="container">
+            <div class="he-text">
+                <span class="section-label reveal">טווח המחירים שלנו</span>
+                <div class="pricing-price reveal reveal-delay-1">
+                    <span class="gold">₪30</span> — <span class="gold">₪1,000</span>
+                </div>
+                <p class="pricing-sub reveal reveal-delay-2">מחיר לכל כיס — מהפשוט ועד היוקרתי ביותר</p>
+                <a href="tel:0546398638" class="btn-primary reveal reveal-delay-3">לפרטים — התקשרו</a>
+            </div>
+            <div class="en-text">
+                <span class="section-label reveal">Our Price Range</span>
+                <div class="pricing-price reveal reveal-delay-1">
+                    <span class="gold">₪30</span> — <span class="gold">₪1,000</span>
+                </div>
+                <p class="pricing-sub reveal reveal-delay-2">Something for every budget — from simple to the most luxurious</p>
+                <a href="tel:+972546398638" class="btn-primary reveal reveal-delay-3">Call for Details</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         HOURS & LOCATION
+         ========================================== -->
+    <section id="hours">
+        <div class="container">
+            <div class="hours-grid">
+                <!-- Opening Hours -->
+                <div>
+                    <div class="he-text">
+                        <span class="section-label reveal">שעות פתיחה</span>
+                        <h2 class="section-title reveal reveal-delay-1">מתי <em>אפשר להגיע</em></h2>
+                        <div class="hours-table reveal reveal-delay-2">
+                            <div class="hour-row">
+                                <span class="hour-day">ראשון</span>
+                                <span class="hour-time">10:00 – 19:00</span>
+                            </div>
+                            <div class="hour-row">
+                                <span class="hour-day">שני</span>
+                                <span class="hour-time">10:00 – 19:00</span>
+                            </div>
+                            <div class="hour-row">
+                                <span class="hour-day">שלישי</span>
+                                <span class="hour-time">10:00 – 19:00</span>
+                            </div>
+                            <div class="hour-row">
+                                <span class="hour-day">רביעי</span>
+                                <span class="hour-time">10:00 – 19:00</span>
+                            </div>
+                            <div class="hour-row">
+                                <span class="hour-day">חמישי</span>
+                                <span class="hour-time">10:00 – 19:00</span>
+                            </div>
+                            <div class="hour-row">
+                                <span class="hour-day">שישי</span>
+                                <span class="hour-time">10:00 – 14:00</span>
+                            </div>
+                            <div class="hour-row">
+                                <span class="hour-day">שבת</span>
+                                <span class="hour-time closed">סגור</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="en-text">
+                        <span class="section-label reveal">Opening Hours</span>
+                        <h2 class="section-title reveal reveal-delay-1">When to <em>Visit Us</em></h2>
+                        <div class="hours-table reveal reveal-delay-2">
+                            <div class="hour-row en-text">
+                                <span class="hour-day">Sunday</span>
+                                <span class="hour-time">10:00 – 19:00</span>
+                            </div>
+                            <div class="hour-row en-text">
+                                <span class="hour-day">Monday</span>
+                                <span class="hour-time">10:00 – 19:00</span>
+                            </div>
+                            <div class="hour-row en-text">
+                                <span class="hour-day">Tuesday</span>
+                                <span class="hour-time">10:00 – 19:00</span>
+                            </div>
+                            <div class="hour-row en-text">
+                                <span class="hour-day">Wednesday</span>
+                                <span class="hour-time">10:00 – 19:00</span>
+                            </div>
+                            <div class="hour-row en-text">
+                                <span class="hour-day">Thursday</span>
+                                <span class="hour-time">10:00 – 19:00</span>
+                            </div>
+                            <div class="hour-row en-text">
+                                <span class="hour-day">Friday</span>
+                                <span class="hour-time">10:00 – 14:00</span>
+                            </div>
+                            <div class="hour-row en-text">
+                                <span class="hour-day">Saturday</span>
+                                <span class="hour-time closed">Closed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <div class="he-text">
+                        <span class="section-label reveal">מיקום</span>
+                        <h2 class="section-title reveal reveal-delay-1">איך <em>מגיעים</em></h2>
+                        <div class="location-card reveal reveal-delay-2">
+                            <div class="info-row">
+                                <div class="info-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                </div>
+                                <div class="info-text">רח׳ הבונים 3, נתניה, ישראל</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="1" y="3" width="22" height="18" rx="2"/>
+                                        <path d="M9 17V7l8 5-8 5z"/>
+                                    </svg>
+                                </div>
+                                <div class="info-text">חניון ממוקם ישירות מאחורי החנות<br><small style="color:var(--text-muted)">(התקשרו לפרטי חניה)</small></div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                                        <line x1="9" y1="9" x2="9.01" y2="9"/>
+                                        <line x1="15" y1="9" x2="15.01" y2="9"/>
+                                    </svg>
+                                </div>
+                                <div class="info-text">נגישות מלאה לכיסאות גלגלים</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                    </svg>
+                                </div>
+                                <div class="info-text"><a href="tel:0546398638" dir="ltr">054-639-8638</a></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="en-text">
+                        <span class="section-label reveal">Location</span>
+                        <h2 class="section-title reveal reveal-delay-1">How to <em>Find Us</em></h2>
+                        <div class="location-card reveal reveal-delay-2">
+                            <div class="info-row en-text">
+                                <div class="info-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                </div>
+                                <div class="info-text">3 HaBunim St., Netanya, Israel</div>
+                            </div>
+                            <div class="info-row en-text">
+                                <div class="info-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="1" y="3" width="22" height="18" rx="2"/>
+                                        <path d="M9 17V7l8 5-8 5z"/>
+                                    </svg>
+                                </div>
+                                <div class="info-text">Parking lot directly behind the store<br><small style="color:var(--text-muted)">(Call for parking details)</small></div>
+                            </div>
+                            <div class="info-row en-text">
+                                <div class="info-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                                        <line x1="9" y1="9" x2="9.01" y2="9"/>
+                                        <line x1="15" y1="9" x2="15.01" y2="9"/>
+                                    </svg>
+                                </div>
+                                <div class="info-text">Full wheelchair accessibility</div>
+                            </div>
+                            <div class="info-row en-text">
+                                <div class="info-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                    </svg>
+                                </div>
+                                <div class="info-text"><a href="tel:+972546398638" dir="ltr">+972-54-639-8638</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         REVIEWS / TESTIMONIALS
+         ========================================== -->
+    <!-- Replace with real customer reviews -->
+    <section id="reviews">
+        <div class="container">
+            <div class="reviews-header">
+                <span class="section-label reveal he-text">מה הלקוחות אומרים</span>
+                <span class="section-label reveal en-text">What Customers Say</span>
+                <h2 class="section-title reveal reveal-delay-1">
+                    <span class="he-text">חוות דעת <em>לקוחות</em></span>
+                    <span class="en-text">Customer <em>Reviews</em></span>
+                </h2>
+            </div>
+
+            <!-- Hebrew Reviews -->
+            <div class="reviews-grid he-text">
+                <div class="review-card reveal">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-quote">״הגעתי לחפש חליפה לחתונה של הבן שלי ויצאתי עם חליפה מושלמת. השירות היה אישי וחם, ממליץ בחום!״</p>
+                    <span class="review-author">דוד כ.</span>
+                </div>
+                <div class="review-card reveal reveal-delay-1">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-quote">״מבחר ענק של צבעים ודגמים שלא ראיתי בשום מקום אחר. המחירים הוגנים וההתאמה מדויקת. חנות ברמה אחרת.״</p>
+                    <span class="review-author">יוסי מ.</span>
+                </div>
+                <div class="review-card reveal reveal-delay-2">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-quote">״קנינו חליפות לילדים לבר מצווה. היה מגוון מדהים, הילדים אהבו והמחיר היה מצוין. בהחלט נחזור!״</p>
+                    <span class="review-author">רונית ש.</span>
+                </div>
+            </div>
+
+            <!-- English Reviews -->
+            <div class="reviews-grid en-text">
+                <div class="review-card en-text reveal">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-quote">"I came looking for a suit for my son's wedding and left with the perfect one. The service was personal and warm, highly recommend!"</p>
+                    <span class="review-author">David K.</span>
+                </div>
+                <div class="review-card en-text reveal reveal-delay-1">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-quote">"A huge selection of colors and designs I haven't seen anywhere else. Fair prices and perfect fit. A store on another level."</p>
+                    <span class="review-author">Yossi M.</span>
+                </div>
+                <div class="review-card en-text reveal reveal-delay-2">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-quote">"We bought suits for the kids for a bar mitzvah. Amazing variety, the kids loved them, and the price was excellent. We'll definitely be back!"</p>
+                    <span class="review-author">Ronit S.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         CONTACT SECTION
+         ========================================== -->
+    <section id="contact">
+        <div class="container">
+            <div class="contact-grid">
+                <!-- Contact Info -->
+                <div>
+                    <div class="he-text">
+                        <span class="section-label reveal">צור קשר</span>
+                        <h2 class="section-title reveal reveal-delay-1">בואו <em>נדבר</em></h2>
+                        <div class="section-divider reveal reveal-delay-2"></div>
+                        <p class="reveal reveal-delay-2" style="color: var(--text-muted); margin-bottom: 40px; font-size: 0.95rem;">
+                            מוזמנים ליצור קשר בכל שאלה, לקביעת ייעוץ אישי, או להזמנה מהירה. אנחנו כאן בשבילכם.
+                        </p>
+                        <a href="tel:0546398638" class="contact-btn reveal reveal-delay-3">
+                            <div class="contact-btn-icon phone-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="contact-btn-label">התקשרו עכשיו</div>
+                                <div class="contact-btn-number">054-639-8638</div>
+                            </div>
+                        </a>
+                        <a href="https://wa.me/972546398638" target="_blank" rel="noopener" class="contact-btn reveal reveal-delay-4">
+                            <div class="contact-btn-icon whatsapp-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="contact-btn-label">WhatsApp</div>
+                                <div class="contact-btn-number">054-639-8638</div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="en-text">
+                        <span class="section-label reveal">Contact Us</span>
+                        <h2 class="section-title reveal reveal-delay-1">Let's <em>Talk</em></h2>
+                        <div class="section-divider reveal reveal-delay-2"></div>
+                        <p class="reveal reveal-delay-2" style="color: var(--text-muted); margin-bottom: 40px; font-size: 0.95rem;">
+                            Feel free to reach out with any questions, to book a personal consultation, or to place a quick order. We're here for you.
+                        </p>
+                        <a href="tel:+972546398638" class="contact-btn en-text reveal reveal-delay-3">
+                            <div class="contact-btn-icon phone-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="contact-btn-label">Call Now</div>
+                                <div class="contact-btn-number">+972-54-639-8638</div>
+                            </div>
+                        </a>
+                        <a href="https://wa.me/972546398638" target="_blank" rel="noopener" class="contact-btn en-text reveal reveal-delay-4">
+                            <div class="contact-btn-icon whatsapp-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="contact-btn-label">WhatsApp</div>
+                                <div class="contact-btn-number">+972-54-639-8638</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Decorative Quote -->
+                <div class="contact-quote-wrap reveal">
+                    <blockquote class="contact-quote he-text">
+                        כי לכל <span class="gold">רגע מיוחד</span> מגיע חיפוש <span class="gold">מושלם</span>.
+                    </blockquote>
+                    <blockquote class="contact-quote en-text">
+                        Because every <span class="gold">special moment</span> deserves a <span class="gold">perfect</span> look.
+                    </blockquote>
+                    <p class="contact-attribution">— Rafael Fashion, 2024</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-logo">
+                <span class="logo-rafael">Rafael</span> <span class="logo-fashion">Fashion</span>
+            </div>
+            <p class="footer-copy">
+                <span class="he-text">© 2024 Rafael Fashion. כל הזכויות שמורות.</span>
+                <span class="en-text">© 2024 Rafael Fashion. All rights reserved.</span>
+            </p>
+            <ul class="footer-links">
+                <li>
+                    <a href="#hero" class="he-text">עמוד ראשי</a>
+                    <a href="#hero" class="en-text">Home</a>
+                </li>
+                <li>
+                    <a href="#contact" class="he-text">צור קשר</a>
+                    <a href="#contact" class="en-text">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- ==========================================
+         WHATSAPP FAB
+         ========================================== -->
+    <a href="https://wa.me/972546398638" target="_blank" rel="noopener" class="whatsapp-fab" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+        </svg>
+        <span class="fab-tooltip he-text">שלחו הודעה בוואטסאפ</span>
+        <span class="fab-tooltip en-text">Send a WhatsApp message</span>
+    </a>
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+    <script>
+        /* ============================================
+           NAVBAR SCROLL EFFECT
+           ============================================ */
+        (function() {
+            var navbar = document.getElementById('navbar');
+            var scrollThreshold = 80;
+
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > scrollThreshold) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+        })();
+
+        /* ============================================
+           HAMBURGER MENU
+           ============================================ */
+        (function() {
+            var hamburger = document.getElementById('hamburger');
+            var mobileMenu = document.getElementById('mobileMenu');
+            var mobileLinks = mobileMenu.querySelectorAll('a');
+
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+                document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+            });
+
+            mobileLinks.forEach(function(link) {
+                link.addEventListener('click', function() {
+                    hamburger.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
+        })();
+
+        /* ============================================
+           LANGUAGE TOGGLE
+           ============================================ */
+        (function() {
+            var langBtn = document.getElementById('langToggle');
+            var isHebrew = true;
+
+            langBtn.addEventListener('click', function() {
+                isHebrew = !isHebrew;
+
+                if (isHebrew) {
+                    document.documentElement.setAttribute('dir', 'rtl');
+                    document.documentElement.setAttribute('lang', 'he');
+                } else {
+                    document.documentElement.setAttribute('dir', 'ltr');
+                    document.documentElement.setAttribute('lang', 'en');
+                }
+            });
+        })();
+
+        /* ============================================
+           SCROLL REVEAL (IntersectionObserver)
+           ============================================ */
+        (function() {
+            var reveals = document.querySelectorAll('.reveal');
+
+            if ('IntersectionObserver' in window) {
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                reveals.forEach(function(el) {
+                    observer.observe(el);
+                });
+            } else {
+                // Fallback: show all
+                reveals.forEach(function(el) {
+                    el.classList.add('visible');
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
