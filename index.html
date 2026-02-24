@@ -119,7 +119,6 @@ a{text-decoration:none;color:inherit;transition:color .35s var(--ease)}
 .hero::after{content:'';position:absolute;top:-50%;left:-20%;width:140%;height:200%;background:repeating-linear-gradient(-12deg,transparent,transparent 280px,rgba(100,95,88,.05) 280px,rgba(100,95,88,.05) 281px);pointer-events:none;z-index:0}
 .hero .container{position:relative;z-index:2;text-align:center;padding-top:140px;padding-bottom:100px}
 .hero-logo{display:block;margin:0 auto 40px;width:clamp(300px,42vw,400px);height:auto;filter:drop-shadow(0 8px 32px rgba(100,95,88,.08)) drop-shadow(0 2px 8px rgba(100,95,88,.06))}
-.hero-gold-line{width:48px;height:1px;background:var(--gold);margin:0 auto 24px}
 .hero-location{font-family:var(--f-body);font-size:.65rem;font-weight:200;letter-spacing:.5em;text-transform:uppercase;color:var(--vein-dark);margin-bottom:36px}
 .hero-headline{font-family:var(--f-display);line-height:1.15;margin-bottom:32px}
 .hero-headline .line1{font-size:clamp(2.8rem,5.5vw,5rem);font-weight:300;display:block;color:#4A4540;letter-spacing:.04em}
@@ -265,32 +264,102 @@ a{text-decoration:none;color:inherit;transition:color .35s var(--ease)}
   .footer-links{flex-wrap:wrap;justify-content:center}
   .contact-quote-area{padding-top:0}
 }
-@media(max-width:430px){
+
+/* ── iPhone / Mobile ── */
+@media(max-width:768px){
+  html{font-size:14px}
   .container{padding:0 20px}
-  section{padding:80px 0}
-  .hero .container{padding-top:120px;padding-bottom:60px}
-  .hero-logo{width:min(320px,80vw)}
-  .hero-headline .line1,.hero-headline .line2{font-size:clamp(2.2rem,9vw,3.2rem)}
-  .hero-headline .line3{font-size:clamp(1.5rem,6vw,2.2rem)}
-  .hero-buttons{flex-direction:column;align-items:center}
-  .btn-dark,.btn-ghost{width:100%;max-width:280px;text-align:center}
-  .services-grid,.reviews-grid{grid-template-columns:1fr}
-  .service-card{padding:40px 28px}
-  .review-card{padding:32px 24px}
+  section{padding:60px 0}
+
+  /* Navbar */
+  .navbar{padding:14px 0}.navbar .container{padding:0 20px}
+  .navbar.scrolled{padding:10px 0}
+  .nav-logo-img{height:32px}
+  .navbar.scrolled .nav-logo-img{height:28px}
   .nav-cta{display:none}
-  .mobile-menu a{font-size:1.8rem}
-  .wa-fab{bottom:20px;left:20px;width:52px;height:52px}
+
+  /* Hero */
+  .hero{min-height:100svh;min-height:100dvh}
+  .hero .container{padding-top:100px;padding-bottom:40px}
+  .hero-logo{width:clamp(200px,60vw,260px);margin-bottom:16px}
+  .hero-location{margin-bottom:20px;font-size:.58rem;letter-spacing:.35em}
+  .hero-headline{line-height:1.1;margin-bottom:16px}
+  .hero-headline .line1,.hero-headline .line2{font-size:clamp(2rem,8vw,2.8rem)}
+  .hero-headline .line3{font-size:clamp(1.4rem,5.5vw,1.9rem);margin-top:4px}
+  .hero-sub{font-size:.75rem;margin:12px auto 24px;max-width:320px}
+  .hero-buttons{flex-direction:column;align-items:center}
+  .btn-dark,.btn-ghost{padding:12px 28px;font-size:.68rem;width:100%;max-width:260px;text-align:center}
+  .scroll-indicator{display:none}
+
+  /* About */
+  .about-grid{grid-template-columns:1fr;gap:32px}
+  .about-visual{display:none}
+  .about-content .section-eyebrow,.about-content .section-heading{text-align:center}
+  [dir="ltr"] .about-content .section-eyebrow,[dir="ltr"] .about-content .section-heading{text-align:center}
+  .ornament{margin:14px 0 20px}
+  .about-features{gap:10px}
+
+  /* Services */
+  .services-header{margin-bottom:40px}
+  .services-grid{grid-template-columns:1fr 1fr;gap:1px}
+  .service-card{padding:28px 20px}
+  .svc-icon-box{width:40px;height:40px;margin-bottom:18px}
+  .svc-icon-box svg{width:18px;height:18px}
+  .svc-title{font-size:1.1rem;margin-bottom:8px}
+  .svc-desc{font-size:.75rem;line-height:1.7}
+  .svc-number{font-size:4rem;top:12px;right:16px}
+  [dir="ltr"] .svc-number{right:auto;left:16px}
+  .collection-banner img{max-height:220px}
+  .collection-banner{margin-bottom:32px}
+
+  /* Hours */
+  .hours-grid{grid-template-columns:1fr;gap:32px}
+  .hour-row{padding:12px 0;font-size:.8rem}
+  .location-card{margin-top:20px}
+  .loc-row{padding:16px 24px}
+
+  /* Reviews */
+  .reviews-header{margin-bottom:32px}
+  .reviews-grid{grid-template-columns:1fr;gap:14px}
+  .review-card{padding:28px 24px}
+  .review-text{font-size:.95rem}
+  .review-quote-mark{font-size:3rem;margin-bottom:4px}
+
+  /* Contact */
+  .contact-grid{grid-template-columns:1fr;gap:32px}
+  .contact-quote-area{display:none}
+  .contact-phone-btn{width:100%}
+
+  /* Footer */
+  .footer{padding:28px 0}
+  .footer .container{flex-direction:column;gap:16px;text-align:center;padding:0 20px}
+  .footer-links{flex-wrap:wrap;justify-content:center;gap:16px}
+
+  /* FABs */
+  .wa-fab{width:50px;height:50px;bottom:20px;left:20px}
   [dir="ltr"] .wa-fab{left:auto;right:20px}
+  .wa-fab svg{width:24px;height:24px}
   .wa-fab .wa-tooltip{display:none}
-  .collection-banner img{max-height:260px}
+  .a11y-btn{width:50px;height:50px;bottom:20px;right:20px}
+  [dir="ltr"] .a11y-btn{right:auto;left:20px}
+  .a11y-btn .a11y-tip{display:none}
+  .a11y-panel{width:85vw}
+
+  .mobile-menu a{font-size:1.8rem}
+  .section-heading{font-size:clamp(1.6rem,5vw,2.2rem)}
+  .section-eyebrow{font-size:.58rem;letter-spacing:.3em;margin-bottom:14px}
 }
+
 @media(max-width:375px){
-  .hero-logo{width:min(280px,85vw)}
-  .hero-headline .line1,.hero-headline .line2{font-size:2rem}
-  .hero-headline .line3{font-size:1.4rem}
-  .section-heading{font-size:1.7rem}
-  .hero-sub{font-size:.75rem}
+  .hero-logo{width:clamp(180px,70vw,240px)}
+  .hero-headline .line1,.hero-headline .line2{font-size:1.8rem}
+  .hero-headline .line3{font-size:1.3rem}
+  .section-heading{font-size:1.5rem}
+  .hero-sub{font-size:.7rem}
+  .service-card{padding:24px 16px}
+  .svc-title{font-size:1rem}
 }
+
 @media(hover:none) and (pointer:coarse){
   .service-card:hover{transform:none;box-shadow:none;border-color:var(--marble-border)}
   .service-card:active{transform:translateY(-3px);box-shadow:0 8px 32px rgba(60,55,50,.08)}
@@ -372,7 +441,6 @@ a{text-decoration:none;color:inherit;transition:color .35s var(--ease)}
 <section class="hero marble" id="hero">
   <div class="container">
     <img src="" alt="Rafael Luxury Fashion" class="hero-logo ha-logo logo-target">
-    <div class="hero-gold-line ha-line"></div>
     <p class="hero-location ha-loc">
       <span class="he">נתניה · NETANYA, ISRAEL</span>
       <span class="en">NETANYA, ISRAEL · נתניה</span>
@@ -395,7 +463,6 @@ a{text-decoration:none;color:inherit;transition:color .35s var(--ease)}
     </p>
     <div class="hero-buttons ha-cta">
       <a href="tel:0546398638" class="btn-dark"><span class="he">התקשרו לייעוץ</span><span class="en">Call For Consultation</span></a>
-      <a href="#services" class="btn-ghost"><span class="he">גלו את הקולקציה</span><span class="en">Discover Collection</span></a>
     </div>
   </div>
   <div class="scroll-indicator ha-scroll">
@@ -454,7 +521,6 @@ a{text-decoration:none;color:inherit;transition:color .35s var(--ease)}
     <div class="collection-banner reveal">
       <img src="" alt="Rafael Fashion Full Collection" class="img2-target">
       <div class="collection-banner-overlay">
-        <span class="collection-banner-text"><span class="he">הקולקציה החדשה</span><span class="en">New Collection</span></span>
       </div>
     </div>
     <div class="services-grid">
