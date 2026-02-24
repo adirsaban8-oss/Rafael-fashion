@@ -1,0 +1,116 @@
+You are the best luxury web designer in the world. Build a COMPLETE new index.html from scratch for "Rafael Luxury Fashion" modeled after argosuits.com structure.
+
+IMPORTANT TECHNICAL REQUIREMENTS:
+- Single self-contained HTML file. ALL CSS in <style>, ALL JS in <script>.
+- Google Fonts CDN: Cormorant Garamond (300,300i,400,400i,600,700) + Montserrat (200,300,400,500,600)
+- RTL Hebrew default, bilingual HE/EN
+- CSS custom properties design system
+- Mobile responsive (768px breakpoint)
+- Apple spring easing: cubic-bezier(0.16, 1, 0.3, 1)
+- IntersectionObserver scroll reveal animations
+- iOS Safari fixes: -webkit-fill-available, 100dvh, env(safe-area-inset-*)
+
+COLOR SYSTEM (cool marble):
+--marble-bg: #F2F2F0
+--marble-section: #ECEAE8
+--marble-card: #E8E6E3
+--marble-border: #D2CEC9
+--gold: #A8885A
+--gold-light: #C4A96A
+--text-dark: #2C2825
+--text-medium: #6A6260
+--text-light: #9A9590
+
+BUSINESS DATA:
+- Name: Rafael Luxury Fashion / רפאל אופנת יוקרה
+- Address: הבונים 3, נתניה
+- Phone: 054-639-8638 (tel:0546398638)
+- WhatsApp: https://wa.me/972546398638
+- Hours: Sun-Thu 10:00-19:00, Fri 10:00-14:00, Sat Closed
+- Free parking behind store, wheelchair accessible
+
+SECTIONS TO BUILD (in order):
+
+[1] ANNOUNCEMENT BAR - Sticky top bar with CSS marquee animation scrolling text: "משלוח חינם בהזמנה מעל ₪500 | קולקציית קיץ 2025 זמינה עכשיו | 10% הנחה ללקוחות חדשים" repeating. Dark background (#2C2825), gold text, height ~35px.
+
+[2] STICKY NAVBAR - Below announcement bar. Logo centered (use __LOGO__ placeholder). Navigation links: חליפות, חולצות, אביזרים, מבצעים, אודות, צור קשר. Hamburger menu on mobile. Background transparent, becomes rgba(242,242,240,.95) with backdrop-filter on scroll. Include search icon and cart icon with item count badge.
+
+[3] HERO SLIDER - Full viewport height (100dvh minus announcement+navbar). 3 slides with crossfade auto-advance every 5 seconds. Each slide has:
+- Background: use placeholder with data-image-slot="hero-1" (etc) and a solid color fallback
+- Overlay gradient
+- Centered text: headline (Cormorant Garamond 700), subtitle (Montserrat 300), CTA button
+Slide 1: "הסטייל שמדבר בשבילך" / "חליפות יוקרה בעיצוב אישי" / CTA "לקולקציה"
+Slide 2: "קולקציית קיץ 2025" / "טרנדים חדשים, סגנון נצחי" / CTA "גלו עכשיו"
+Slide 3: "חווית קנייה אישית" / "ייעוץ סטיילינג מקצועי ללא עלות" / CTA "קבעו תור"
+Navigation dots at bottom. Pause on hover.
+
+[4] CATEGORY GRID - Section title "הקטגוריות שלנו" with gold underline. 6 cards in 3x2 grid:
+- חליפות קלאסיות (Classic Suits)
+- חליפות עסקיות (Business Suits)
+- חליפות ערב (Evening Suits)
+- חולצות (Shirts)
+- אביזרים (Accessories)
+- נעליים (Shoes)
+Each card: image placeholder with data-image-slot, overlay with category name, hover zoom effect. Cards link to #.
+
+[5] FEATURED COLLECTION BANNER - Full-width editorial banner. Split layout: left side image placeholder (data-image-slot="featured"), right side content with:
+- Label: "הקולקציה החדשה"
+- Title: "אלגנטיות מודרנית"
+- Description paragraph about the new collection
+- CTA button "צפו בקולקציה"
+Parallax-like effect on scroll.
+
+[6] SERVICES / MAGAZINE SECTION - Section title "השירותים שלנו". 3 editorial cards:
+Card 1: "עיצוב חליפה אישית" - Custom suit design service description
+Card 2: "ייעוץ סטיילינג" - Personal styling consultation description
+Card 3: "תיקונים והתאמות" - Alterations and adjustments description
+Each card has image placeholder (data-image-slot), title, description, "קראו עוד" link.
+
+[7] ABOUT + HOURS STRIP - 2-column layout:
+Left: About text - "רפאל אופנת יוקרה – הבית של הגבר המודרני. מאז 2005 אנחנו מציעים חווית קנייה אישית ומקצועית עם מותגי יוקרה מהארץ ומהעולם. הבוטיק שלנו בנתניה מציע מגוון רחב של חליפות, חולצות ואביזרים לכל אירוע."
+Right: Hours table + address + phone + map placeholder (data-image-slot="map").
+
+[8] REVIEWS STRIP - Section title "הלקוחות שלנו אומרים". 3 review cards:
+Review 1: "חליפה מושלמת! השירות היה מעולה מההתחלה ועד הסוף. תודה רבה לצוות המקצועי." - דניאל כ. ⭐⭐⭐⭐⭐
+Review 2: "המקום הכי טוב לחליפות בנתניה. מבחר ענק ומחירים הוגנים." - יוסי מ. ⭐⭐⭐⭐⭐
+Review 3: "קניתי חליפה לחתונה והתוצאה הייתה מדהימה. ממליץ בחום!" - אלון ש. ⭐⭐⭐⭐⭐
+
+[9] FULL MULTI-COLUMN FOOTER - 4 columns:
+Col 1: Logo (__LOGO__) + short brand description + social media icons (Instagram, Facebook, TikTok)
+Col 2: "ניווט מהיר" - Quick links: חליפות, חולצות, אביזרים, מבצעים, אודות, צור קשר
+Col 3: "מידע" - Info links: מדיניות החזרות, משלוחים, שאלות נפוצות, תנאי שימוש, מדיניות פרטיות
+Col 4: "צרו קשר" - Full contact details (address, phone, email: info@rafael-fashion.co.il, WhatsApp link)
+Bottom bar: "© 2025 Rafael Luxury Fashion. כל הזכויות שמורות." + payment icons placeholders (Visa, Mastercard, PayPal, Bit, Apple Pay)
+
+[FLOATING ELEMENTS]:
+- WhatsApp FAB: Fixed bottom-left green button with WhatsApp icon (SVG), links to wa.me/972546398638, pulse animation
+- Accessibility button: Fixed bottom-right, opens panel with: text size toggle, high contrast, highlight links, stop animations, readable font
+- Cookie banner: Bottom bar, "האתר משתמש בעוגיות לשיפור חווית הגלישה" with "אישור" button, saves to localStorage
+
+IMAGE PLACEHOLDER SYSTEM:
+For every image slot, use this pattern:
+<div class="img-placeholder" data-image-slot="SLOT_NAME" style="background:#E8E6E3;">
+  <!-- IMAGE: description of what image should go here -->
+  <span class="placeholder-label">📷 SLOT_NAME</span>
+</div>
+Style placeholders with centered label, dashed border, appropriate aspect ratios.
+
+LOGO INJECTION:
+The logo file is at "raf1.jpeg" in the same directory. Read it, convert to base64, and inject it everywhere __LOGO__ appears. Use a JS const at the top of the script: const LOGO_BASE64 = "data:image/jpeg;base64,..."; Then use JS to set all .logo-img elements src to this const.
+
+ALSO: There are two product images in the directory:
+1. "ChatGPT Image Feb 24, 2026, 03_11_19 PM.png" - Two boys in navy suits (use for About section or hero)
+2. "ChatGPT Image Feb 24, 2026, 03_22_01 PM.png" - Six boys in various suits (use for Featured Collection banner or Category section)
+Read these files too, convert to base64, and embed them in relevant image slots.
+
+MAKE SURE:
+- The site is FULLY functional and beautiful
+- All animations work
+- Mobile responsive at 768px
+- RTL Hebrew layout
+- All links are # placeholders
+- Smooth scrolling
+- Cookie consent works with localStorage
+- Language structure supports future EN toggle
+- SVG marble texture overlay on sections
+- Payment integration comment markers where relevant
