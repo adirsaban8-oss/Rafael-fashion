@@ -1,0 +1,30 @@
+The Rafael Luxury Fashion website has been rebuilt as a pixel-perfect structural clone of argosuits.com. Here's what was implemented:
+
+**Structure & Layout:**
+- [1] Announcement bar with auto-scrolling marquee (30s loop), dismiss button with sessionStorage
+- [2] Sticky navbar with blur effect, logo, nav links with underline animation, language toggle (HE/EN), call button
+- [3] Full-screen hero slider (3 slides) with crossfade transitions, arrow controls, dot indicators, keyboard/touch support
+- [4] Category grid (3x2 desktop, responsive) with hover zoom effects
+- [5] Featured banner with gradient overlay
+- [6] Services section with 3 cards
+- [7] About + Hours section in two-column layout
+- [8] Reviews section with 3 testimonial cards
+- [9] Dark contact section with phone/WhatsApp buttons
+- [10] Footer with 4-column grid
+
+**Interactions (all buttons work):**
+- "התקשרו עכשיו" / Call buttons → `tel:0546398638`
+- WhatsApp buttons → `https://wa.me/972546398638`
+- Category/collection buttons → smooth scroll to #services or #categories
+- Logo click → smooth scroll to #hero
+- All nav links → smooth scroll to respective sections
+
+**Features:**
+- Bilingual support (Hebrew RTL default, English LTR toggle)
+- Mobile hamburger menu with full-screen overlay
+- WhatsApp FAB with pulse animation and tooltip
+- Accessibility panel with 5 toggles (large text, high contrast, highlight links, stop animations, reading mode)
+- IntersectionObserver reveal animations with stagger
+- All 3 original base64 images preserved
+- NO cookie banner (removed as requested)
+- Works offline, single self-contained file (~6MB)

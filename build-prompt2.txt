@@ -1,0 +1,138 @@
+You are rebuilding the Rafael Luxury Fashion website to be a
+PIXEL-PERFECT structural clone of argosuits.com.
+Same layout. Same interactions. Same button behaviors.
+Only the content, branding, and colors change.
+
+The existing file is at:
+c:\Users\cyber\Downloads\Rafael fashion\index.html
+It is a single self-contained HTML file (~6.3MB) with 3 base64 images.
+Keep all 3 base64 images exactly as they are.
+Output a single updated HTML file replacing it entirely.
+
+CRITICAL: The file contains 3 base64-encoded images. You MUST preserve them exactly.
+To do this:
+1. First, read the current index.html and extract the 3 base64 data URIs (they start with "data:image/")
+2. Store them in variables/constants
+3. Write the new HTML using those exact same base64 strings
+4. The logo appears as img src in navbar and footer
+5. Image 1 (2 boys in navy suits) is used in hero slide 1 background-image
+6. Image 2 (6 boys in various suits) is used in hero slide 2 and featured banner background-image
+
+WHAT TO REMOVE — NO EXCEPTIONS:
+- Remove the cookie consent banner completely (all HTML, CSS, and JS)
+- Remove any localStorage cookie logic
+- Remove any cookie-related event listeners
+
+ARGO CLONE RULES — COPY EVERY INTERACTION:
+Study argosuits.com and replicate every UI behavior:
+
+EVERY BUTTON must do something real:
+  "התקשרו עכשיו" / "Call Now" -> tel:0546398638
+  "הזמינו בוואטסאפ" / "WhatsApp" -> https://wa.me/972546398638
+  "לקולקציה" / category buttons -> smoothly scroll to #services section
+  "קרא עוד" / "Learn More" -> smoothly scroll to #about section
+  "צרו קשר" / "Contact" -> smoothly scroll to #contact section
+  "גלו את הקולקציה" / hero CTA -> smoothly scroll to #categories
+  Nav links -> smooth scroll to their section IDs
+  Logo click -> smooth scroll to top (#hero)
+  NO dead buttons. NO href="#" that does nothing.
+  Every click must have a visible, satisfying result.
+
+EXACT PAGE STRUCTURE:
+
+[1] ANNOUNCEMENT BAR — Top ticker
+Height: 36px, Background: #1A1815 (ink black)
+Content: auto-scrolling CSS marquee, infinite loop, 30s duration
+Hebrew text (loop):
+"✦ משלוחים לכל הארץ   ✦ ייעוץ אישי לאירועים   ✦ דגמים בלעדיים שאין בשום מקום אחר   ✦ הזמינו עכשיו: 054-639-8638   ✦ נתניה | הבונים 3   ✦ פתוח א׳–ה׳ 10:00–19:00   ✦"
+English (EN mode):
+"✦ Nationwide Delivery   ✦ Personal Event Styling   ✦ Exclusive Designs   ✦ Call: 054-639-8638   ✦ Netanya | 3 HaBunim St   ✦ Open Sun–Thu 10:00–19:00   ✦"
+Font: Montserrat 300, 0.66rem, letter-spacing 0.2em, color white
+X dismiss button: absolute right 16px, color rgba(255,255,255,0.5), click: bar slides up (height 0, overflow hidden), 0.4s, use sessionStorage('bar_dismissed') so it stays hidden only for this session
+
+[2] NAVBAR — Sticky, exactly like Argo
+Sticks to top after announcement bar scrolls away (position: sticky, top: 0)
+Height: 62px desktop / 52px mobile
+Background: rgba(242,242,240,0.97), backdrop-filter: blur(20px) saturate(160%)
+border-bottom: 1px solid #D2CEC9, box-shadow: 0 2px 12px rgba(60,55,50,0.06)
+
+RIGHT ZONE: Logo image (base64 raf1.jpeg), height: 42px desktop / 32px mobile, Click: smooth scroll to #hero
+CENTER ZONE — Navigation links: Montserrat 300, 0.7rem, letter-spacing 0.22em, UPPERCASE, Color: #504C46 -> #1A1815 hover, ::after pseudo underline scaleX(0)->scaleX(1)
+Links: "חליפות גברים" -> #suits, "בגדי ילדים" -> #children, "★ ייעוץ הלבשה" -> #consultation (gold star), "שעות ומיקום" -> #hours, "צור קשר" -> #contact
+LEFT ZONE: Language toggle (EN/עב) + "התקשרו עכשיו" button (background: #1A1815, hover: #9C7D3E, click: tel:0546398638)
+
+MOBILE HAMBURGER (< 860px): 3 lines, click opens FULL SCREEN overlay with links + call button + WhatsApp button + Close X, Hamburger->X animation
+
+[3] HERO SLIDER — Full screen, Argo style
+Height: 100svh (min 560px), Auto-advance every 5s, crossfade 1.2s
+
+SLIDE 1: existing base64 image (2 kids blue suits) as background, overlay gradient
+Content: Logo img clamp(220px,32vw,320px), gold line 44px, Heading "חליפות ייחודיות" italic gold "לכל אירוע", Sub "דגמים וצבעים שאין לאף אחד בישראל", CTA "גלו את הקולקציה" -> scroll #categories
+
+SLIDE 2: existing base64 image (6 kids) as background
+Content: Eyebrow "★ שירות מרכזי", Heading "ייעוץ הלבשה" italic gold "לאירוע המושלם", CTA "קבעו ייעוץ עכשיו" -> tel:0546398638
+
+SLIDE 3: CSS marble placeholder (no image), background gradient
+Content: "קולקציית הגברים" italic gold "בדגמים בלעדיים", CTA "לקולקציה המלאה" -> scroll #suits
+
+SLIDER CONTROLS: Prev/Next arrows (circles 46px, SVG chevrons), Dot indicators (active: 24px wide gold, inactive: 8px circle), Keyboard arrows, Touch swipe
+
+[4] CATEGORY GRID — id="categories"
+Background: #ECEAE8, Padding: 80px 0
+Header: Eyebrow "SHOP · קטגוריות", Title "הקולקציה שלנו", Sub "חנות בקרוב · Shop Coming Soon"
+GRID: 3x2 desktop, 2x3 mobile, gap 3px, cards height 420px/240px mobile
+6 cards with gradient backgrounds, hover zoom scale(1.06), overlay, text at bottom
+Card 3 has FEATURED badge with gold border
+All cards click -> scroll to #consultation or #services
+
+[5] FEATURED BANNER — id="featured"
+Full width, height 480px/280px mobile
+Use existing base64 image (6 kids) as background with gradient overlay
+Content: Eyebrow "EXCLUSIVE · בלעדי", Heading italic "דגמים שאין בשום מקום אחר", CTA "גלו עוד" -> scroll #services
+
+[6] SERVICES — id="services" / id="consultation"
+Background: #F2F2F0, Padding: 100px 0
+3-column grid, each card: white bg, border, image top 260px, text bottom
+Card 1 id="consultation": "ייעוץ הלבשה אישי", link -> tel:0546398638
+Card 2 id="suits": "חליפות גברים", link -> scroll #categories
+Card 3 id="children": "בגדי ילדים", link -> scroll #categories
+
+[7] ABOUT + HOURS — id="about" + id="hours"
+Background: #ECEAE8, two column grid
+LEFT: About text, feature list (4 items), CTA "צרו קשר" -> scroll #contact
+RIGHT id="hours": Hours table, location details, phone link, WhatsApp button
+
+[8] REVIEWS — id="reviews"
+Background: #F2F2F0, 3 review cards with stars, quotes, authors
+Card hover translateY(-4px)
+
+[9] CONTACT SECTION — id="contact"
+Background: #121110 (dark), two column grid
+LEFT: Phone button (tel:0546398638) + WhatsApp button (wa.me link)
+RIGHT: Quote italic "כי לכל רגע מיוחד מגיע לוק מושלם"
+
+[10] FOOTER
+Background: #121110, 4-column grid
+Col 1: Logo + tagline + phone/whatsapp icons
+Col 2: Navigation links -> scroll to sections
+Col 3: Info links
+Col 4: Contact details with SVG icons
+Bottom bar: copyright + "נבנה עבור רפאל אטדגי"
+
+FLOATING ELEMENTS:
+- WhatsApp FAB: bottom-left, green, 56px circle, pulse, tooltip
+- Accessibility button: bottom-right, dark, 52px circle, opens slide-in panel with 5 toggles
+- NO cookie banner
+
+SCROLL: smooth scroll with navbar offset calculation
+REVEAL: IntersectionObserver animations, translateY(36px)->0, stagger 90ms
+BILINGUAL: HE default RTL, toggle to EN LTR, all content dual-wrapped in span.he/span.en
+
+RESPONSIVE (max-width: 768px):
+Font 14px, padding 60px, hamburger nav, 2-col categories, 1-col everything else, iOS safe areas
+
+FINE DETAILS:
+::selection gold, thin scrollbar, no border-radius on buttons, Apple spring easing everywhere
+Meta tags with proper title, description, theme-color, viewport
+
+OUTPUT: Single HTML file replacing index.html. Keep ALL 3 base64 images. All CSS in style, all JS in script. Google Fonts CDN only. Zero external libs. Every button works. Works offline.
