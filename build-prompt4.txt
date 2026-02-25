@@ -1,0 +1,104 @@
+Apply these 6 precise modifications to the existing Rafael Fashion website.
+File: c:\Users\cyber\Downloads\Rafael fashion\index.html
+Keep everything else exactly as-is.
+
+CRITICAL: The file is ~6.3MB with 3 base64 images. You MUST preserve all base64 images.
+Use the Edit tool for targeted changes — do NOT rewrite the entire file.
+Read sections first with offset/limit, then apply surgical edits.
+
+CHANGE 1 — NAVBAR LAYOUT REDESIGN
+Rearrange navbar elements RIGHT to LEFT:
+[RIGHT] EN/עב language toggle | [2nd] Logo (15% LARGER) | [3rd] "התקשרו עכשיו" tel:0546398638 | [4th] Cart icon | [5th] Search icon | [LEFT] Hamburger menu
+
+SEARCH ICON: Click opens search bar sliding DOWN below navbar:
+Full width, white, 52px height, border-bottom 1px #D2CEC9
+Input: Montserrat 300, 0.9rem, placeholder "חפש מוצרים..." / "Search products..."
+Autofocus on open, X button to close
+
+Debounce 300ms filter on this product list:
+const SEARCH_PRODUCTS = [
+  { name: 'חליפות גברים', nameEn: "Men's Suits", section: '#suits' },
+  { name: 'בגדי ילדים', nameEn: "Children's Clothing", section: '#children' },
+  { name: 'ייעוץ הלבשה', nameEn: "Styling Consultation", section: '#consultation' },
+  { name: 'חליפה קלאסית', nameEn: "Classic Suit", section: '#suits' },
+  { name: 'חליפת ערב', nameEn: "Evening Suit", section: '#suits' },
+  { name: 'חליפת עסקים', nameEn: "Business Suit", section: '#suits' },
+  { name: 'חליפת בר מצווה', nameEn: "Bar Mitzvah Suit", section: '#children' },
+  { name: 'חליפת חתונה', nameEn: "Wedding Suit", section: '#suits' },
+  { name: 'חולצות', nameEn: "Shirts", section: '#services' },
+  { name: 'אביזרים', nameEn: "Accessories", section: '#services' },
+];
+
+Results dropdown: white panel, border, shadow, max-height 320px
+Each row: 44px square placeholder + product name + "← לצפייה" #9C7D3E
+Click: close search + smooth scroll to section
+No results: "לא נמצאו תוצאות" centered
+
+MOBILE (<860px): Order: Logo | Search | Cart | Hamburger
+Language toggle + Call button move INSIDE hamburger overlay
+
+CHANGE 2 — REMOVE LOGO FROM HERO SLIDE 1
+Remove any logo image overlaid on hero slide 1 (2 kids in blue suits).
+Remove any img tag with raf1 base64 inside the slide, any .hero-logo/.slide-logo class, any logo wrapper div inside slide HTML, any CSS positioning logo inside hero slides.
+Keep the slide background image (2 kids) untouched.
+Logo now lives ONLY in navbar.
+
+CHANGE 3 — TYPOGRAPHY: ARGO-STYLE TEXT
+Apply site-wide:
+NAV LINKS: Montserrat 300, 0.72rem, letter-spacing 0.28em, uppercase, #2C2A26
+EYEBROW LABELS: Montserrat 300, 0.62rem, letter-spacing 0.42em, uppercase, #9C7D3E
+SECTION TITLES: Cormorant Garamond 300, clamp(1.8rem,3.5vw,3rem), letter-spacing 0.04em, #1A1815
+BODY TEXT: Montserrat 300, 0.85rem, line-height 1.9, letter-spacing 0.04em, #504C46
+BUTTONS: Montserrat 500, 0.7rem, letter-spacing 0.22em, uppercase
+HERO HEADLINE: Cormorant Garamond 300, clamp(2.8rem,6vw,5.5rem), letter-spacing 0.02em, line-height 1.05
+ITALIC ACCENT: italic, #A8885A, weight 300
+
+CHANGE 4 — COOL MARBLE BACKGROUND
+body background: #F4F3F1
+--marble-bg: #F4F3F1 (primary cool white marble)
+--marble-section: #EDEBE8 (alternating sections)
+
+Replace SVG marble texture with body::before:
+content:'', position fixed, inset 0, pointer-events none, z-index 0, opacity 1
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='marble'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.008 0.002' numOctaves='9' seed='42' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.74 0 0 0 0 0.74 0 0 0 0 0.76 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23marble)'/%3E%3C/svg%3E")
+background-size: 800px 800px
+All content: position relative, z-index 1+
+
+CHANGE 5 — CATEGORY NAV BAR BELOW NAVBAR
+Add secondary sticky nav bar directly below main navbar.
+background: white, border-bottom 1px #D2CEC9, height 44px, z-index 99
+Horizontal scrollable row of category links (centered desktop, scroll mobile):
+
+Links with bilingual span.lang-he/span.lang-en:
+"חדש באתר"/"New In" -> #categories
+"חליפות גברים"/"Men's Suits" -> #suits
+"בגדי ילדים"/"Children's" -> #children
+"חליפות ערב"/"Evening Suits" -> #suits
+"חליפות עסקים"/"Business Suits" -> #suits
+"★ ייעוץ הלבשה"/"★ Styling" -> #consultation (always gold #9C7D3E, weight 400)
+"חולצות"/"Shirts" -> #services
+"אביזרים"/"Accessories" -> #services
+"משלוחים"/"Delivery" -> #about
+
+Style: Montserrat 300, 0.7rem, letter-spacing 0.2em, uppercase, #504C46
+padding 0 20px, height 44px, border-right 1px #E8E6E3 separator
+hover: color #1A1815, background #F4F3F1
+active: color #9C7D3E, border-bottom 2px solid #9C7D3E
+
+Mobile: horizontally scrollable, gradient fade on right edge via ::after
+
+CHANGE 6 — CONTACT SECTION: REMOVE BLACK BACKGROUND
+Contact section (#contact): change from dark (#121110) to marble (#EDEBE8)
+Update all text colors: heading #1A1815, subtext #504C46, eyebrow stays #9C7D3E
+Phone button: border #D2CEC9, bg white, hover bg #F4F3F1, value text #1A1815
+WhatsApp button: same light pattern
+Quote: color #2C2A26, italic gold unchanged, attribution #A8A39C
+Footer STAYS DARK — only contact section gets lightened
+
+IMPORTANT:
+- Keep all 3 base64 images exactly as-is
+- Keep all existing functionality (WhatsApp FAB, accessibility, hero slider, scroll reveal, bilingual toggle, cart panel, auth modals)
+- Keep footer dark
+- No cookie banner
+- Single HTML file
+- Use Edit tool for surgical changes, not Write for the whole file
