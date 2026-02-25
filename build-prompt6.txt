@@ -1,0 +1,52 @@
+Apply ONE typography change to the entire Rafael Fashion website.
+File: c:\Users\cyber\Downloads\Rafael fashion\index.html
+
+CRITICAL: The file is ~6.3MB with 3 base64 images embedded as data URIs. You MUST preserve all base64 images exactly. Use the Edit tool for targeted surgical changes — do NOT rewrite the entire file with Write. Read sections with offset/limit or Grep first, then edit.
+
+THE ONLY GOAL: Make all text look exactly like argosuits.com. Same font. Same black color. Nothing else.
+
+STEP 1 — REPLACE FONTS:
+Find the existing Google Fonts link tags (preconnect and css2 import for Cormorant Garamond, Montserrat, Poppins, Frank Ruhl Libre, or whatever is currently there).
+Remove them all. Replace with ONLY this single import:
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+Keep the two preconnect links.
+
+STEP 2 — ONE FONT EVERYWHERE:
+In :root, change --font-serif, --font-sans, --font-primary, --font-display (whatever font variables exist) ALL to: 'Heebo', sans-serif
+Then do a global find-replace: every font-family declaration in CSS must become font-family: 'Heebo', sans-serif
+This includes navbar, hero, sections, cards, buttons, footer, modals, panels, toasts, accessibility — EVERYTHING.
+
+STEP 3 — TEXT COLORS — REMOVE ALL GOLD:
+Replace every text color to use ONLY these:
+- Primary (headings, titles, nav, buttons): #000000
+- Body (descriptions, paragraphs): #1A1A1A
+- Secondary (captions, labels, muted): #555555
+- Very muted (placeholders, footnotes): #999999
+- White (on dark/image backgrounds only): #FFFFFF
+
+REMOVE completely every gold text color:
+- #A8885A, #9C7D3E, #C4973B, #D4A84B — change all to #000000 or #555555
+- var(--gold), var(--text-gold), var(--gold-light) used for TEXT — change to #000000 or #555555
+- Gold eyebrow labels -> #555555
+- Gold italic headline words -> #000000 italic
+- Gold review author names -> #555555
+- Gold arrow/link text -> #000000
+- Gold star characters -> #000000
+NOTE: Only change TEXT colors. Do NOT change gold on backgrounds, borders, decorative elements, or SVG icons.
+
+STEP 4 — FONT WEIGHTS:
+Navigation links: 300
+Section titles/headlines: 400
+Body paragraphs: 300
+Buttons: 500
+Small labels/eyebrows: 300
+Bold emphasis: 600 max
+
+STEP 5 — LETTER SPACING:
+Navigation links: 0.08em
+Buttons: 0.12em
+Section titles: 0.02em
+Body text: 0.02em
+Small labels: 0.15em
+
+DO NOT CHANGE: layout, backgrounds, borders, images, base64 data, structure, functionality. Only font-family, font-weight, letter-spacing, and text colors. Single HTML file output.
