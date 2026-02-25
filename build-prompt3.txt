@@ -1,0 +1,94 @@
+Update the Rafael Fashion website with these exact specifications for the cart and auth systems.
+
+The existing file is at: c:\Users\cyber\Downloads\Rafael fashion\index.html
+It is a single self-contained HTML file (~6.3MB) with 3 base64 images embedded inline.
+
+CRITICAL: You MUST preserve all 3 base64 images exactly as they are. They are very large strings starting with "data:image/". Do NOT remove, truncate, or re-encode them. Read the file first, identify the base64 strings, and make sure they appear identically in your output.
+
+IMPORTANT: Keep ALL existing sections, styling, animations, interactions UNCHANGED. You are ONLY adding: cart sidebar panel, auth modals (login/register), user menu, toast system. Do NOT rewrite sections that already work.
+
+APPROACH: Use the Edit tool to make targeted additions to the existing file rather than rewriting the whole file. This preserves the base64 images safely.
+
+Specifically:
+1. Read the current index.html (use offset/limit since it's huge)
+2. Add new CSS for cart, auth modals, toast, user menu to the existing style block
+3. Add cart sidebar HTML after the existing accessibility panel
+4. Add login/register modal HTML after the cart sidebar
+5. Add toast container HTML
+6. Add new JS for cart, auth, toast to the existing script block
+7. Update the cart icon in navbar to open the cart panel
+8. Do NOT touch or modify any base64 image strings
+
+HERE ARE THE EXACT SPECIFICATIONS:
+
+CART — UI ONLY, NO REAL FUNCTIONALITY
+The cart is purely visual — no localStorage, no real data.
+
+Cart icon in navbar: Shopping bag SVG, 20px, #504C46, Static badge showing "0"
+Click cart icon opens CART SIDEBAR PANEL:
+  Slides in from left (RTL), width 380px, full height
+  background white, border-right 1px #D2CEC9
+  box-shadow: 8px 0 40px rgba(0,0,0,0.12)
+  transform: translateX(-100%) to translateX(0), 0.45s
+
+  Panel header: "סל הקניות" / "Cart", Cormorant 500, 1.2rem, X close button, border-bottom
+
+  Panel body (always shows empty state):
+    Large circle (80px) with shopping bag SVG, border 1px #D2CEC9
+    "סל הקניות שלך ריק" / "Your cart is empty" Cormorant 300, 1.2rem, #9C7D3E
+    "גלו את הקולקציה שלנו" / "Discover our collection" Montserrat 300, 0.8rem
+    Button: "גלו את הקולקציה" background #1A1815 -> close panel + scroll to #categories
+
+  Panel footer (sticky bottom):
+    "מעוניינים להזמין? צרו קשר ישירות" Montserrat 300, 0.78rem
+    Button 1: "התקשרו עכשיו" background #1A1815 -> tel:0546398638
+    Button 2: "הזמינו בוואטסאפ" background #25D366 -> https://wa.me/972546398638
+    Button 3: "תשלום באשראי (בקרוב)" border 1px #D2CEC9 -> opens LOGIN MODAL
+
+  Backdrop: rgba(0,0,0,0.18), click closes panel
+
+AUTH — ONLY WHEN CREDIT CARD PAYMENT IS CLICKED
+Login/Register modals are HIDDEN. They appear ONLY when user clicks "תשלום באשראי".
+
+LOGIN MODAL:
+  Backdrop rgba(0,0,0,0.5), z-index 9992
+  Box: white, max-width 420px, padding 44px 36px, no border-radius, centered
+  Animation: opacity 0->1, scale 0.96->1, 0.35s
+  Close X top right
+
+  Info banner: background #F0E4C8, border-right 3px solid #A8885A
+    "תשלום באשראי יהיה זמין בקרוב. בינתיים ניתן להזמין בטלפון או וואטסאפ."
+
+  Title: "כניסה לחשבון" / "Sign In" Cormorant 300, 1.8rem
+  Field 1: "מספר טלפון / דוא״ל" - input with border-bottom style
+  Field 2: "סיסמא" - with eye toggle SVG
+  "שכחת סיסמה?" link -> alert("לאיפוס סיסמה, צרו קשר: 054-639-8638")
+  Submit: "כניסה" background #1A1815, hover #9C7D3E
+    Validates not empty, checks localStorage 'rf_users', logs in or shows error
+  Divider "או"
+  Register link -> opens register modal
+
+REGISTER MODAL:
+  Same styling. Title: "יצירת חשבון"
+  Info banner same as login
+  Fields: שם פרטי (required), שם משפחה (required), מספר טלפון (required, starts 05, 10 digits), דוא״ל (optional), סיסמא (min 6), אימות סיסמה (must match) + eye toggles
+  Checkboxes: תנאי שימוש (required), עדכונים (optional)
+  Submit: validates all, checks phone not duplicate, saves to localStorage rf_users with btoa(password)
+  Login link below
+
+USER MENU (navbar when logged in):
+  Replace call button area with "שלום, [firstName]" dropdown
+  Dropdown: "פרטים אישיים" (shows profile modal) + "יציאה" (clears rf_current_user)
+
+TOAST NOTIFICATION SYSTEM:
+  Fixed top 80px center, background #1A1815, color white
+  Montserrat 300, 0.82rem, padding 13px 28px, z-index 9999
+  Animate in/out, auto-dismiss after 3s, stack multiple toasts
+
+ERROR/VALIDATION:
+  .rf-field-error: Montserrat 0.68rem, #CC3333, hidden by default
+  input.error: red border-bottom
+
+BILINGUAL: All new text wrapped in span.he / span.en pattern matching existing site structure.
+
+Keep everything else exactly as-is. Single HTML file. No cookie banner. All 3 base64 images preserved.
