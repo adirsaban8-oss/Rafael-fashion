@@ -1,0 +1,81 @@
+Apply a complete typography overhaul to the Rafael Fashion website.
+File: c:\Users\cyber\Downloads\Rafael fashion\index.html
+
+CRITICAL: The file is ~6.3MB with 3 base64 images. You MUST preserve all base64 images exactly.
+Use the Edit tool for targeted changes — do NOT rewrite the entire file.
+Read sections first with offset/limit or Grep, then apply surgical edits.
+Change ONLY fonts, text colors, weights, sizes, and letter-spacing. Do not change layout, images, or any other styles.
+
+STEP 1 — REPLACE GOOGLE FONTS IMPORT
+Remove ALL current Google Fonts link tags (preconnect and the css2 import).
+Replace with ONLY this:
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300;1,400&family=Frank+Ruhl+Libre:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+Poppins = primary sans-serif (navigation, body, buttons, labels)
+Frank Ruhl Libre = Hebrew serif display font (headlines, titles)
+
+STEP 2 — ROOT FONT VARIABLES
+Add/replace in :root {}:
+--font-primary: 'Poppins', sans-serif;
+--font-display: 'Frank Ruhl Libre', serif;
+--text-black: #000000;
+--text-dark: #1A1A1A;
+--text-mid: #3D3D3D;
+--text-soft: #6B6B6B;
+--text-muted: #9B9B9B;
+--text-gold: #C4973B;
+
+Also update any existing --font-serif and --font-sans variables to point to the new fonts.
+
+STEP 3 — APPLY TYPOGRAPHY SITE-WIDE
+Replace ALL font-family declarations throughout the CSS:
+
+BODY/BASE: font-family var(--font-primary), weight 300, size 14px, color var(--text-dark), letter-spacing 0.01em, -webkit-font-smoothing antialiased
+
+ANNOUNCEMENT BAR: font-family var(--font-primary), weight 300, size 0.72rem, letter-spacing 0.18em, color rgba(255,255,255,0.9)
+
+NAVBAR:
+- Nav links: var(--font-primary), weight 300, 0.7rem, letter-spacing 0.25em, uppercase, color var(--text-mid), hover var(--text-black)
+- "התקשרו עכשיו" button: var(--font-primary), weight 500, 0.68rem, letter-spacing 0.2em, uppercase
+- Language toggle: var(--font-primary), weight 300, 0.68rem, letter-spacing 0.15em
+
+SECONDARY CATEGORY NAV: var(--font-primary), weight 300, 0.68rem, letter-spacing 0.22em, uppercase, color var(--text-mid), hover var(--text-black), active var(--text-gold)
+
+HERO:
+- Headlines: var(--font-display), weight 400, clamp(2.8rem,6vw,5.5rem), letter-spacing 0.02em, line-height 1.05, color white
+- Italic gold line: weight 300, italic, color #D4A84B
+- Subheadline: var(--font-primary), weight 300, 0.82rem, letter-spacing 0.12em, color rgba(255,255,255,0.78)
+- Location tag: var(--font-primary), weight 200, 0.62rem, letter-spacing 0.48em, uppercase, color rgba(255,255,255,0.6)
+- CTA buttons: var(--font-primary), weight 500, 0.7rem, letter-spacing 0.22em, uppercase
+
+SECTION EYEBROWS: var(--font-primary), weight 300, 0.6rem, letter-spacing 0.45em, uppercase, color var(--text-gold)
+SECTION TITLES (h2): var(--font-display), weight 400, clamp(1.8rem,3.5vw,3rem), letter-spacing 0.03em, line-height 1.2, color var(--text-black)
+SECTION SUB-TITLES (h3): var(--font-display), weight 400, clamp(1.2rem,2vw,1.6rem), letter-spacing 0.02em, color var(--text-dark)
+BODY/DESCRIPTION: var(--font-primary), weight 300, 0.85rem, line-height 1.95, letter-spacing 0.04em, color var(--text-soft)
+FEATURE LIST: var(--font-primary), weight 300, 0.85rem, letter-spacing 0.05em, color var(--text-dark)
+ALL BUTTONS: var(--font-primary), weight 500, 0.7rem, letter-spacing 0.22em, uppercase
+
+HOURS TABLE: days var(--font-primary) weight 300 0.82rem color var(--text-soft), times weight 400 color var(--text-gold), "סגור" color var(--text-muted) weight 300
+LOCATION INFO: var(--font-primary) weight 300 0.82rem color var(--text-soft), phone var(--font-display) weight 400 1.1rem color var(--text-dark)
+
+REVIEWS: quote var(--font-display) weight 300 italic 1.05rem line-height 1.82 color var(--text-dark), author var(--font-primary) weight 400 0.68rem letter-spacing 0.25em uppercase color var(--text-gold), stars 0.82rem letter-spacing 0.18em color var(--text-gold)
+
+CONTACT: heading var(--font-display) weight 300 clamp(1.8rem,3vw,2.8rem) color var(--text-black), sub var(--font-primary) weight 300 0.85rem color var(--text-soft), button labels var(--font-primary) weight 200 0.6rem letter-spacing 0.3em uppercase color var(--text-muted), button values var(--font-display) weight 400 1.1rem color var(--text-dark), quote var(--font-display) weight 300 italic clamp(1.6rem,2.8vw,2.4rem) color var(--text-mid), gold words color var(--text-gold)
+
+FOOTER: headings var(--font-primary) weight 500 0.62rem letter-spacing 0.35em uppercase color var(--text-gold), links var(--font-primary) weight 300 0.78rem letter-spacing 0.08em color rgba(255,255,255,0.45) hover var(--text-gold), copyright var(--font-primary) weight 200 0.66rem letter-spacing 0.1em color rgba(255,255,255,0.22)
+
+MOBILE MENU: var(--font-display) weight 300 2rem letter-spacing 0.06em color var(--text-black), hover color var(--text-gold)
+SEARCH BAR: input var(--font-primary) weight 300 0.9rem color var(--text-dark), placeholder color var(--text-muted), results var(--font-primary) weight 400 0.85rem, category labels weight 300 0.72rem color var(--text-gold)
+CART PANEL: header var(--font-display) weight 400 1.2rem color var(--text-black), empty state var(--font-display) weight 300 1.1rem color var(--text-gold), sub var(--font-primary) weight 300 0.8rem color var(--text-muted)
+AUTH MODALS: title var(--font-display) weight 300 1.8rem color var(--text-black), labels var(--font-primary) weight 300 0.65rem letter-spacing 0.2em uppercase color var(--text-soft), inputs var(--font-primary) weight 300 0.9rem color var(--text-dark), errors var(--font-primary) weight 300 0.7rem color #CC3333
+TOAST: var(--font-primary) weight 300 0.82rem letter-spacing 0.06em
+ACCESSIBILITY PANEL: title var(--font-display) weight 400, options var(--font-primary) weight 300 0.82rem, footer var(--font-primary) weight 200 0.62rem
+
+STEP 4 — CATEGORY CARD TEXT
+Category name: var(--font-display), weight 400, clamp(1.4rem,2.5vw,2rem), letter-spacing 0.04em, color white
+Category sub: var(--font-primary), weight 200, 0.68rem, letter-spacing 0.3em, uppercase, color rgba(255,255,255,0.7)
+Arrow "← לפרטים": var(--font-primary), weight 300, 0.7rem, letter-spacing 0.18em, color #D4A84B
+
+DO NOT CHANGE: layout, backgrounds (except text colors listed), images, base64 data, structure. Single HTML file output.
