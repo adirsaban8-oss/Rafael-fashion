@@ -259,6 +259,8 @@ select{font-family:inherit}
 .product-img-area{position:relative;aspect-ratio:3/4;background:var(--wash);overflow:hidden;margin-bottom:1.5rem}
 .product-img-placeholder{position:absolute;inset:0;background:linear-gradient(155deg,var(--wash) 0%,var(--line-soft) 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;color:var(--mute);transition:transform 1s var(--ease),opacity .5s var(--ease)}
 .product-card:hover .product-img-placeholder{transform:scale(1.03);opacity:.92}
+.product-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease),opacity .5s var(--ease)}
+.product-card:hover .product-img{transform:scale(1.04)}
 .product-img-placeholder-name{font-family:var(--font-display);font-size:clamp(1rem,1.6vw,1.35rem);font-weight:400;color:var(--mute);font-style:italic;letter-spacing:.01em}
 .product-img-placeholder-tag{font-size:.58rem;font-weight:500;letter-spacing:.4em;color:var(--line);text-transform:uppercase;margin-top:.75rem}
 .product-wishlist-btn{position:absolute;top:14px;left:14px;width:32px;height:32px;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:3;transition:background .25s;cursor:pointer}
@@ -284,6 +286,7 @@ select{font-family:inherit}
 .product-detail{display:grid;grid-template-columns:58% 42%;gap:clamp(2rem,5vw,5rem);padding:clamp(2rem,5vw,4.5rem) var(--edge) 5rem;max-width:1500px;margin:0 auto}
 .pd-gallery{position:sticky;top:calc(var(--anno-h) + var(--nav-h) + var(--sub-nav-h) + 1.5rem);align-self:start}
 .pd-main-img{aspect-ratio:3/4;background:var(--wash);position:relative;overflow:hidden;margin-bottom:.75rem}
+.pd-main-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .pd-thumbs{display:flex;gap:.5rem}
 .pd-thumb{width:74px;height:98px;background:var(--wash);border:1px solid transparent;flex-shrink:0;cursor:pointer;transition:border-color .3s}
 .pd-thumb.active,.pd-thumb:hover{border-color:var(--ink)}
@@ -784,6 +787,21 @@ const CATALOG={
   children:buildProducts('c',{clothing:CHILDREN_CLOTHING_SIZES,shoes:CHILDREN_SHOE_SIZES})
 };
 
+/* ========== PRODUCT IMAGES ==========
+   Keys can be either product ID (e.g. 'y-suit-parade') or variant key (e.g. 'y-suit-linen__mint-green').
+   Variant-specific entries take priority over product-level entries. First image is primary.
+*/
+const IMAGES={
+  'c-suit-linen__light-grey':['photos/child-linen-grey-1.png'],
+  'y-suit-linen__mint-green':['photos/youth-linen-mint-1.png','photos/youth-linen-mint-2.png','photos/youth-linen-mint-3.png','photos/youth-linen-mint-4.png','photos/youth-linen-mint-5.png','photos/youth-linen-mint-6.png'],
+  'y-suit-parade':['photos/youth-parade-1.png','photos/youth-parade-2.png','photos/youth-parade-3.png']
+};
+function getImages(product){
+  if(product._variantKey && IMAGES[product._variantKey]) return IMAGES[product._variantKey];
+  if(IMAGES[product.id]) return IMAGES[product.id];
+  return null;
+}
+
 const ICONS={
   suit:'<svg viewBox="0 0 64 80" fill="none" stroke="currentColor"><path d="M20 10 L32 22 L44 10 L56 20 L52 70 L40 72 L38 40 L26 40 L24 72 L12 70 L8 20 Z"/><line x1="32" y1="22" x2="32" y2="72"/></svg>',
   pants:'<svg viewBox="0 0 64 80" fill="none" stroke="currentColor"><path d="M16 8 L48 8 L50 40 L46 72 L36 72 L34 42 L30 42 L28 72 L18 72 L14 40 Z"/></svg>',
@@ -1057,16 +1075,20 @@ function productCardHTML(p){
   } else {
     swatches=p.colors.slice(0,5).map(c=>'<span class="color-swatch" style="background:'+c.hex+'" title="'+tr(c,'name')+'"></span>').join('')+(p.colors.length>5?'<span class="color-more">+'+(p.colors.length-5)+'</span>':'');
   }
+  const imgs=getImages(p);
+  const imageMarkup=imgs
+    ? '<img class="product-img" src="'+imgs[0]+'" alt="'+placeholderName+'" loading="lazy">'
+    : '<div class="product-img-placeholder">'+
+        '<div class="product-img-placeholder-name">'+placeholderName+'</div>'+
+        '<div class="product-img-placeholder-tag">'+t('comingSoon')+'</div>'+
+      '</div>';
   return ''+
     '<article class="product-card" data-id="'+linkId+'">'+
       '<div class="product-img-area" data-image-slot="'+(isVariant?p._variantKey:p.id)+'-main">'+
         '<button class="product-wishlist-btn '+(inWish?'active':'')+'" data-wish="'+wishKey+'" aria-label="Wishlist">'+
           '<svg viewBox="0 0 24 24" fill="'+(inWish?'currentColor':'none')+'" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'+
         '</button>'+
-        '<div class="product-img-placeholder">'+
-          '<div class="product-img-placeholder-name">'+placeholderName+'</div>'+
-          '<div class="product-img-placeholder-tag">'+t('comingSoon')+'</div>'+
-        '</div>'+
+        imageMarkup+
       '</div>'+
       '<div class="product-info">'+
         '<div class="product-brand">'+brandLine+'</div>'+
@@ -1112,7 +1134,19 @@ function renderProduct(id,preselectColorId){
   document.title=tr(p,'name')+' · '+tr(p.colors[colorIdx],'name')+' — Rafael';
   const catTitle=STATE.lang==='he'?CATS[found.cat].he:CATS[found.cat].en;
   const subTitle=STATE.lang==='he'?SUBCATS[found.sub].he:SUBCATS[found.sub].en;
-  const thumbsHTML=[0,1,2,3].map(i=>'<div class="pd-thumb '+(i===0?'active':'')+'" data-thumb="'+i+'"></div>').join('');
+  const activeColor=p.colors[colorIdx];
+  const variantForImages=Object.assign({},p,{_variantColor:activeColor,_variantKey:p.id+'__'+activeColor.id});
+  const pdImgs=getImages(variantForImages);
+  const thumbsSource=pdImgs&&pdImgs.length?pdImgs:[null,null,null,null];
+  const thumbsHTML=thumbsSource.map((src,i)=>src
+    ?'<div class="pd-thumb '+(i===0?'active':'')+'" data-thumb="'+i+'" style="background-image:url(\''+src+'\');background-size:cover;background-position:center"></div>'
+    :'<div class="pd-thumb '+(i===0?'active':'')+'" data-thumb="'+i+'"></div>').join('');
+  const pdMainMarkup=pdImgs&&pdImgs.length
+    ?'<img class="pd-main-photo" src="'+pdImgs[0]+'" alt="'+tr(p,'name')+'">'
+    :'<div class="product-img-placeholder">'+
+       '<div class="product-img-placeholder-name">'+tr(p,'name')+'</div>'+
+       '<div class="product-img-placeholder-tag">'+t('imgComingSoon')+'</div>'+
+     '</div>';
   const colorsHTML=p.colors.map((c,i)=>{
     const lb=(c.hex==='#FFFFFF'||c.hex==='#FAFAFA')?';border:1px solid #ccc':'';
     return '<div class="pd-color '+(i===colorIdx?'active':'')+'" style="background:'+c.hex+lb+'" data-color="'+i+'" title="'+tr(c,'name')+'"></div>';
@@ -1132,10 +1166,7 @@ function renderProduct(id,preselectColorId){
       '<section class="product-detail">'+
         '<div class="pd-gallery">'+
           '<div class="pd-main-img" data-image-slot="'+p.id+'-main">'+
-            '<div class="product-img-placeholder">'+
-              '<div class="product-img-placeholder-name">'+tr(p,'name')+'</div>'+
-              '<div class="product-img-placeholder-tag">'+t('imgComingSoon')+'</div>'+
-            '</div>'+
+            pdMainMarkup+
           '</div>'+
           '<div class="pd-thumbs">'+thumbsHTML+'</div>'+
         '</div>'+
@@ -1169,13 +1200,36 @@ function renderProduct(id,preselectColorId){
   attachProductDetailEvents();
 }
 
+function updatePdGallery(){
+  const p=pdState.product;
+  const activeColor=p.colors[pdState.colorIdx];
+  const variantForImages=Object.assign({},p,{_variantColor:activeColor,_variantKey:p.id+'__'+activeColor.id});
+  const imgs=getImages(variantForImages);
+  const mainEl=document.querySelector('.pd-main-img');
+  const thumbsEl=document.querySelector('.pd-thumbs');
+  if(!mainEl||!thumbsEl) return;
+  if(imgs&&imgs.length){
+    mainEl.innerHTML='<img class="pd-main-photo" src="'+imgs[0]+'" alt="'+tr(p,'name')+'">';
+    thumbsEl.innerHTML=imgs.map((src,i)=>'<div class="pd-thumb '+(i===0?'active':'')+'" data-thumb="'+i+'" data-src="'+src+'" style="background-image:url(\''+src+'\');background-size:cover;background-position:center"></div>').join('');
+    thumbsEl.querySelectorAll('.pd-thumb').forEach(th=>th.addEventListener('click',function(){
+      thumbsEl.querySelectorAll('.pd-thumb').forEach(t=>t.classList.remove('active'));
+      th.classList.add('active');
+      mainEl.querySelector('.pd-main-photo').src=th.dataset.src;
+    }));
+  } else {
+    mainEl.innerHTML='<div class="product-img-placeholder"><div class="product-img-placeholder-name">'+tr(p,'name')+'</div><div class="product-img-placeholder-tag">'+t('imgComingSoon')+'</div></div>';
+    thumbsEl.innerHTML=[0,1,2,3].map(i=>'<div class="pd-thumb '+(i===0?'active':'')+'" data-thumb="'+i+'"></div>').join('');
+  }
+}
 function attachProductDetailEvents(){
   const p=pdState.product;
+  updatePdGallery();
   document.querySelectorAll('#pdColors .pd-color').forEach(el=>el.addEventListener('click',function(){
     document.querySelectorAll('#pdColors .pd-color').forEach(c=>c.classList.remove('active'));
     el.classList.add('active');
     pdState.colorIdx=parseInt(el.dataset.color);
     document.getElementById('pdColorName').textContent=tr(p.colors[pdState.colorIdx],'name');
+    updatePdGallery();
     checkAddReady();
   }));
   document.querySelectorAll('#pdSizes .pd-size').forEach(btn=>btn.addEventListener('click',function(){
@@ -1334,7 +1388,9 @@ function doSearch(q){
   results.innerHTML=matches.map(p=>{
     const catTitle=STATE.lang==='he'?CATS[p.cat].he:CATS[p.cat].en;
     const subTitle=STATE.lang==='he'?SUBCATS[p.sub].he:SUBCATS[p.sub].en;
-    return '<div class="search-result" data-id="'+p.id+'"><div class="search-result-img"></div><div class="search-result-info"><div class="search-result-name">'+tr(p,'name')+'</div><div class="search-result-cat">'+catTitle+' · '+subTitle+'</div></div></div>';
+    const sImgs=getImages(p);
+    const imgStyle=sImgs?' style="background-image:url(\''+sImgs[0]+'\');background-size:cover;background-position:center"':'';
+    return '<div class="search-result" data-id="'+p.id+'"><div class="search-result-img"'+imgStyle+'></div><div class="search-result-info"><div class="search-result-name">'+tr(p,'name')+'</div><div class="search-result-cat">'+catTitle+' · '+subTitle+'</div></div></div>';
   }).join('');
   document.querySelectorAll('.search-result').forEach(el=>el.addEventListener('click',function(){ location.hash='#/product/'+el.dataset.id; closeSearch(); }));
 }
