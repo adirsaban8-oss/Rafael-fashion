@@ -195,9 +195,10 @@ select{font-family:inherit}
 .split-tile-youth:hover .split-tile-overlay{background:rgba(0,0,0,.32)}
 .split-tile-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(2rem,5vw,4.5rem);z-index:2;gap:.75rem}
 .split-tile-youth .split-tile-content{color:var(--bg)}
-.split-tile-children .split-tile-content{color:var(--ink)}
+.split-tile-children .split-tile-content{color:var(--bg)}
 .split-tile-label{font-size:.66rem;font-weight:500;letter-spacing:.42em;text-transform:uppercase;opacity:.8}
 .split-tile-name{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4.5rem);font-weight:400;letter-spacing:.005em;line-height:1}
+.split-tile-name.is-mark{font-family:var(--font-display);font-size:clamp(3.5rem,7vw,6.5rem);font-weight:200;letter-spacing:.32em;text-transform:lowercase;color:#FFFFFF;text-shadow:0 2px 14px rgba(0,0,0,.45);padding-right:.32em}
 .split-tile-desc{font-size:.88rem;font-weight:300;max-width:360px;line-height:1.6;opacity:.88;margin-top:.5rem}
 .split-tile-link{font-size:.66rem;font-weight:500;letter-spacing:.3em;text-transform:uppercase;margin-top:1rem;padding-bottom:.35rem;border-bottom:1px solid currentColor;align-self:flex-start;transition:padding .3s}
 .split-tile:hover .split-tile-link{padding-bottom:.5rem}
@@ -926,7 +927,7 @@ function renderHome(){
           '<div class="split-tile-overlay"></div>'+
           '<div class="split-tile-content">'+
             '<div class="split-tile-label">'+t('collection')+' · 01</div>'+
-            '<div class="split-tile-name">'+(STATE.lang==='he'?CATS.youth.he:CATS.youth.en)+'</div>'+
+            '<div class="split-tile-name is-mark">teen</div>'+
             '<p class="split-tile-desc">'+(STATE.lang==='he'?CATS.youth.tagline_he:CATS.youth.tagline_en)+'</p>'+
             '<span class="split-tile-link">'+t('explore')+' ›</span>'+
           '</div>'+
@@ -936,7 +937,7 @@ function renderHome(){
           '<div class="split-tile-overlay"></div>'+
           '<div class="split-tile-content">'+
             '<div class="split-tile-label">'+t('collection')+' · 02</div>'+
-            '<div class="split-tile-name">'+(STATE.lang==='he'?CATS.children.he:CATS.children.en)+'</div>'+
+            '<div class="split-tile-name is-mark">kids</div>'+
             '<p class="split-tile-desc">'+(STATE.lang==='he'?CATS.children.tagline_he:CATS.children.tagline_en)+'</p>'+
             '<span class="split-tile-link">'+t('explore')+' ›</span>'+
           '</div>'+
