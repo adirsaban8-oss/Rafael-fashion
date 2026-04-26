@@ -156,16 +156,17 @@ select{font-family:inherit}
 /* ============================================================
    HOME: HERO — FULL VIEWPORT EDITORIAL
    ============================================================ */
-.hero{position:relative;width:100%;min-height:calc(100vh - var(--anno-h) - var(--nav-h));background:#F3F1EC;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(1.5rem,4vh,3rem) var(--edge) clamp(2rem,5vh,3.5rem);gap:clamp(1.5rem,4vh,2.5rem)}
-.hero-media{width:100%;max-width:960px;aspect-ratio:16/10;background-image:url("photos/ChatGPT Image Feb 24, 2026, 03_22_01 PM.png");background-size:contain;background-position:center;background-repeat:no-repeat;flex:0 1 auto}
-.hero-content{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;color:var(--ink);width:100%;max-width:680px}
-.hero-eyebrow{font-size:.7rem;font-weight:500;letter-spacing:.5em;text-transform:uppercase;color:var(--mute);margin-bottom:1.25rem}
-.hero-title{font-family:var(--font-display);font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:400;letter-spacing:.22em;line-height:1.1;margin-bottom:1.25rem;color:#2B1D10;text-transform:uppercase;text-shadow:0 1px 0 rgba(255,255,255,.4)}
+.hero{position:relative;width:100%;min-height:calc(100vh - var(--anno-h) - var(--nav-h));background:#F3F1EC url("photos/home-hero.jpeg") center/cover no-repeat;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(1.5rem,4vh,3rem) var(--edge) clamp(2rem,5vh,3.5rem);gap:clamp(1.5rem,4vh,2.5rem)}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.35) 100%);z-index:1;pointer-events:none}
+.hero-media{display:none}
+.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;color:var(--bg);width:100%;max-width:680px}
+.hero-eyebrow{font-size:.7rem;font-weight:500;letter-spacing:.5em;text-transform:uppercase;color:rgba(250,250,248,.85);margin-bottom:1.25rem}
+.hero-title{font-family:var(--font-display);font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:400;letter-spacing:.22em;line-height:1.1;margin-bottom:1.25rem;color:var(--bg);text-transform:uppercase;text-shadow:0 2px 12px rgba(0,0,0,.45)}
 .hero-links{display:flex;gap:clamp(1rem,3vw,2.25rem);flex-wrap:wrap;justify-content:center}
-.hero-link{font-size:.7rem;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);padding-bottom:.3rem;border-bottom:1px solid var(--ink);cursor:pointer;transition:border-color .3s,padding .3s;white-space:nowrap}
+.hero-link{font-size:.7rem;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--bg);padding-bottom:.3rem;border-bottom:1px solid var(--bg);cursor:pointer;transition:border-color .3s,padding .3s;white-space:nowrap}
 .hero-link:hover{padding-bottom:.5rem}
-.hero-link.call{background:var(--ink);color:var(--bg);border:none;padding:.85rem 1.75rem;letter-spacing:.25em;font-size:.68rem;transition:background .3s}
-.hero-link.call:hover{background:var(--ink-mid);padding:.85rem 1.75rem}
+.hero-link.call{background:var(--bg);color:var(--ink);border:none;padding:.85rem 1.75rem;letter-spacing:.25em;font-size:.68rem;transition:background .3s}
+.hero-link.call:hover{background:var(--wash);padding:.85rem 1.75rem}
 .hero-scroll{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:3;color:var(--mute);font-size:.58rem;font-weight:500;letter-spacing:.35em;text-transform:uppercase;opacity:.6;display:none;flex-direction:column;align-items:center;gap:.5rem}
 .hero-scroll-line{width:1px;height:32px;background:var(--mute);animation:scrollHint 2.2s ease-in-out infinite}
 @keyframes scrollHint{0%,100%{transform:scaleY(.4);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}
