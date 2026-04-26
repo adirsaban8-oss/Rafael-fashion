@@ -807,9 +807,11 @@ const IMAGES={
   'c-suit-parade__stone':['photos/child-parade-stone-1.png','photos/child-parade-stone-2.png','photos/child-parade-stone-3.png','photos/child-parade-stone-4.png'],
   'c-suit-parade__black':['photos/child-parade-black-1.png','photos/child-parade-black-2.png','photos/child-parade-black-3.png','photos/child-parade-black-4.png','photos/child-parade-black-5.png']
 };
+const IMG_VERSION='v3';
+function withVer(arr){ return arr.map(s=>s+'?'+IMG_VERSION); }
 function getImages(product){
-  if(product._variantKey && IMAGES[product._variantKey]) return IMAGES[product._variantKey];
-  if(IMAGES[product.id]) return IMAGES[product.id];
+  if(product._variantKey && IMAGES[product._variantKey]) return withVer(IMAGES[product._variantKey]);
+  if(IMAGES[product.id]) return withVer(IMAGES[product.id]);
   return null;
 }
 
