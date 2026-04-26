@@ -844,6 +844,13 @@ const T={
 };
 function t(key){ return T[STATE.lang][key] || key; }
 function tr(item,field){ return item[field+'_'+STATE.lang] || item[field+'_en'] || item[field+'_he'] || item[field] || ''; }
+function pname(p,color){
+  const c=color||p._variantColor;
+  if(c&&c.id==='tuxedo-black'&&/-suit-parade$/.test(p.id)){
+    return STATE.lang==='he'?'חליפת טוקסידו':(STATE.lang==='fr'?'Costume Smoking':'Tuxedo Suit');
+  }
+  return tr(p,'name');
+}
 
 /* ========== STATE ========== */
 const STATE={lang:localStorage.getItem('rf_lang')||'he',cart:JSON.parse(localStorage.getItem('rf_cart')||'[]'),wishlist:JSON.parse(localStorage.getItem('rf_wishlist')||'[]')};
@@ -1072,7 +1079,7 @@ function productCardHTML(p){
   const wishKey=isVariant?p._variantKey:p.id;
   const inWish=STATE.wishlist.indexOf(wishKey)>=0;
   const placeholderName=isVariant?tr(p._variantColor,'name'):tr(p,'name');
-  const brandLine=isVariant?tr(p,'name').toUpperCase():t('brand').toUpperCase();
+  const brandLine=isVariant?pname(p).toUpperCase():t('brand').toUpperCase();
   const titleLine=isVariant?tr(p._variantColor,'name'):tr(p,'name');
   let swatches;
   if(isVariant){
@@ -1138,7 +1145,7 @@ function renderProduct(id,preselectColorId){
     if(idx>=0) colorIdx=idx;
   }
   pdState={product:p,colorIdx:colorIdx,size:null,qty:1,cat:found.cat,sub:found.sub};
-  document.title=tr(p,'name')+' · '+tr(p.colors[colorIdx],'name')+' — Rafael';
+  document.title=pname(p,p.colors[colorIdx])+' · '+tr(p.colors[colorIdx],'name')+' — Rafael';
   const catTitle=STATE.lang==='he'?CATS[found.cat].he:CATS[found.cat].en;
   const subTitle=STATE.lang==='he'?SUBCATS[found.sub].he:SUBCATS[found.sub].en;
   const activeColor=p.colors[colorIdx];
@@ -1148,10 +1155,11 @@ function renderProduct(id,preselectColorId){
   const thumbsHTML=thumbsSource.map((src,i)=>src
     ?'<div class="pd-thumb '+(i===0?'active':'')+'" data-thumb="'+i+'" style="background-image:url(\''+src+'\');background-size:cover;background-position:center"></div>'
     :'<div class="pd-thumb '+(i===0?'active':'')+'" data-thumb="'+i+'"></div>').join('');
+  const displayName=pname(p,activeColor);
   const pdMainMarkup=pdImgs&&pdImgs.length
-    ?'<img class="pd-main-photo" src="'+pdImgs[0]+'" alt="'+tr(p,'name')+'">'
+    ?'<img class="pd-main-photo" src="'+pdImgs[0]+'" alt="'+displayName+'">'
     :'<div class="product-img-placeholder">'+
-       '<div class="product-img-placeholder-name">'+tr(p,'name')+'</div>'+
+       '<div class="product-img-placeholder-name">'+displayName+'</div>'+
        '<div class="product-img-placeholder-tag">'+t('imgComingSoon')+'</div>'+
      '</div>';
   const colorsHTML=p.colors.map((c,i)=>{
@@ -1169,7 +1177,7 @@ function renderProduct(id,preselectColorId){
 
   document.getElementById('pageContent').innerHTML=''+
     '<div class="page">'+
-      renderSubNav([{label:t('home'),hash:'#/'},{label:catTitle,hash:'#/'+found.cat},{label:subTitle,hash:'#/'+found.cat+'/'+found.sub},{label:tr(p,'name'),current:true}])+
+      renderSubNav([{label:t('home'),hash:'#/'},{label:catTitle,hash:'#/'+found.cat},{label:subTitle,hash:'#/'+found.cat+'/'+found.sub},{label:displayName,current:true}])+
       '<section class="product-detail">'+
         '<div class="pd-gallery">'+
           '<div class="pd-main-img" data-image-slot="'+p.id+'-main">'+
@@ -1179,7 +1187,7 @@ function renderProduct(id,preselectColorId){
         '</div>'+
         '<div class="pd-info">'+
           '<div class="pd-brand">'+t('brand')+'</div>'+
-          '<h1 class="pd-name">'+tr(p,'name')+'</h1>'+
+          '<h1 class="pd-name" id="pdName">'+displayName+'</h1>'+
           '<div class="pd-tag">'+tr(p,'subcategory_tag')+'</div>'+
           '<div class="'+priceClass+'" id="pdPrice">'+priceDisplay+'</div>'+
           '<div class="pd-divider"></div>'+
@@ -1212,11 +1220,17 @@ function updatePdGallery(){
   const activeColor=p.colors[pdState.colorIdx];
   const variantForImages=Object.assign({},p,{_variantColor:activeColor,_variantKey:p.id+'__'+activeColor.id});
   const imgs=getImages(variantForImages);
+  const displayName=pname(p,activeColor);
+  const nameEl=document.getElementById('pdName');
+  if(nameEl) nameEl.textContent=displayName;
+  const crumbCurrent=document.querySelector('.breadcrumb-current');
+  if(crumbCurrent) crumbCurrent.textContent=displayName;
+  document.title=displayName+' · '+tr(activeColor,'name')+' — Rafael';
   const mainEl=document.querySelector('.pd-main-img');
   const thumbsEl=document.querySelector('.pd-thumbs');
   if(!mainEl||!thumbsEl) return;
   if(imgs&&imgs.length){
-    mainEl.innerHTML='<img class="pd-main-photo" src="'+imgs[0]+'" alt="'+tr(p,'name')+'">';
+    mainEl.innerHTML='<img class="pd-main-photo" src="'+imgs[0]+'" alt="'+displayName+'">';
     thumbsEl.innerHTML=imgs.map((src,i)=>'<div class="pd-thumb '+(i===0?'active':'')+'" data-thumb="'+i+'" data-src="'+src+'" style="background-image:url(\''+src+'\');background-size:cover;background-position:center"></div>').join('');
     thumbsEl.querySelectorAll('.pd-thumb').forEach(th=>th.addEventListener('click',function(){
       thumbsEl.querySelectorAll('.pd-thumb').forEach(t=>t.classList.remove('active'));
@@ -1224,7 +1238,7 @@ function updatePdGallery(){
       mainEl.querySelector('.pd-main-photo').src=th.dataset.src;
     }));
   } else {
-    mainEl.innerHTML='<div class="product-img-placeholder"><div class="product-img-placeholder-name">'+tr(p,'name')+'</div><div class="product-img-placeholder-tag">'+t('imgComingSoon')+'</div></div>';
+    mainEl.innerHTML='<div class="product-img-placeholder"><div class="product-img-placeholder-name">'+displayName+'</div><div class="product-img-placeholder-tag">'+t('imgComingSoon')+'</div></div>';
     thumbsEl.innerHTML=[0,1,2,3].map(i=>'<div class="pd-thumb '+(i===0?'active':'')+'" data-thumb="'+i+'"></div>').join('');
   }
 }
