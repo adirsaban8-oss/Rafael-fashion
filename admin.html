@@ -241,8 +241,7 @@ function editProduct(id,isCustom){
   } else {
     p = {id:'custom-'+Date.now().toString(36), name_he:'',name_en:'',name_fr:'', cat:'youth', sub:'suits', price:null, inStock:true, _new:true, images:[] };
   }
-  var o = id&&!isCustom ? S.getOverride(id) : {};
-  var imgs = (p.images||p._images||[]);
+  var imgs = (id&&!isCustom ? (S.getImagesFor(id)||p.images) : (p.images)) || [];
   openModal(
     '<div class="between"><h3>'+(p._new?'מוצר חדש':'עריכת מוצר')+'</h3><button class="btn ghost sm" onclick="closeModal()">✕</button></div>'+
     '<div class="field3" style="margin-top:.8rem">'+
@@ -309,13 +308,9 @@ function saveProductModal(id,isCustomOrNew){
     prod.sizes = prod.sizes || [];
     S.saveCustom(prod);
   } else {
-    // override on base product
+    // override on this variant (id === variant key)
     S.setOverride(id, fields);
-    if(window._editImgs && window._editImgs.length){
-      // attach images to base product's primary variant key
-      var key = (snap && snap.variants && snap.variants[0] && snap.variants[0].key) || id;
-      S.setImagesFor(key, window._editImgs.slice());
-    }
+    S.setImagesFor(id, window._editImgs.slice());
   }
   closeModal(); toast('נשמר'); viewProducts();
 }

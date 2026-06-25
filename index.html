@@ -792,7 +792,11 @@ function buildProducts(prefix,sizes){
       {id:prefix+'-shoes-moccasin',name_he:'מוקסינים',name_en:'Moccasins',name_fr:'Mocassins',subcategory_tag_he:'מוקסין',subcategory_tag_en:'Moccasin',subcategory_tag_fr:'Mocassin',description_he:'מוקסיני זמש אלגנטיים ונוחים במגוון צבעים. מתאימים ללוק חגיגי או יומיומי מוקפד.',description_en:'Elegant, comfortable suede moccasins in a range of colors. Perfect for formal or refined casual looks.',description_fr:'Mocassins en daim élégants et confortables dans une gamme de couleurs. Parfaits pour un look formel ou décontracté raffiné.',colors:MOCCASIN_COLORS,sizes:sizes.shoes,price:null,iconType:'shoe',inStock:true}
     ],
     accessories:[
-      {id:prefix+"-belt",name_he:'חגורה',name_en:'Belt',name_fr:'Ceinture',subcategory_tag_he:'עור',subcategory_tag_en:'Leather',subcategory_tag_fr:'Cuir',description_he:'חגורת עור איכותית במגוון צבעים, משלימה כל לוק אלגנטי.',description_en:'Premium leather belt in a range of colors — completes any elegant look.',description_fr:'Ceinture en cuir haut de gamme dans une gamme de couleurs — complète tout look élégant.',colors:BELT_COLORS,noExplode:true,sizes:BELT_SIZES,price:null,iconType:'accessory',inStock:true},
+      {id:prefix+'-belt-1',name_he:'חגורת עור שחורה',name_en:'Black Leather Belt',name_fr:'Ceinture en Cuir Noir',subcategory_tag_he:'עור',subcategory_tag_en:'Leather',subcategory_tag_fr:'Cuir',description_he:'חגורת עור שחורה איכותית, משלימה כל לוק אלגנטי.',description_en:'Premium black leather belt that completes any elegant look.',description_fr:'Ceinture en cuir noir haut de gamme qui complète tout look élégant.',colors:[{id:'black',name_he:'שחור',name_en:'Black',name_fr:'Noir',hex:'#1A1815'}],noExplode:true,sizes:BELT_SIZES,price:null,iconType:'accessory',inStock:true},
+      {id:prefix+'-belt-2',name_he:'חגורת עור שחורה',name_en:'Black Leather Belt',name_fr:'Ceinture en Cuir Noir',subcategory_tag_he:'עור',subcategory_tag_en:'Leather',subcategory_tag_fr:'Cuir',description_he:'חגורת עור שחורה איכותית, משלימה כל לוק אלגנטי.',description_en:'Premium black leather belt that completes any elegant look.',description_fr:'Ceinture en cuir noir haut de gamme qui complète tout look élégant.',colors:[{id:'black',name_he:'שחור',name_en:'Black',name_fr:'Noir',hex:'#1A1815'}],noExplode:true,sizes:BELT_SIZES,price:null,iconType:'accessory',inStock:true},
+      {id:prefix+'-belt-3',name_he:'חגורת עור שחורה',name_en:'Black Leather Belt',name_fr:'Ceinture en Cuir Noir',subcategory_tag_he:'עור',subcategory_tag_en:'Leather',subcategory_tag_fr:'Cuir',description_he:'חגורת עור שחורה איכותית, משלימה כל לוק אלגנטי.',description_en:'Premium black leather belt that completes any elegant look.',description_fr:'Ceinture en cuir noir haut de gamme qui complète tout look élégant.',colors:[{id:'black',name_he:'שחור',name_en:'Black',name_fr:'Noir',hex:'#1A1815'}],noExplode:true,sizes:BELT_SIZES,price:null,iconType:'accessory',inStock:true},
+      {id:prefix+'-belt-4',name_he:'חגורת עור שחורה',name_en:'Black Leather Belt',name_fr:'Ceinture en Cuir Noir',subcategory_tag_he:'עור',subcategory_tag_en:'Leather',subcategory_tag_fr:'Cuir',description_he:'חגורת עור שחורה איכותית, משלימה כל לוק אלגנטי.',description_en:'Premium black leather belt that completes any elegant look.',description_fr:'Ceinture en cuir noir haut de gamme qui complète tout look élégant.',colors:[{id:'black',name_he:'שחור',name_en:'Black',name_fr:'Noir',hex:'#1A1815'}],noExplode:true,sizes:BELT_SIZES,price:null,iconType:'accessory',inStock:true},
+      {id:prefix+'-belt-5',name_he:'חגורת עור שחורה',name_en:'Black Leather Belt',name_fr:'Ceinture en Cuir Noir',subcategory_tag_he:'עור',subcategory_tag_en:'Leather',subcategory_tag_fr:'Cuir',description_he:'חגורת עור שחורה איכותית, משלימה כל לוק אלגנטי.',description_en:'Premium black leather belt that completes any elegant look.',description_fr:'Ceinture en cuir noir haut de gamme qui complète tout look élégant.',colors:[{id:'black',name_he:'שחור',name_en:'Black',name_fr:'Noir',hex:'#1A1815'}],noExplode:true,sizes:BELT_SIZES,price:null,iconType:'accessory',inStock:true},
       {id:prefix+'-bowtie',name_he:'פפיון',name_en:'Bowtie',name_fr:'Nœud Papillon',subcategory_tag_he:'פפיון',subcategory_tag_en:'Bowtie',subcategory_tag_fr:'Nœud Papillon',description_he:'פפיון אלגנטי לאירועים חגיגיים, במגוון גוונים לבחירה.',description_en:'Elegant bowtie for formal events, in a range of colors to choose from.',description_fr:'Nœud papillon élégant pour les événements formels, dans une variété de couleurs.',colors:BOWTIE_COLORS,sizes:BOWTIE_SIZES,price:null,iconType:'accessory',inStock:true}
     ]
   };
@@ -888,7 +892,17 @@ const IMAGES={
   'y-shoes-moccasin__blue':['photos/moccasin-blue.png'],
   'c-shoes-moccasin__blue':['photos/moccasin-blue.png'],
   'y-shoes-moccasin__black':['photos/moccasin-black.png'],
-  'c-shoes-moccasin__black':['photos/moccasin-black.png']
+  'c-shoes-moccasin__black':['photos/moccasin-black.png'],
+  'y-bowtie__mint-green':['photos/bowtie-mint-green.png'],'c-bowtie__mint-green':['photos/bowtie-mint-green.png'],
+  'y-bowtie__stone':['photos/bowtie-stone.png'],'c-bowtie__stone':['photos/bowtie-stone.png'],
+  'y-bowtie__sky-blue':['photos/bowtie-sky-blue.png'],'c-bowtie__sky-blue':['photos/bowtie-sky-blue.png'],
+  'y-bowtie__black':['photos/bowtie-black.png'],'c-bowtie__black':['photos/bowtie-black.png'],
+  'y-bowtie__navy':['photos/bowtie-navy.png'],'c-bowtie__navy':['photos/bowtie-navy.png'],
+  'y-belt-1':['photos/belt-black-1.png'],'c-belt-1':['photos/belt-black-1.png'],
+  'y-belt-2':['photos/belt-black-2.png'],'c-belt-2':['photos/belt-black-2.png'],
+  'y-belt-3':['photos/belt-black-3.png'],'c-belt-3':['photos/belt-black-3.png'],
+  'y-belt-4':['photos/belt-black-4.png'],'c-belt-4':['photos/belt-black-4.png'],
+  'y-belt-5':['photos/belt-black-5.png'],'c-belt-5':['photos/belt-black-5.png']
 };
 const IMG_VERSION='v3';
 const SUBCAT_COVERS={
@@ -977,9 +991,24 @@ function findProductById(id){
     }
   return null;
 }
+/* ---- hide variants that have no image ---- */
+function variantImages(p,c){
+  const key=(p.colors&&p.colors.length>1&&!p.noExplode&&c)?(p.id+'__'+c.id):p.id;
+  const im=getImages(Object.assign({},p,{_variantKey:key}));
+  return (im&&im.length)?im:null;
+}
+function visibleColors(p){
+  const cols=p.colors||[];
+  if(cols.length<=1||p.noExplode) return variantImages(p,cols[0])?cols.slice():[];
+  return cols.filter(c=>variantImages(p,c));
+}
+function productHasImage(p){ return visibleColors(p).length>0; }
 function countSubcat(cat,sub){
   if(!CATALOG[cat]||!CATALOG[cat][sub]) return 0;
-  return CATALOG[cat][sub].reduce((sum,p)=>sum+((p.colors.length<=1||p.noExplode)?1:p.colors.length),0);
+  return CATALOG[cat][sub].reduce((sum,p)=>{
+    if(!p.colors||p.colors.length<=1||p.noExplode) return sum+(productHasImage(p)?1:0);
+    return sum+visibleColors(p).length;
+  },0);
 }
 function getAllProducts(){
   const all=[];
@@ -999,18 +1028,20 @@ function getAllProducts(){
 function buildSnapshot(){
   if(!window.RFStore) return;
   const snap=[];
+  const join=(a,b)=>a?(b?(a+' · '+b):a):b;
   for(const cat of Object.keys(CATALOG))
     for(const sub of Object.keys(CATALOG[cat]))
       CATALOG[cat][sub].forEach(p=>{
-        const variants=[];
-        if(p.colors && p.colors.length>1 && !p.noExplode)
-          p.colors.forEach(c=>variants.push({key:p.id+'__'+c.id,colorId:c.id,colorName:c.name_he,images:(IMAGES[p.id+'__'+c.id]||[])}));
-        else variants.push({key:p.id,colorId:(p.colors&&p.colors[0]&&p.colors[0].id)||'',colorName:'',images:(IMAGES[p.id]||[])});
-        const firstImgs=getImages(Object.assign({},p,{_variantKey:variants[0].key}))||[];
-        snap.push({id:p.id,cat,sub,name_he:p.name_he,name_en:p.name_en,name_fr:p.name_fr,
-          price:(p.price===undefined?null:p.price),inStock:p.inStock!==false,iconType:p.iconType,noExplode:!!p.noExplode,
-          colors:p.colors||[],sizes:p.sizes||[],variants:variants,_thumb:(firstImgs[0]||''),_sizes:p.sizes||[],
-          _catName:(CATS[cat]&&CATS[cat].he)||cat,_subName:(SUBCATS[sub]&&SUBCATS[sub].he)||sub,_removed:RFStore.isRemoved(p.id)});
+        const entry=(key,c)=>{
+          const imgs=getImages(Object.assign({},p,{_variantKey:key}))||[];
+          snap.push({id:key,baseId:p.id,cat,sub,colorId:c?c.id:'',
+            name_he:join(p.name_he,c&&c.name_he),name_en:join(p.name_en,c&&c.name_en),name_fr:join(p.name_fr,c&&c.name_fr),
+            price:(p.price===undefined?null:p.price),inStock:p.inStock!==false,iconType:p.iconType,
+            sizes:p.sizes||[],_sizes:p.sizes||[],_thumb:(imgs[0]||''),images:imgs,
+            _catName:(CATS[cat]&&CATS[cat].he)||cat,_subName:(SUBCATS[sub]&&SUBCATS[sub].he)||sub,_removed:RFStore.isRemoved(key)});
+        };
+        if(p.colors && p.colors.length>1 && !p.noExplode) p.colors.forEach(c=>entry(p.id+'__'+c.id,c));
+        else entry(p.id,(p.colors&&p.colors[0])||null);
       });
   RFStore.setSnapshot(snap);
 }
@@ -1188,10 +1219,17 @@ function renderSubcategory(cat,sub){
 }
 
 function renderProductGrid(){
-  let list=CATALOG[gridState.cat][gridState.sub].slice();
+  let base=CATALOG[gridState.cat][gridState.sub].slice();
+  if(window.RFStore) RFStore.getCustom().forEach(c=>{ if(c.cat===gridState.cat&&c.sub===gridState.sub) base.push(c); });
+  const ov=(obj,key)=> window.RFStore ? RFStore.applyWithKey(obj,key) : obj;
   const expanded=[];
-  list.forEach(p=>{ if(p.colors.length<=1||p.noExplode){ expanded.push(p); return; } p.colors.forEach(c=>expanded.push(Object.assign({},p,{_variantColor:c,_linkId:p.id+"/"+c.id,_variantKey:p.id+"__"+c.id}))); });
-  list=expanded;
+  base.forEach(p=>{
+    const vis=visibleColors(p);
+    if(!vis.length) return; // no image → hide the whole card
+    if(!p.colors||p.colors.length<=1||p.noExplode){ expanded.push(ov(Object.assign({},p,{_variantKey:p.id}),p.id)); return; }
+    vis.forEach(c=>{ const key=p.id+"__"+c.id; expanded.push(ov(Object.assign({},p,{_variantColor:c,_linkId:p.id+"/"+c.id,_variantKey:key}),key)); });
+  });
+  let list=expanded.filter(p=>!(window.RFStore && RFStore.isRemoved(p._variantKey||p.id)));
   if(gridState.sort==='name') list.sort((a,b)=>tr(a,'name').localeCompare(tr(b,'name')));
   const headerEl=document.querySelector('.grid-header');
   if(headerEl && !headerEl.querySelector('.grid-header-count')){
@@ -1270,11 +1308,20 @@ function attachProductCardEvents(){
 
 /* ========== RENDER: PRODUCT DETAIL ========== */
 let pdState={product:null,colorIdx:0,size:null,qty:1,cat:null,sub:null};
+function pdVariantKey(p,color){ return (p.colors&&p.colors.length>1&&!p.noExplode&&color)?(p.id+'__'+color.id):p.id; }
+function pdApplied(p,color){ return window.RFStore?RFStore.applyWithKey(Object.assign({},p),pdVariantKey(p,color)):p; }
+function pdPriceHTML(vp){
+  if(vp.price===null||vp.price===undefined) return t('priceInquire');
+  if(vp.salePrice) return '₪'+Number(vp.salePrice).toLocaleString()+' <span class="old-price">₪'+Number(vp.price).toLocaleString()+'</span>';
+  return formatPrice(vp.price)||t('priceInquire');
+}
 function renderProduct(id,preselectColorId){
   const found=findProductById(id);
   if(!found){ location.hash='#/'; return; }
+  const _vis=visibleColors(found.product);
+  if(!_vis.length){ location.hash='#/'+found.cat+'/'+found.sub; return; }
   document.getElementById('navbar').classList.remove('transparent');
-  const p=found.product;
+  const p=Object.assign({},found.product,{colors:_vis});
   let colorIdx=0;
   if(preselectColorId){
     const idx=p.colors.findIndex(c=>c.id===preselectColorId);
@@ -1308,8 +1355,9 @@ function renderProduct(id,preselectColorId){
     return '<button class="pd-size" data-size="'+val+'">'+label+'</button>';
   }).join('');
   const variantNote=p.variantNote_he?'<div class="pd-variant-note"><span class="lang-he">'+p.variantNote_he+'</span><span class="lang-en">'+(p.variantNote_en||p.variantNote_he)+'</span></div>':'';
-  const priceDisplay=p.price===null?t('priceInquire'):(formatPrice(p.price)||t('priceInquire'));
-  const priceClass=p.price===null?'pd-price':'pd-price fixed';
+  const vpActive=pdApplied(p,activeColor);
+  const priceDisplay=pdPriceHTML(vpActive);
+  const priceClass=(vpActive.price===null||vpActive.price===undefined)?'pd-price':'pd-price fixed';
 
   document.getElementById('pageContent').innerHTML=''+
     '<div class="page">'+
@@ -1359,6 +1407,8 @@ function updatePdGallery(){
   const displayName=pname(p,activeColor);
   const nameEl=document.getElementById('pdName');
   if(nameEl) nameEl.textContent=displayName;
+  const priceEl=document.getElementById('pdPrice');
+  if(priceEl){ const vp=pdApplied(p,activeColor); priceEl.innerHTML=pdPriceHTML(vp); priceEl.className=(vp.price===null||vp.price===undefined)?'pd-price':'pd-price fixed'; }
   const crumbCurrent=document.querySelector('.breadcrumb-current');
   if(crumbCurrent) crumbCurrent.textContent=displayName;
   document.title=displayName+' · '+tr(activeColor,'name')+' — Rafael';
@@ -1547,6 +1597,7 @@ function doSearch(q){
   if(!q||q.length<2){ results.innerHTML=''; return; }
   const needle=q.toLowerCase();
   const matches=getAllProducts().filter(p=>{
+    if(!productHasImage(p)) return false;
     if(tr(p,'name').toLowerCase().indexOf(needle)>=0) return true;
     if((tr(p,'subcategory_tag')||'').toLowerCase().indexOf(needle)>=0) return true;
     return (p.colors||[]).some(c=>tr(c,'name').toLowerCase().indexOf(needle)>=0);
@@ -1555,7 +1606,7 @@ function doSearch(q){
   results.innerHTML=matches.map(p=>{
     const catTitle=CATS[p.cat][STATE.lang]||CATS[p.cat].en;
     const subTitle=SUBCATS[p.sub][STATE.lang]||SUBCATS[p.sub].en;
-    const sImgs=getImages(p);
+    const _vc=visibleColors(p)[0]; const sImgs=_vc?variantImages(p,_vc):getImages(p);
     const imgStyle=sImgs?' style="background-image:url(\''+sImgs[0]+'\');background-size:cover;background-position:center"':'';
     return '<div class="search-result" data-id="'+p.id+'"><div class="search-result-img"'+imgStyle+'></div><div class="search-result-info"><div class="search-result-name">'+tr(p,'name')+'</div><div class="search-result-cat">'+catTitle+' · '+subTitle+'</div></div></div>';
   }).join('');

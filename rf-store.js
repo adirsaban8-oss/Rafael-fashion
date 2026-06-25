@@ -122,8 +122,9 @@
     },
 
     /* ---------- apply overrides onto a base product object ---------- */
-    applyToProduct: function(p){
-      var o = this.getOverride(p.id);
+    applyToProduct: function(p){ return this.applyWithKey(p, p.id); },
+    applyWithKey: function(p, key){
+      var o = this.getOverride(key);
       if(!o || !Object.keys(o).length) return p;
       var m = Object.assign({}, p);
       if(o.price !== undefined && o.price !== '') m.price = (o.price===null? null : Number(o.price));
