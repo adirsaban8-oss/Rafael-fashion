@@ -8,8 +8,9 @@
 <title>Rafael — Luxury Fashion</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;600&family=Cormorant+Garamond:wght@300;400;500&family=Italiana&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;600&family=Cormorant+Garamond:wght@300;400;500&family=Italiana&family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Suez+One&family=Bellefair&display=swap">
 <link rel="icon" href="photos/raf1.jpeg" type="image/jpeg">
+<script src="rf-store.js"></script>
 <style>
 /* ============================================================
    RAFAEL — LUXURY FASHION
@@ -63,7 +64,7 @@ select{font-family:inherit}
 /* ============================================================
    NAVBAR
    ============================================================ */
-.navbar{position:fixed;top:var(--anno-h);left:0;right:0;height:var(--nav-h);background:var(--bg);border-bottom:1px solid var(--line);z-index:900;padding:0 var(--edge);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.5rem;transition:background .4s var(--ease),border-color .4s var(--ease),color .4s var(--ease)}
+.navbar{position:fixed;top:var(--anno-h);left:0;right:0;height:var(--nav-h);background:var(--bg);border-bottom:1px solid var(--line);z-index:900;padding:0 var(--edge);display:flex;justify-content:space-between;align-items:center;gap:1.5rem;transition:background .4s var(--ease),border-color .4s var(--ease),color .4s var(--ease)}
 .navbar.transparent{background:transparent;border-color:transparent;color:var(--bg)}
 .navbar.transparent .nav-icon svg{stroke:var(--bg)}
 .navbar.transparent .nav-link{color:var(--bg)}
@@ -79,8 +80,8 @@ select{font-family:inherit}
 .nav-link::after{content:'';position:absolute;bottom:-3px;right:0;left:0;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .4s var(--ease)}
 [dir="ltr"] .nav-link::after{transform-origin:left}
 .nav-link:hover::after{transform:scaleX(1)}
-.nav-logo-wrap{display:flex;justify-content:center;align-items:center;cursor:pointer}
-.nav-logo{height:40px;object-fit:contain;transition:opacity .3s}
+.nav-logo-wrap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;justify-content:center;align-items:center;cursor:pointer;z-index:1}
+.nav-logo{height:56px;object-fit:contain;transition:opacity .3s}
 .nav-logo-wrap:hover .nav-logo{opacity:.8}
 .nav-icon{width:36px;height:36px;display:flex;align-items:center;justify-content:center;position:relative;background:transparent;border:none;cursor:pointer;transition:opacity .25s}
 .nav-icon:hover{opacity:.6}
@@ -188,17 +189,19 @@ select{font-family:inherit}
 .split-tile:hover .split-tile-bg{transform:scale(1.04)}
 .split-tile-youth{background:var(--ink)}
 .split-tile-youth .split-tile-bg{background:url("photos/home-youth-cover.png") center/cover no-repeat,#1E1A16}
-.split-tile-children .split-tile-bg{background:url("photos/home-children-cover.png") center/cover no-repeat,#EDEAE3;filter:brightness(1.25) saturate(1.05)}
+.split-tile-children .split-tile-bg{background:url("photos/home-children-cover.png") center/cover no-repeat,#EDEAE3}
 .split-tile-overlay{position:absolute;inset:0;background:rgba(0,0,0,0);transition:background .6s var(--ease);z-index:1}
 .split-tile:hover .split-tile-overlay{background:rgba(0,0,0,.12)}
 .split-tile-youth .split-tile-overlay{background:rgba(0,0,0,.2)}
 .split-tile-youth:hover .split-tile-overlay{background:rgba(0,0,0,.32)}
-.split-tile-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(2rem,5vw,4.5rem);z-index:2;gap:.75rem}
+.split-tile-children .split-tile-overlay{background:rgba(0,0,0,.3)}
+.split-tile-children:hover .split-tile-overlay{background:rgba(0,0,0,.42)}
+.split-tile-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:clamp(2rem,5vw,4.5rem);z-index:2;gap:.75rem}
 .split-tile-youth .split-tile-content{color:var(--bg)}
 .split-tile-children .split-tile-content{color:var(--bg)}
 .split-tile-label{font-size:.66rem;font-weight:500;letter-spacing:.42em;text-transform:uppercase;opacity:.8}
 .split-tile-name{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4.5rem);font-weight:400;letter-spacing:.005em;line-height:1}
-.split-tile-name.is-mark{font-family:var(--font-display);font-size:clamp(3.5rem,7vw,6.5rem);font-weight:200;letter-spacing:.32em;text-transform:lowercase;color:#FFFFFF;text-shadow:0 2px 14px rgba(0,0,0,.45);padding-right:.32em}
+.split-tile-name.is-mark{font-family:var(--font-display);font-size:clamp(3.5rem,7vw,6.5rem);font-weight:200;letter-spacing:.32em;text-transform:lowercase;color:#FFFFFF;text-shadow:0 2px 22px rgba(0,0,0,.7),0 1px 4px rgba(0,0,0,.5);padding-left:.32em;padding-right:.32em}
 .split-tile-desc{font-size:.88rem;font-weight:300;max-width:360px;line-height:1.6;opacity:.88;margin-top:.5rem}
 .split-tile-link{font-size:.66rem;font-weight:500;letter-spacing:.3em;text-transform:uppercase;margin-top:1rem;padding-bottom:.35rem;border-bottom:1px solid currentColor;align-self:flex-start;transition:padding .3s}
 .split-tile:hover .split-tile-link{padding-bottom:.5rem}
@@ -232,9 +235,9 @@ select{font-family:inherit}
 .sub-card-bg-img{background:#F3F1EC center/cover no-repeat}
 .sub-card:hover .sub-card-bg{transform:scale(1.03)}
 .sub-card-bg svg{width:120px;height:120px;color:var(--line);stroke-width:.5;opacity:.65}
-.sub-card-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem;z-index:2;gap:.25rem}
+.sub-card-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem;z-index:2;gap:.25rem;background:linear-gradient(to top,rgba(243,241,236,.97) 0%,rgba(243,241,236,.82) 22%,rgba(243,241,236,.4) 45%,rgba(243,241,236,0) 68%)}
 .sub-card-label{font-size:.6rem;font-weight:500;letter-spacing:.35em;text-transform:uppercase;color:var(--mute)}
-.sub-card-name{font-family:var(--font-display);font-size:2.2rem;font-weight:400;color:var(--ink);line-height:1;letter-spacing:.005em}
+.sub-card-name{font-family:var(--font-sans);font-size:2.15rem;font-weight:200;color:var(--ink);line-height:1.18;letter-spacing:.06em}
 .sub-card-count{font-size:.66rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--mute);margin-top:.3rem}
 .sub-card-arrow{position:absolute;top:2rem;left:2rem;width:42px;height:42px;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--ink);opacity:0;transform:translateX(-8px);transition:all .4s var(--ease);font-size:.9rem}
 [dir="ltr"] .sub-card-arrow{left:auto;right:2rem;transform:translateX(8px)}
@@ -279,6 +282,13 @@ select{font-family:inherit}
 .product-colors{display:flex;gap:.35rem;align-items:center;margin-top:.15rem}
 .color-swatch{width:12px;height:12px;border-radius:50%;border:1px solid var(--line)}
 .color-more{font-size:.62rem;color:var(--mute);font-weight:400;letter-spacing:.1em;margin-right:.2rem}
+.product-badge{position:absolute;top:.7rem;right:.7rem;z-index:3;font-family:var(--font-sans);font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .55rem;border-radius:99px;background:var(--ink);color:#fff}
+[dir="ltr"] .product-badge{right:auto;left:.7rem}
+.product-badge.badge-new{background:#3f7d50}
+.product-badge.badge-bestseller{background:#b5852f}
+.product-badge.badge-featured{background:#1f1b16}
+.product-oos{position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:center;background:rgba(243,241,236,.55);pointer-events:none}
+.product-oos span{background:rgba(31,27,22,.9);color:#fff;font-family:var(--font-sans);font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:.35rem .9rem;border-radius:99px}
 .product-price{font-size:.78rem;font-weight:400;color:var(--ink);font-style:italic;font-family:var(--font-display);margin-top:.25rem}
 .product-price.has-value{font-family:var(--font-sans);font-weight:500;font-style:normal;letter-spacing:.02em;font-size:.82rem}
 .product-price.has-value .old-price{text-decoration:line-through;color:var(--mute);margin-left:.5rem;font-weight:400}
@@ -493,8 +503,8 @@ body[data-lang="he"] .lang-en,body[data-lang="he"] .lang-fr,body[data-lang="en"]
   .announcement{font-size:.56rem;letter-spacing:.22em}
   .navbar{grid-template-columns:auto 1fr auto;padding:0 1rem;gap:.5rem}
   .nav-side{gap:.35rem}
-  .nav-logo{height:30px}
-  .lang-toggle{display:none}
+  .nav-logo{height:40px}
+  .lang-toggle{font-size:.56rem;padding:.3rem .45rem;letter-spacing:.12em}
   .nav-side-right .nav-icon:nth-child(2){display:none}
   .hero{min-height:calc(100vh - var(--anno-h) - var(--nav-h));padding:1.5rem 1rem 2.5rem;gap:1.5rem;background-position:20% center}
   .hero-media{aspect-ratio:4/5;max-width:100%}
@@ -729,7 +739,9 @@ body[data-lang="he"] .lang-en,body[data-lang="he"] .lang-fr,body[data-lang="en"]
 /* ========== COLORS ========== */
 const PARADE_COLORS=[{id:'light-grey',name_he:'אפור בהיר',name_en:'Light Grey',name_fr:'Gris Clair',hex:'#C0C0C0'},{id:'mint-green',name_he:'ירוק מנטה',name_en:'Mint Green',name_fr:'Vert Menthe',hex:'#98D8B8'},{id:'black',name_he:'שחור',name_en:'Black',name_fr:'Noir',hex:'#1A1815'},{id:'tuxedo-black',name_he:'טוקסידו שחור',name_en:'Black Tuxedo',name_fr:'Smoking Noir',hex:'#0E0D0C'},{id:'sky-blue',name_he:'תכלת',name_en:'Sky Blue',name_fr:'Bleu Ciel',hex:'#87CEEB'},{id:'navy',name_he:'כחול נייבי',name_en:'Navy Blue',name_fr:'Bleu Marine',hex:'#1F2F4F'},{id:'stone',name_he:"אבן-בז'",name_en:'Stone Beige',hex:'#C8B99C'}];
 const LINEN_COLORS=[{id:'light-grey',name_he:'אפור בהיר',name_en:'Light Grey',name_fr:'Gris Clair',hex:'#C0C0C0'},{id:'sky-blue',name_he:'תכלת',name_en:'Sky Blue',name_fr:'Bleu Ciel',hex:'#87CEEB'},{id:'stone',name_he:'אבן',name_en:'Stone',name_fr:'Pierre',hex:'#C8B99C'},{id:'mint-green',name_he:'ירוק מנטה',name_en:'Mint Green',name_fr:'Vert Menthe',hex:'#98D8B8'}];
-const OVERSIZED_COLORS=[{id:'green',name_he:'ירוק',name_en:'Green',name_fr:'Vert',hex:'#4A7C4E'},{id:'black',name_he:'שחור',name_en:'Black',name_fr:'Noir',hex:'#1A1815'},{id:'stone',name_he:"אבן-בז'",name_en:'Stone',hex:'#C8B99C'},{id:'white',name_he:'לבן',name_en:'White',name_fr:'Blanc',hex:'#F5F5F0'},{id:'sky-blue',name_he:'תכלת',name_en:'Sky Blue',name_fr:'Bleu Ciel',hex:'#87CEEB'}];
+const OVERSIZED_COLORS=[{id:'green',name_he:'ירוק',name_en:'Green',name_fr:'Vert',hex:'#4A7C4E'},{id:'black',name_he:'שחור',name_en:'Black',name_fr:'Noir',hex:'#1A1815'},{id:'stone',name_he:"אבן-בז'",name_en:'Stone',hex:'#C8B99C'},{id:'white',name_he:'לבן',name_en:'White',name_fr:'Blanc',hex:'#F5F5F0'},{id:'sky-blue',name_he:'תכלת',name_en:'Sky Blue',name_fr:'Bleu Ciel',hex:'#87CEEB'},{id:'grey',name_he:'אפור',name_en:'Grey',name_fr:'Gris',hex:'#8C9296'}];
+const VEST_PARADE_COLORS=PARADE_COLORS.concat([{id:'light-green',name_he:'ירוק בהיר',name_en:'Light Green',name_fr:'Vert Clair',hex:'#A6B89C'}]);
+const MOCCASIN_COLORS=[{id:'grey',name_he:'אפור',name_en:'Grey',name_fr:'Gris',hex:'#A8A29A'},{id:'beige',name_he:"בז'",name_en:'Beige',name_fr:'Beige',hex:'#C8B99C'},{id:'blue',name_he:'כחול',name_en:'Blue',name_fr:'Bleu',hex:'#44597A'},{id:'black',name_he:'שחור',name_en:'Black',name_fr:'Noir',hex:'#1A1815'}];
 const CLASSIC_SHIRT_COLORS=[{id:'white-mandarin',name_he:'לבן סיני',name_en:'White Mandarin',name_fr:'Blanc Mandarin',hex:'#FFFFFF'},{id:'white-regular',name_he:'לבן',name_en:'White',name_fr:'Blanc',hex:'#FAFAFA'},{id:'black-mandarin',name_he:'שחור סיני',name_en:'Black Mandarin',name_fr:'Noir Mandarin',hex:'#1A1815'},{id:'black-regular',name_he:'שחור',name_en:'Black',name_fr:'Noir',hex:'#2A2825'},{id:'sky-regular',name_he:'תכלת',name_en:'Sky Blue',name_fr:'Bleu Ciel',hex:'#87CEEB'},{id:'navy-regular',name_he:'נייבי',name_en:'Navy',name_fr:'Marine',hex:'#1F2F4F'},{id:'pink-regular',name_he:'ורוד',name_en:'Pink',name_fr:'Rose',hex:'#F4C2C2'},{id:'grey-regular',name_he:'אפור',name_en:'Grey',name_fr:'Gris',hex:'#808080'},{id:'cream-regular',name_he:"שמנת-בז'",name_en:'Cream',hex:'#E8DFC8'}];
 const LINEN_SHIRT_COLORS=[{id:'pistachio',name_he:'ירוק פיסטוק',name_en:'Pistachio',name_fr:'Pistache',hex:'#93C572'},{id:'beige',name_he:"בז'",name_en:'Beige',hex:'#C8B99C'},{id:'jeans',name_he:"ג'ינס",name_en:'Jeans Blue',hex:'#5A7A9A'},{id:'pink',name_he:'ורוד',name_en:'Pink',name_fr:'Rose',hex:'#F4C2C2'},{id:'turquoise',name_he:'טורקיז',name_en:'Turquoise',name_fr:'Turquoise',hex:'#40E0D0'},{id:'white',name_he:'לבן',name_en:'White',name_fr:'Blanc',hex:'#FFFFFF'}];
 const LINEN_VEST_COLORS=[{id:'green',name_he:'ירוק',name_en:'Green',name_fr:'Vert',hex:'#4A7C4E'},{id:'sky-blue',name_he:'תכלת',name_en:'Sky Blue',name_fr:'Bleu Ciel',hex:'#87CEEB'}];
@@ -772,11 +784,12 @@ function buildProducts(prefix,sizes){
       {id:prefix+'-shirt-linen',name_he:'חולצת פשתן',name_en:'Linen Shirt',name_fr:'Chemise en Lin',subcategory_tag_he:'פשתן',subcategory_tag_en:'Linen',subcategory_tag_fr:'Lin',description_he:'חולצת פשתן קלילה ונוחה, מגיעה במגוון צבעים רעננים לקיץ.',description_en:'Light, comfortable linen shirt in a range of fresh summer colors.',description_fr:'Chemise en lin légère et confortable, dans une gamme de couleurs fraîches pour lété.',colors:LINEN_SHIRT_COLORS,sizes:sizes.clothing,price:null,iconType:'shirt',inStock:true}
     ],
     vests:[
-      {id:prefix+'-vest-parade',name_he:'וסט פרדה',name_en:'Parade Vest',name_fr:'Gilet Parade',subcategory_tag_he:'פרדה',subcategory_tag_en:'Parade',subcategory_tag_fr:'Parade',description_he:'וסט פרדה תואם לחליפה ולמכנסיים, למראה שלם ומוקפד.',description_en:'Parade vest matching the suit and trousers for a complete, refined look.',description_fr:'Gilet Parade assorti au costume et au pantalon pour un look complet et raffiné.',colors:PARADE_COLORS,sizes:sizes.clothing,price:null,iconType:'vest',inStock:true},
+      {id:prefix+'-vest-parade',name_he:'וסט פרדה',name_en:'Parade Vest',name_fr:'Gilet Parade',subcategory_tag_he:'פרדה',subcategory_tag_en:'Parade',subcategory_tag_fr:'Parade',description_he:'וסט פרדה תואם לחליפה ולמכנסיים, למראה שלם ומוקפד.',description_en:'Parade vest matching the suit and trousers for a complete, refined look.',description_fr:'Gilet Parade assorti au costume et au pantalon pour un look complet et raffiné.',colors:VEST_PARADE_COLORS,sizes:sizes.clothing,price:null,iconType:'vest',inStock:true},
       {id:prefix+'-vest-linen',name_he:'וסט פשתן',name_en:'Linen Vest',name_fr:'Gilet en Lin',subcategory_tag_he:'פשתן',subcategory_tag_en:'Linen',subcategory_tag_fr:'Lin',description_he:'וסט פשתן אלגנטי וקליל, תוספת מושלמת ללוק הקיצי.',description_en:'Elegant, light linen vest — the perfect addition to a summer look.',description_fr:'Gilet en lin élégant et léger — le complément parfait d\'un look estival.',colors:LINEN_VEST_COLORS,sizes:sizes.clothing,price:null,iconType:'vest',inStock:true}
     ],
     shoes:[
-      {id:prefix+'-shoes-icon',name_he:'נעלי Icon London',name_en:'Icon London',name_fr:'Icon London',subcategory_tag_he:'Icon London',subcategory_tag_en:'Icon London',subcategory_tag_fr:'Icon London',description_he:'נעליים איכותיות ממותג Icon London בצבע לבן. עיצוב קלאסי ונוח לכל אירוע.',description_en:'Premium Icon London shoes in white. Classic, comfortable design for any occasion.',description_fr:'Chaussures Icon London premium en blanc. Design classique et confortable pour toute occasion.',colors:[{id:'white',name_he:'לבן',name_en:'White',name_fr:'Blanc',hex:'#FFFFFF'}],sizes:sizes.shoes,price:null,iconType:'shoe',inStock:true}
+      {id:prefix+'-shoes-icon',name_he:'נעלי Icon London',name_en:'Icon London',name_fr:'Icon London',subcategory_tag_he:'Icon London',subcategory_tag_en:'Icon London',subcategory_tag_fr:'Icon London',description_he:'נעליים איכותיות ממותג Icon London בצבע לבן. עיצוב קלאסי ונוח לכל אירוע.',description_en:'Premium Icon London shoes in white. Classic, comfortable design for any occasion.',description_fr:'Chaussures Icon London premium en blanc. Design classique et confortable pour toute occasion.',colors:[{id:'white',name_he:'לבן',name_en:'White',name_fr:'Blanc',hex:'#FFFFFF'}],sizes:sizes.shoes,price:null,iconType:'shoe',inStock:true},
+      {id:prefix+'-shoes-moccasin',name_he:'מוקסינים',name_en:'Moccasins',name_fr:'Mocassins',subcategory_tag_he:'מוקסין',subcategory_tag_en:'Moccasin',subcategory_tag_fr:'Mocassin',description_he:'מוקסיני זמש אלגנטיים ונוחים במגוון צבעים. מתאימים ללוק חגיגי או יומיומי מוקפד.',description_en:'Elegant, comfortable suede moccasins in a range of colors. Perfect for formal or refined casual looks.',description_fr:'Mocassins en daim élégants et confortables dans une gamme de couleurs. Parfaits pour un look formel ou décontracté raffiné.',colors:MOCCASIN_COLORS,sizes:sizes.shoes,price:null,iconType:'shoe',inStock:true}
     ],
     accessories:[
       {id:prefix+"-belt",name_he:'חגורה',name_en:'Belt',name_fr:'Ceinture',subcategory_tag_he:'עור',subcategory_tag_en:'Leather',subcategory_tag_fr:'Cuir',description_he:'חגורת עור איכותית במגוון צבעים, משלימה כל לוק אלגנטי.',description_en:'Premium leather belt in a range of colors — completes any elegant look.',description_fr:'Ceinture en cuir haut de gamme dans une gamme de couleurs — complète tout look élégant.',colors:BELT_COLORS,noExplode:true,sizes:BELT_SIZES,price:null,iconType:'accessory',inStock:true},
@@ -825,7 +838,57 @@ const IMAGES={
   'y-pants-parade__sky-blue':['photos/pants-parade-sky-1.png','photos/pants-parade-sky-2.png','photos/pants-parade-sky-3.png','photos/pants-parade-sky-4.png','photos/pants-parade-sky-5.png'],
   'c-pants-parade__sky-blue':['photos/pants-parade-sky-1.png','photos/pants-parade-sky-2.png','photos/pants-parade-sky-3.png','photos/pants-parade-sky-4.png','photos/pants-parade-sky-5.png'],
   'y-pants-parade__stone':['photos/pants-parade-stone-1.png','photos/pants-parade-stone-2.png','photos/pants-parade-stone-3.png'],
-  'c-pants-parade__stone':['photos/pants-parade-stone-1.png','photos/pants-parade-stone-2.png','photos/pants-parade-stone-3.png']
+  'c-pants-parade__stone':['photos/pants-parade-stone-1.png','photos/pants-parade-stone-2.png','photos/pants-parade-stone-3.png'],
+  'y-vest-parade__stone':['photos/vest-parade-stone-1.png','photos/vest-parade-stone-2.png','photos/vest-parade-stone-3.png','photos/vest-parade-stone-4.png'],
+  'c-vest-parade__stone':['photos/vest-parade-stone-1.png','photos/vest-parade-stone-2.png','photos/vest-parade-stone-3.png','photos/vest-parade-stone-4.png'],
+  'y-vest-parade__light-grey':['photos/vest-parade-grey-1.png','photos/vest-parade-grey-2.png','photos/vest-parade-grey-3.png','photos/vest-parade-grey-4.png'],
+  'c-vest-parade__light-grey':['photos/vest-parade-grey-1.png','photos/vest-parade-grey-2.png','photos/vest-parade-grey-3.png','photos/vest-parade-grey-4.png'],
+  'y-vest-parade__navy':['photos/vest-parade-navy-1.png','photos/vest-parade-navy-2.png','photos/vest-parade-navy-3.png'],
+  'c-vest-parade__navy':['photos/vest-parade-navy-1.png','photos/vest-parade-navy-2.png','photos/vest-parade-navy-3.png'],
+  'y-vest-parade__black':['photos/vest-parade-black-1.png','photos/vest-parade-black-2.png','photos/vest-parade-black-3.png','photos/vest-parade-black-4.png','photos/vest-parade-black-5.png','photos/vest-parade-black-6.png'],
+  'c-vest-parade__black':['photos/vest-parade-black-1.png','photos/vest-parade-black-2.png','photos/vest-parade-black-3.png','photos/vest-parade-black-4.png','photos/vest-parade-black-5.png','photos/vest-parade-black-6.png'],
+  'y-vest-parade__sky-blue':['photos/vest-parade-sky-1.png','photos/vest-parade-sky-2.png','photos/vest-parade-sky-3.png','photos/vest-parade-sky-4.png'],
+  'c-vest-parade__sky-blue':['photos/vest-parade-sky-1.png','photos/vest-parade-sky-2.png','photos/vest-parade-sky-3.png','photos/vest-parade-sky-4.png'],
+  'y-vest-parade__mint-green':['photos/vest-parade-mint-youth-1.png','photos/vest-parade-mint-youth-2.png','photos/vest-parade-mint-youth-3.png','photos/vest-parade-mint-youth-4.png'],
+  'c-vest-parade__mint-green':['photos/vest-parade-mint-child-1.png','photos/vest-parade-mint-child-2.png','photos/vest-parade-mint-child-3.png'],
+  'y-vest-linen__sky-blue':['photos/vest-linen-sky-1.png','photos/vest-linen-sky-2.png','photos/vest-linen-sky-3.png','photos/vest-linen-sky-4.png','photos/vest-linen-sky-5.png'],
+  'c-vest-linen__sky-blue':['photos/vest-linen-sky-1.png','photos/vest-linen-sky-2.png','photos/vest-linen-sky-3.png','photos/vest-linen-sky-4.png','photos/vest-linen-sky-5.png'],
+  'y-shirt-linen__jeans':['photos/shirt-linen-jeans-1.png','photos/shirt-linen-jeans-2.png'],
+  'c-shirt-linen__jeans':['photos/shirt-linen-jeans-1.png','photos/shirt-linen-jeans-2.png'],
+  'y-shirt-linen__beige':['photos/shirt-linen-beige-1.png','photos/shirt-linen-beige-2.png'],
+  'c-shirt-linen__beige':['photos/shirt-linen-beige-1.png','photos/shirt-linen-beige-2.png'],
+  'y-shirt-linen__pink':['photos/shirt-linen-pink-1.png','photos/shirt-linen-pink-2.png'],
+  'c-shirt-linen__pink':['photos/shirt-linen-pink-1.png','photos/shirt-linen-pink-2.png'],
+  'y-shirt-linen__pistachio':['photos/shirt-linen-pistachio-1.png','photos/shirt-linen-pistachio-2.png'],
+  'c-shirt-linen__pistachio':['photos/shirt-linen-pistachio-1.png','photos/shirt-linen-pistachio-2.png'],
+  'y-shirt-linen__turquoise':['photos/shirt-linen-turquoise-1.png'],
+  'c-shirt-linen__turquoise':['photos/shirt-linen-turquoise-1.png'],
+  'y-shirt-linen__white':['photos/shirt-linen-white-1.png','photos/shirt-linen-white-2.png','photos/shirt-linen-white-3.png','photos/shirt-linen-white-4.png','photos/shirt-linen-white-5.png','photos/shirt-linen-white-6.png'],
+  'c-shirt-linen__white':['photos/shirt-linen-white-1.png','photos/shirt-linen-white-2.png','photos/shirt-linen-white-3.png','photos/shirt-linen-white-4.png','photos/shirt-linen-white-5.png','photos/shirt-linen-white-6.png'],
+  'y-pants-oversized__green':['photos/pants-oversized-green-1.png','photos/pants-oversized-green-2.png','photos/pants-oversized-green-3.png','photos/pants-oversized-green-4.png','photos/pants-oversized-green-5.png','photos/pants-oversized-green-6.png','photos/pants-oversized-green-7.png'],
+  'c-pants-oversized__green':['photos/pants-oversized-green-1.png','photos/pants-oversized-green-2.png','photos/pants-oversized-green-3.png','photos/pants-oversized-green-4.png','photos/pants-oversized-green-5.png','photos/pants-oversized-green-6.png','photos/pants-oversized-green-7.png'],
+  'y-pants-oversized__stone':['photos/pants-oversized-stone-1.png','photos/pants-oversized-stone-2.png','photos/pants-oversized-stone-3.png','photos/pants-oversized-stone-4.png','photos/pants-oversized-stone-5.png','photos/pants-oversized-stone-6.png'],
+  'c-pants-oversized__stone':['photos/pants-oversized-stone-1.png','photos/pants-oversized-stone-2.png','photos/pants-oversized-stone-3.png','photos/pants-oversized-stone-4.png','photos/pants-oversized-stone-5.png','photos/pants-oversized-stone-6.png'],
+  'y-pants-oversized__white':['photos/pants-oversized-white-1.png','photos/pants-oversized-white-2.png','photos/pants-oversized-white-3.png','photos/pants-oversized-white-4.png'],
+  'c-pants-oversized__white':['photos/pants-oversized-white-1.png','photos/pants-oversized-white-2.png','photos/pants-oversized-white-3.png','photos/pants-oversized-white-4.png'],
+  'y-pants-oversized__sky-blue':['photos/pants-oversized-sky-1.png','photos/pants-oversized-sky-2.png','photos/pants-oversized-sky-3.png','photos/pants-oversized-sky-4.png','photos/pants-oversized-sky-5.png'],
+  'c-pants-oversized__sky-blue':['photos/pants-oversized-sky-1.png','photos/pants-oversized-sky-2.png','photos/pants-oversized-sky-3.png','photos/pants-oversized-sky-4.png','photos/pants-oversized-sky-5.png'],
+  'c-pants-linen__stone':['photos/pants-linen-stone-child-1.png','photos/pants-linen-stone-child-2.png','photos/pants-linen-stone-child-3.png'],
+  'c-pants-linen__sky-blue':['photos/pants-linen-sky-child-1.png','photos/pants-linen-sky-child-2.png','photos/pants-linen-sky-child-3.png','photos/pants-linen-sky-child-4.png'],
+  'y-vest-parade__light-green':['photos/vest-parade-lgreen-1.png','photos/vest-parade-lgreen-2.png','photos/vest-parade-lgreen-3.png','photos/vest-parade-lgreen-4.png','photos/vest-parade-lgreen-5.png','photos/vest-parade-lgreen-6.png','photos/vest-parade-lgreen-7.png'],
+  'c-vest-parade__light-green':['photos/vest-parade-lgreen-1.png','photos/vest-parade-lgreen-2.png','photos/vest-parade-lgreen-3.png','photos/vest-parade-lgreen-4.png','photos/vest-parade-lgreen-5.png','photos/vest-parade-lgreen-6.png','photos/vest-parade-lgreen-7.png'],
+  'y-pants-oversized__grey':['photos/pants-oversized-grey-1.png','photos/pants-oversized-grey-2.png'],
+  'c-pants-oversized__grey':['photos/pants-oversized-grey-1.png','photos/pants-oversized-grey-2.png'],
+  'y-shoes-icon':['photos/shoes-icon-1.png'],
+  'c-shoes-icon':['photos/shoes-icon-1.png'],
+  'y-shoes-moccasin__grey':['photos/moccasin-grey.png'],
+  'c-shoes-moccasin__grey':['photos/moccasin-grey.png'],
+  'y-shoes-moccasin__beige':['photos/moccasin-beige.png'],
+  'c-shoes-moccasin__beige':['photos/moccasin-beige.png'],
+  'y-shoes-moccasin__blue':['photos/moccasin-blue.png'],
+  'c-shoes-moccasin__blue':['photos/moccasin-blue.png'],
+  'y-shoes-moccasin__black':['photos/moccasin-black.png'],
+  'c-shoes-moccasin__black':['photos/moccasin-black.png']
 };
 const IMG_VERSION='v3';
 const SUBCAT_COVERS={
@@ -844,6 +907,11 @@ const SUBCAT_COVERS={
 };
 function withVer(arr){ return arr.map(s=>s+'?'+IMG_VERSION); }
 function getImages(product){
+  if(window.RFStore){
+    const ov=RFStore.getImagesFor(product._variantKey||product.id);
+    if(ov&&ov.length) return ov;
+    if(product.images&&product.images.length) return product.images;
+  }
   if(product._variantKey && IMAGES[product._variantKey]) return withVer(IMAGES[product._variantKey]);
   if(IMAGES[product.id]) return withVer(IMAGES[product.id]);
   return null;
@@ -918,7 +986,33 @@ function getAllProducts(){
   for(const cat of Object.keys(CATALOG))
     for(const sub of Object.keys(CATALOG[cat]))
       CATALOG[cat][sub].forEach(p=>all.push(Object.assign({},p,{cat,sub})));
+  if(window.RFStore){
+    let list=all.filter(p=>!RFStore.isRemoved(p.id)).map(p=>RFStore.applyToProduct(p));
+    RFStore.getCustom().forEach(c=>{
+      const cp=Object.assign({colors:[{id:'default',name_he:'',name_en:'',name_fr:''}],sizes:[],inStock:true,iconType:'suit'},c);
+      list.push(cp);
+    });
+    return list;
+  }
   return all;
+}
+function buildSnapshot(){
+  if(!window.RFStore) return;
+  const snap=[];
+  for(const cat of Object.keys(CATALOG))
+    for(const sub of Object.keys(CATALOG[cat]))
+      CATALOG[cat][sub].forEach(p=>{
+        const variants=[];
+        if(p.colors && p.colors.length>1 && !p.noExplode)
+          p.colors.forEach(c=>variants.push({key:p.id+'__'+c.id,colorId:c.id,colorName:c.name_he,images:(IMAGES[p.id+'__'+c.id]||[])}));
+        else variants.push({key:p.id,colorId:(p.colors&&p.colors[0]&&p.colors[0].id)||'',colorName:'',images:(IMAGES[p.id]||[])});
+        const firstImgs=getImages(Object.assign({},p,{_variantKey:variants[0].key}))||[];
+        snap.push({id:p.id,cat,sub,name_he:p.name_he,name_en:p.name_en,name_fr:p.name_fr,
+          price:(p.price===undefined?null:p.price),inStock:p.inStock!==false,iconType:p.iconType,noExplode:!!p.noExplode,
+          colors:p.colors||[],sizes:p.sizes||[],variants:variants,_thumb:(firstImgs[0]||''),_sizes:p.sizes||[],
+          _catName:(CATS[cat]&&CATS[cat].he)||cat,_subName:(SUBCATS[sub]&&SUBCATS[sub].he)||sub,_removed:RFStore.isRemoved(p.id)});
+      });
+  RFStore.setSnapshot(snap);
 }
 
 /* ========== PRICE ========== */
@@ -927,6 +1021,10 @@ function formatPrice(price){
   if(typeof price==='number') return '₪'+price.toLocaleString();
   if(price.min&&price.max) return '₪'+price.min.toLocaleString()+' – ₪'+price.max.toLocaleString();
   return null;
+}
+function badgeLabel(b){
+  const m={new:{he:'חדש',en:'New',fr:'Nouveau'},bestseller:{he:'רב-מכר',en:'Bestseller',fr:'Best-seller'},featured:{he:'מומלץ',en:'Featured',fr:'En vedette'}};
+  return (m[b]&&(m[b][STATE.lang]||m[b].en))||'';
 }
 function priceHTML(product){
   if(product.price===null) return '<div class="product-price">'+t('priceInquireShort')+'</div>';
@@ -945,7 +1043,7 @@ function renderSubNav(crumbs){
 
 /* ========== RENDER: HOME ========== */
 function renderHome(){
-  document.title = STATE.lang==='he' ? 'רפאל אופנת יוקרה' : 'Rafael — Luxury Fashion';
+  document.title = STATE.lang==='he' ? 'רפאל אופנת יוקרה' : (STATE.lang==='fr'?'Rafael — Mode de Luxe':'Rafael — Luxury Fashion');
   document.getElementById('navbar').classList.remove('transparent');
 
   document.getElementById('pageContent').innerHTML=''+
@@ -1017,24 +1115,22 @@ function renderCategory(cat){
   if(!CATS[cat]){ location.hash='#/'; return; }
   document.getElementById('navbar').classList.remove('transparent');
   const catData=CATS[cat];
-  const title=STATE.lang==='he'?catData.he:catData.en;
-  const desc=STATE.lang==='he'?catData.tagline_he:catData.tagline_en;
+  const title=catData[STATE.lang]||catData.en;
+  const desc=catData['tagline_'+STATE.lang]||catData.tagline_en;
   document.title=title+' — Rafael';
   const subcards=Object.keys(SUBCATS).map(sub=>{
     const s=SUBCATS[sub];
     const count=countSubcat(cat,sub);
-    const cover=SUBCAT_COVERS[cat+'/'+sub];
+    const cover=(window.RFStore&&RFStore.getCoversMap()[cat+'/'+sub])||SUBCAT_COVERS[cat+'/'+sub];
     const bgHtml=cover
-      ?'<div class="sub-card-bg sub-card-bg-img" style="background-image:url(\''+cover+'?'+IMG_VERSION+'\')"></div>'
+      ?'<div class="sub-card-bg sub-card-bg-img" style="background-image:url(\''+cover+(cover.indexOf('data:')===0?'':'?'+IMG_VERSION)+'\')"></div>'
       :'<div class="sub-card-bg">'+(ICONS[{suits:'suit',pants:'pants',shirts:'shirt',vests:'vest',shoes:'shoe',accessories:'accessory'}[sub]]||'')+'</div>';
     return ''+
       '<div class="sub-card" onclick="location.hash=\'#/'+cat+'/'+sub+'\'">'+
         bgHtml+
         '<div class="sub-card-arrow">←</div>'+
         '<div class="sub-card-content">'+
-          '<div class="sub-card-label">'+t('collection')+'</div>'+
-          '<div class="sub-card-name">'+(STATE.lang==='he'?s.he:s.en)+'</div>'+
-          '<div class="sub-card-count">'+count+' '+t('items')+'</div>'+
+          '<div class="sub-card-name">'+(s[STATE.lang]||s.en)+'</div>'+
         '</div>'+
       '</div>';
   }).join('');
@@ -1059,8 +1155,8 @@ function renderSubcategory(cat,sub){
   if(!CATS[cat]||!SUBCATS[sub]){ location.hash='#/'; return; }
   document.getElementById('navbar').classList.remove('transparent');
   gridState={cat,sub,filter:'all',sort:'popular'};
-  const catTitle=STATE.lang==='he'?CATS[cat].he:CATS[cat].en;
-  const subTitle=STATE.lang==='he'?SUBCATS[sub].he:SUBCATS[sub].en;
+  const catTitle=CATS[cat][STATE.lang]||CATS[cat].en;
+  const subTitle=SUBCATS[sub][STATE.lang]||SUBCATS[sub].en;
   document.title=subTitle+' — '+catTitle+' — Rafael';
   document.getElementById('pageContent').innerHTML=''+
     '<div class="page">'+
@@ -1141,6 +1237,8 @@ function productCardHTML(p){
           '<svg viewBox="0 0 24 24" fill="'+(inWish?'currentColor':'none')+'" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'+
         '</button>'+
         imageMarkup+
+        (p.badge?'<div class="product-badge badge-'+p.badge+'">'+badgeLabel(p.badge)+'</div>':'')+
+        (p.inStock===false?'<div class="product-oos"><span>'+(STATE.lang==='he'?'אזל מהמלאי':(STATE.lang==='fr'?'Épuisé':'Sold out'))+'</span></div>':'')+
       '</div>'+
       '<div class="product-info">'+
         '<div class="product-brand">'+brandLine+'</div>'+
@@ -1184,8 +1282,8 @@ function renderProduct(id,preselectColorId){
   }
   pdState={product:p,colorIdx:colorIdx,size:null,qty:1,cat:found.cat,sub:found.sub};
   document.title=pname(p,p.colors[colorIdx])+' · '+tr(p.colors[colorIdx],'name')+' — Rafael';
-  const catTitle=STATE.lang==='he'?CATS[found.cat].he:CATS[found.cat].en;
-  const subTitle=STATE.lang==='he'?SUBCATS[found.sub].he:SUBCATS[found.sub].en;
+  const catTitle=CATS[found.cat][STATE.lang]||CATS[found.cat].en;
+  const subTitle=SUBCATS[found.sub][STATE.lang]||SUBCATS[found.sub].en;
   const activeColor=p.colors[colorIdx];
   const variantForImages=Object.assign({},p,{_variantColor:activeColor,_variantKey:p.id+'__'+activeColor.id});
   const pdImgs=getImages(variantForImages);
@@ -1205,7 +1303,7 @@ function renderProduct(id,preselectColorId){
     return '<div class="pd-color '+(i===colorIdx?'active':'')+'" style="background:'+c.hex+lb+'" data-color="'+i+'" title="'+tr(c,'name')+'"></div>';
   }).join('');
   const sizesHTML=p.sizes.map(s=>{
-    const label=typeof s==='string'?s:(STATE.lang==='he'?s.name_he:s.name_en);
+    const label=typeof s==='string'?s:(s['name_'+STATE.lang]||s.name_en||s.name_he);
     const val=typeof s==='string'?s:s.id;
     return '<button class="pd-size" data-size="'+val+'">'+label+'</button>';
   }).join('');
@@ -1427,8 +1525,18 @@ function sendCartWhatsApp(){
     const color=f.product.colors.find(c=>c.id===item.colorId)||f.product.colors[0];
     return '- '+tr(f.product,'name')+' | '+t('color')+': '+tr(color,'name')+' | '+t('size')+': '+item.size+' | '+t('qty')+': '+item.quantity;
   }).filter(Boolean);
-  const greeting=STATE.lang==='he'?'שלום, אני מעוניין להזמין:':'Hello, I\'d like to order:';
-  window.open('https://wa.me/972546398638?text='+encodeURIComponent(greeting+'\n'+lines.join('\n')),'_blank');
+  const greeting=STATE.lang==='he'?'שלום, אני מעוניין להזמין:':(STATE.lang==='fr'?'Bonjour, je souhaite commander :':'Hello, I\'d like to order:');
+  if(window.RFStore){
+    try{
+      const items=STATE.cart.map(item=>{ const f=findProductById(item.productId); const prod=f?RFStore.applyToProduct(f.product):null;
+        const color=prod&&(prod.colors.find(c=>c.id===item.colorId)||prod.colors[0]);
+        return {name:prod?tr(prod,'name'):item.productId, color:color?tr(color,'name'):'', size:item.size, qty:item.quantity, price:(prod?(prod.salePrice||prod.price):null)}; });
+      const total=items.reduce((s,it)=>s+((Number(it.price)||0)*it.qty),0);
+      RFStore.addOrder({date:new Date().toLocaleString('he-IL'),items:items,total:total||'',customer:{name:'',phone:''},source:'whatsapp'});
+    }catch(e){}
+  }
+  const wa=(window.RFStore&&RFStore.getSettings().whatsapp)||'972546398638';
+  window.open('https://wa.me/'+wa+'?text='+encodeURIComponent(greeting+'\n'+lines.join('\n')),'_blank');
 }
 
 /* ========== SEARCH ========== */
@@ -1445,8 +1553,8 @@ function doSearch(q){
   }).slice(0,8);
   if(matches.length===0){ results.innerHTML='<div class="search-empty">'+t('noResults')+'</div>'; return; }
   results.innerHTML=matches.map(p=>{
-    const catTitle=STATE.lang==='he'?CATS[p.cat].he:CATS[p.cat].en;
-    const subTitle=STATE.lang==='he'?SUBCATS[p.sub].he:SUBCATS[p.sub].en;
+    const catTitle=CATS[p.cat][STATE.lang]||CATS[p.cat].en;
+    const subTitle=SUBCATS[p.sub][STATE.lang]||SUBCATS[p.sub].en;
     const sImgs=getImages(p);
     const imgStyle=sImgs?' style="background-image:url(\''+sImgs[0]+'\');background-size:cover;background-position:center"':'';
     return '<div class="search-result" data-id="'+p.id+'"><div class="search-result-img"'+imgStyle+'></div><div class="search-result-info"><div class="search-result-name">'+tr(p,'name')+'</div><div class="search-result-cat">'+catTitle+' · '+subTitle+'</div></div></div>';
@@ -1460,7 +1568,7 @@ function closeMobileMenu(){ document.getElementById('mobileMenu').classList.remo
 function buildMobileMenu(){
   let html=Object.keys(CATS).map(cat=>{
     const c=CATS[cat];
-    return '<div class="mobile-menu-group"><div class="mobile-menu-title" onclick="location.hash=\'#/'+cat+'\';closeMobileMenu()">'+(STATE.lang==='he'?c.he:c.en)+'</div><div class="mobile-menu-sub">'+Object.keys(SUBCATS).map(sub=>'<a onclick="location.hash=\'#/'+cat+'/'+sub+'\';closeMobileMenu()">'+(STATE.lang==='he'?SUBCATS[sub].he:SUBCATS[sub].en)+'</a>').join('')+'</div></div>';
+    return '<div class="mobile-menu-group"><div class="mobile-menu-title" onclick="location.hash=\'#/'+cat+'\';closeMobileMenu()">'+(c[STATE.lang]||c.en)+'</div><div class="mobile-menu-sub">'+Object.keys(SUBCATS).map(sub=>'<a onclick="location.hash=\'#/'+cat+'/'+sub+'\';closeMobileMenu()">'+(SUBCATS[sub][STATE.lang]||SUBCATS[sub].en)+'</a>').join('')+'</div></div>';
   }).join('');
   html+='<div class="mobile-menu-foot"><a href="tel:0546398638" class="sidebar-btn sidebar-btn-primary" style="width:auto;padding:0 2rem">'+t('callNow')+'</a><button class="lang-toggle" onclick="toggleLang()">EN · עב</button></div>';
   document.getElementById('mobileMenuContent').innerHTML=html;
@@ -1480,14 +1588,14 @@ function openModal(html){ document.getElementById('modal').innerHTML='<button cl
 function closeModal(){ document.getElementById('modalBackdrop').classList.remove('active'); }
 function openSizeGuide(){
   const isShoe=pdState.sub==='shoes';
-  const title=STATE.lang==='he'?'מדריך מידות':'Size Guide';
+  const title=STATE.lang==='he'?'מדריך מידות':(STATE.lang==='fr'?'Guide des Tailles':'Size Guide');
   let body;
   if(isShoe){
-    body='<table><thead><tr><th>EU</th><th>US</th><th>'+(STATE.lang==='he'?'אורך':'Length')+'</th></tr></thead><tbody><tr><td>40</td><td>7</td><td>25.5</td></tr><tr><td>41</td><td>8</td><td>26.5</td></tr><tr><td>42</td><td>8.5</td><td>27</td></tr><tr><td>43</td><td>9.5</td><td>27.5</td></tr><tr><td>44</td><td>10</td><td>28</td></tr><tr><td>45</td><td>11</td><td>29</td></tr></tbody></table>';
+    body='<table><thead><tr><th>EU</th><th>US</th><th>'+(STATE.lang==='he'?'אורך':(STATE.lang==='fr'?'Longueur':'Length'))+'</th></tr></thead><tbody><tr><td>40</td><td>7</td><td>25.5</td></tr><tr><td>41</td><td>8</td><td>26.5</td></tr><tr><td>42</td><td>8.5</td><td>27</td></tr><tr><td>43</td><td>9.5</td><td>27.5</td></tr><tr><td>44</td><td>10</td><td>28</td></tr><tr><td>45</td><td>11</td><td>29</td></tr></tbody></table>';
   } else {
-    body='<table><thead><tr><th>'+(STATE.lang==='he'?'מידה':'Size')+'</th><th>'+(STATE.lang==='he'?'חזה':'Chest')+'</th><th>'+(STATE.lang==='he'?'מותניים':'Waist')+'</th></tr></thead><tbody><tr><td>S</td><td>88-92</td><td>74-78</td></tr><tr><td>M</td><td>93-98</td><td>79-84</td></tr><tr><td>L</td><td>99-104</td><td>85-90</td></tr><tr><td>XL</td><td>105-110</td><td>91-96</td></tr><tr><td>XXL</td><td>111-116</td><td>97-102</td></tr></tbody></table>';
+    body='<table><thead><tr><th>'+(STATE.lang==='he'?'מידה':(STATE.lang==='fr'?'Taille':'Size'))+'</th><th>'+(STATE.lang==='he'?'חזה':(STATE.lang==='fr'?'Poitrine':'Chest'))+'</th><th>'+(STATE.lang==='he'?'מותניים':(STATE.lang==='fr'?'Tour de taille':'Waist'))+'</th></tr></thead><tbody><tr><td>S</td><td>88-92</td><td>74-78</td></tr><tr><td>M</td><td>93-98</td><td>79-84</td></tr><tr><td>L</td><td>99-104</td><td>85-90</td></tr><tr><td>XL</td><td>105-110</td><td>91-96</td></tr><tr><td>XXL</td><td>111-116</td><td>97-102</td></tr></tbody></table>';
   }
-  openModal('<h3>'+title+'</h3>'+body+'<p style="margin-top:1.5rem;font-size:.78rem;color:var(--mute);text-align:center;font-family:var(--font-display);font-style:italic;font-size:.92rem">'+(STATE.lang==='he'?'לייעוץ אישי':'For personal advice')+' · <a href="tel:0546398638" style="color:var(--ink);border-bottom:1px solid var(--ink)">054-639-8638</a></p>');
+  openModal('<h3>'+title+'</h3>'+body+'<p style="margin-top:1.5rem;font-size:.78rem;color:var(--mute);text-align:center;font-family:var(--font-display);font-style:italic;font-size:.92rem">'+(STATE.lang==='he'?'לייעוץ אישי':(STATE.lang==='fr'?'Pour un conseil personnel':'For personal advice'))+' · <a href="tel:0546398638" style="color:var(--ink);border-bottom:1px solid var(--ink)">054-639-8638</a></p>');
 }
 
 /* ========== LANG ========== */
@@ -1518,6 +1626,15 @@ function renderPage(){
 
 /* ========== INIT ========== */
 function init(){
+  if(window.RFStore){
+    try{
+      buildSnapshot();
+      const s=RFStore.getSettings();
+      document.querySelectorAll('.announcement .lang-he').forEach(e=>e.textContent=s.banner_he);
+      document.querySelectorAll('.announcement .lang-en').forEach(e=>e.textContent=s.banner_en);
+      document.querySelectorAll('.announcement .lang-fr').forEach(e=>e.textContent=s.banner_fr);
+    }catch(e){ console.warn('store init',e); }
+  }
   applyLang();
   updateBadges();
 
