@@ -301,7 +301,8 @@ select{font-family:inherit}
 .pd-gallery{position:sticky;top:calc(var(--anno-h) + var(--nav-h) + var(--sub-nav-h) + 1.5rem);align-self:start}
 .pd-main-img{aspect-ratio:3/4;background:var(--wash);position:relative;overflow:hidden;margin-bottom:.75rem}
 .pd-main-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.pd-thumbs{display:flex;gap:.5rem}
+.pd-thumbs{display:flex;gap:.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:.3rem;max-width:100%}
+.pd-thumbs::-webkit-scrollbar{display:none}
 .pd-thumb{width:74px;height:98px;background:var(--wash);border:1px solid transparent;flex-shrink:0;cursor:pointer;transition:border-color .3s}
 .pd-thumb.active,.pd-thumb:hover{border-color:var(--ink)}
 
