@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAFAEL · תשלום</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500&display=swap">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--bg:#F3F1EC;--card:#fff;--ink:#1f1b16;--mid:#5b5246;--mute:#9a8f7e;--line:#e6e0d5;--gold:#a98b53;--ok:#3f7d50;--bad:#b3473a;--radius:14px;--shadow:0 6px 22px rgba(31,27,22,.06)}
+  body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--ink);font-weight:300;line-height:1.6;padding-bottom:90px}
+  .wrap{max-width:780px;margin:0 auto;padding:1.5rem 1rem}
+  header{text-align:center;padding:1.5rem 1rem .5rem}
+  .brand{font-family:'Frank Ruhl Libre',serif;font-size:2rem;font-weight:500;letter-spacing:.18em}
+  .tagline{color:var(--mute);font-size:.85rem;letter-spacing:.02em;margin-top:.2rem}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:1.3rem;margin-bottom:1.1rem;box-shadow:var(--shadow)}
+  .card h2{font-family:'Frank Ruhl Libre',serif;font-size:1.25rem;font-weight:500;margin-bottom:1rem}
+  .muted{color:var(--mute);font-size:.88rem}
+  /* products */
+  .prod{display:flex;align-items:center;gap:.7rem;padding:.7rem 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .prod:last-child{border-bottom:none}
+  .prod .pinfo{flex:1;min-width:120px}
+  .prod .pname{font-weight:500}
+  .prod .pcat{font-size:.74rem;color:var(--mute)}
+  .prod .pprice{font-weight:600;color:var(--ink);white-space:nowrap}
+  .prod select,.prod input{font-family:inherit;padding:.4rem .5rem;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:.85rem}
+  .prod input[type=number]{width:54px}
+  .oos{color:var(--bad);font-size:.78rem;font-weight:500}
+  .btn{font-family:inherit;cursor:pointer;border:none;border-radius:9px;font-weight:500;transition:opacity .2s,background .2s}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn-add{background:var(--ink);color:#fff;padding:.45rem .9rem;font-size:.83rem}
+  .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink);padding:.4rem .8rem}
+  .btn-gold{background:var(--gold);color:#fff}
+  /* cart */
+  .citem{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.55rem 0;border-bottom:1px solid var(--line);font-size:.9rem}
+  .citem:last-child{border-bottom:none}
+  .citem .x{background:none;border:none;color:var(--bad);cursor:pointer;font-size:1rem;padding:.2rem .4rem}
+  /* shipping toggle */
+  .seg{display:flex;gap:.5rem;background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:.3rem}
+  .seg button{flex:1;background:none;border:none;padding:.7rem;border-radius:8px;font-family:inherit;font-size:.92rem;font-weight:500;cursor:pointer;color:var(--mid)}
+  .seg button.active{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+  .ship-note{color:var(--mute);font-size:.85rem;margin-top:.7rem}
+  /* form */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+  label{display:block;font-size:.78rem;color:var(--mid);margin:.6rem 0 .25rem;font-weight:500}
+  .req:after{content:" *";color:var(--gold)}
+  input.f,textarea.f{font-family:inherit;width:100%;padding:.65rem .7rem;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:.95rem;color:var(--ink)}
+  input.f:focus,textarea.f:focus{outline:none;border-color:var(--gold)}
+  input.f.err,textarea.f.err{border-color:var(--bad);background:#fdf4f2}
+  .fld-err{color:var(--bad);font-size:.74rem;margin-top:.2rem;min-height:.9rem}
+  #addressBlock{overflow:hidden;transition:max-height .4s ease,opacity .3s ease,margin .3s;max-height:600px;opacity:1}
+  #addressBlock.hidden{max-height:0;opacity:0;margin:0}
+  /* summary */
+  .sumrow{display:flex;justify-content:space-between;padding:.4rem 0;font-size:.95rem}
+  .sumrow.total{border-top:1px solid var(--line);margin-top:.4rem;padding-top:.7rem;font-weight:700;font-size:1.15rem}
+  .progress{height:8px;background:var(--bg);border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:.6rem 0 .35rem}
+  .progress > div{height:100%;background:linear-gradient(90deg,var(--gold),#c9aa6a);width:0;transition:width .5s ease}
+  .milestone{font-size:.85rem;color:var(--gold);font-weight:500;text-align:center}
+  /* sticky bar */
+  .sticky{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:.7rem 1rem;z-index:40}
+  .sticky-in{max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem}
+  .pay-label{font-size:.8rem;color:var(--mute)}
+  .pay-amount{font-weight:700;font-size:1.1rem}
+  .btn-submit{flex:1;padding:.85rem;font-size:1rem;background:var(--ink);color:#fff}
+  /* toast + success */
+  .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:.7rem 1.3rem;border-radius:99px;font-size:.88rem;z-index:90;opacity:0;transition:opacity .3s;pointer-events:none;text-align:center;max-width:90%}
+  .toast.show{opacity:1}
+  .toast.bad{background:var(--bad)}
+  .success{text-align:center;padding:2rem 1rem}
+  .success .mark{width:72px;height:72px;border-radius:50%;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1rem}
+  .success h2{font-size:1.6rem;font-family:'Frank Ruhl Libre',serif}
+  .hide{display:none!important}
+  @media(max-width:560px){ .grid2{grid-template-columns:1fr} .brand{font-size:1.6rem} }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">RAFAEL</div>
+  <div class="tagline">חליפות גברים, נוער וילדים · נתניה</div>
+</header>
+
+<div class="wrap" id="shop">
+  <!-- PRODUCTS -->
+  <section class="card">
+    <h2>בחירת פריטים</h2>
+    <div id="catalog"><div class="muted">טוען קטלוג…</div></div>
+  </section>
+
+  <!-- CART -->
+  <section class="card">
+    <h2>העגלה</h2>
+    <div id="cart"><div class="muted">העגלה ריקה</div></div>
+  </section>
+
+  <!-- SHIPPING -->
+  <section class="card">
+    <h2>שיטת משלוח</h2>
+    <div class="seg" id="shipSeg">
+      <button data-m="courier" class="active">שליח עד הבית</button>
+      <button data-m="self_pickup">איסוף עצמי</button>
+    </div>
+    <div class="ship-note" id="shipNote">אספקה תוך 3–5 ימי עסקים.</div>
+  </section>
+
+  <!-- CUSTOMER -->
+  <section class="card">
+    <h2>פרטים ליצירת קשר</h2>
+    <div class="grid2">
+      <div><label class="req">שם פרטי</label><input class="f" id="firstName"><div class="fld-err" data-err="firstName"></div></div>
+      <div><label class="req">שם משפחה</label><input class="f" id="lastName"><div class="fld-err" data-err="lastName"></div></div>
+      <div><label class="req">טלפון נייד</label><input class="f" id="phone" inputmode="tel" placeholder="050-0000000"><div class="fld-err" data-err="phone"></div></div>
+      <div><label class="req">אימייל</label><input class="f" id="email" inputmode="email" placeholder="name@mail.com"><div class="fld-err" data-err="email"></div></div>
+    </div>
+
+    <div id="addressBlock">
+      <label class="req">עיר / יישוב</label><input class="f" id="city"><div class="fld-err" data-err="city"></div>
+      <div class="grid2">
+        <div><label class="req">רחוב</label><input class="f" id="street"><div class="fld-err" data-err="street"></div></div>
+        <div><label class="req">מספר בית</label><input class="f" id="houseNumber"><div class="fld-err" data-err="houseNumber"></div></div>
+        <div><label>כניסה / בניין</label><input class="f" id="entrance"></div>
+        <div><label>קומה</label><input class="f" id="floor"></div>
+        <div><label>דירה</label><input class="f" id="apartment"></div>
+        <div><label>מיקוד</label><input class="f" id="zip" inputmode="numeric"></div>
+      </div>
+    </div>
+    <label>הערות למשלוח</label>
+    <textarea class="f" id="notes" rows="2" placeholder="לדוגמה: להשאיר אצל השכן"></textarea>
+  </section>
+
+  <!-- SUMMARY -->
+  <section class="card">
+    <h2>סיכום</h2>
+    <div class="sumrow"><span>סכום ביניים</span><span id="sSub">₪0</span></div>
+    <div class="sumrow"><span>דמי משלוח</span><span id="sShip">₪0</span></div>
+    <div class="progress"><div id="bar"></div></div>
+    <div class="milestone" id="milestone">הוסיפו פריטים כדי להתחיל</div>
+    <div class="sumrow total"><span>סה"כ לתשלום</span><span id="sTotal">₪0</span></div>
+  </section>
+</div>
+
+<!-- SUCCESS -->
+<div class="wrap hide" id="successView">
+  <section class="card success">
+    <div class="mark">✓</div>
+    <h2>ההזמנה התקבלה!</h2>
+    <p class="muted" style="margin:.5rem 0">מספר הזמנה</p>
+    <div style="font-size:1.4rem;font-weight:700" id="okOrderId"></div>
+    <div style="margin:1.1rem 0;padding:1rem;background:var(--bg);border-radius:11px">
+      <div id="okPay" style="font-weight:600"></div>
+      <div id="okTotal" style="font-size:1.3rem;font-weight:700;margin-top:.3rem"></div>
+    </div>
+    <p class="muted">ניצור איתך קשר בהקדם לתיאום. תודה שבחרת ב-RAFAEL 🤍</p>
+    <button class="btn btn-ghost" style="margin-top:1.2rem" onclick="location.reload()">הזמנה חדשה</button>
+  </section>
+</div>
+
+<!-- STICKY PAY BAR -->
+<div class="sticky" id="stickyBar">
+  <div class="sticky-in">
+    <div>
+      <div class="pay-label" id="payLabel">מזומן לשליח</div>
+      <div class="pay-amount" id="payAmount">₪0</div>
+    </div>
+    <button class="btn btn-submit" id="submitBtn" disabled>אישור הזמנה</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== state (in memory only, no storage) ===== */
+var CATALOG=[], cart=[], shippingMethod='courier', lastQuote=null, sending=false;
+function $(id){return document.getElementById(id);}
+function money(n){return '₪'+Number(n||0).toLocaleString();}
+function toast(m,bad){var t=$('toast');t.textContent=m;t.className='toast show'+(bad?' bad':'');setTimeout(function(){t.className='toast';},2600);}
+
+/* ===== load catalog ===== */
+fetch('/api/catalog').then(function(r){return r.json();}).then(function(d){
+  CATALOG=d.products||[]; renderCatalog();
+}).catch(function(){ $('catalog').innerHTML='<div class="oos">שגיאה בטעינת הקטלוג</div>'; });
+
+function renderCatalog(){
+  $('catalog').innerHTML=CATALOG.map(function(p){
+    var out=p.stockStatus==='out_of_stock';
+    var sizeCtrl=p.oneSize
+      ? '<span class="muted">מידה אחת</span>'
+      : '<select id="sz-'+p.id+'"><option value="">מידה…</option>'+p.sizes.map(function(s){return '<option>'+s+'</option>';}).join('')+'</select>';
+    return '<div class="prod">'+
+      '<div class="pinfo"><div class="pname">'+p.name+'</div><div class="pcat">'+p.category+'</div>'+(out?'<div class="oos">אזל מהמלאי</div>':'')+'</div>'+
+      '<div class="pprice">'+money(p.price)+'</div>'+
+      (out?'':sizeCtrl+'<input type="number" id="qty-'+p.id+'" value="1" min="1">'+
+        '<button class="btn btn-add" onclick="addToCart(\''+p.id+'\')">הוסף</button>')+
+    '</div>';
+  }).join('');
+}
+
+function addToCart(id){
+  var p=CATALOG.find(function(x){return x.id===id;}); if(!p) return;
+  var size='ONE_SIZE';
+  if(!p.oneSize){ size=$('sz-'+id).value; if(!size){ toast('יש לבחור מידה',true); return; } }
+  var qty=Math.max(1,parseInt(($('qty-'+id)||{}).value,10)||1);
+  var ex=cart.find(function(it){return it.productId===id&&it.size===size;});
+  if(ex) ex.quantity+=qty; else cart.push({productId:id,name:p.name,size:size,quantity:qty,price:p.price});
+  renderCart(); quote();
+  toast('נוסף לעגלה');
+}
+function removeFromCart(i){ cart.splice(i,1); renderCart(); quote(); }
+
+function renderCart(){
+  if(!cart.length){ $('cart').innerHTML='<div class="muted">העגלה ריקה</div>'; return; }
+  $('cart').innerHTML=cart.map(function(it,i){
+    var sz=it.size==='ONE_SIZE'?'מידה אחת':'מידה '+it.size;
+    return '<div class="citem"><div>'+it.name+' · '+sz+' × '+it.quantity+'</div>'+
+      '<div>'+money(it.price*it.quantity)+' <button class="x" onclick="removeFromCart('+i+')">✕</button></div></div>';
+  }).join('');
+}
+
+/* ===== shipping toggle ===== */
+$('shipSeg').addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return;
+  shippingMethod=b.dataset.m;
+  Array.prototype.forEach.call(this.querySelectorAll('button'),function(x){x.classList.toggle('active',x===b);});
+  var pickup=shippingMethod==='self_pickup';
+  $('addressBlock').classList.toggle('hidden',pickup);
+  $('shipNote').textContent=pickup?'איסוף עצמי מהסטודיו · הבונים 3, נתניה':'אספקה תוך 3–5 ימי עסקים.';
+  quote();
+});
+
+/* ===== live quote (debounced) ===== */
+var qTimer=null;
+function quote(){ clearTimeout(qTimer); qTimer=setTimeout(doQuote,250); }
+function doQuote(){
+  if(!cart.length){
+    lastQuote=null;
+    $('sSub').textContent='₪0'; $('sShip').textContent='₪0'; $('sTotal').textContent='₪0';
+    $('payAmount').textContent='₪0'; $('bar').style.width='0'; $('milestone').textContent='הוסיפו פריטים כדי להתחיל';
+    updateSubmit(); return;
+  }
+  fetch('/api/checkout/quote',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({shippingMethod:shippingMethod,items:cart.map(function(it){return {productId:it.productId,size:it.size,quantity:it.quantity};})})})
+  .then(function(r){return r.json().then(function(d){return {ok:r.ok,d:d};});})
+  .then(function(res){
+    if(!res.ok){ toast(res.d.error||'שגיאה',true); return; }
+    lastQuote=res.d;
+    $('sSub').textContent=money(res.d.subtotal);
+    $('sShip').textContent=res.d.shipping===0?'חינם':money(res.d.shipping);
+    $('sTotal').textContent=money(res.d.grandTotal);
+    $('payAmount').textContent=money(res.d.grandTotal);
+    $('payLabel').textContent=res.d.payment.label;
+    $('milestone').textContent=res.d.shippingMessage;
+    var pct=Math.min(100,Math.round((res.d.subtotal/1500)*100));
+    $('bar').style.width=(shippingMethod==='self_pickup'?100:pct)+'%';
+    updateSubmit();
+  }).catch(function(){ toast('שגיאת תקשורת',true); });
+}
+function updateSubmit(){ $('submitBtn').disabled = sending || !cart.length; }
+
+/* ===== submit ===== */
+function clearErrors(){ Array.prototype.forEach.call(document.querySelectorAll('.fld-err'),function(e){e.textContent='';});
+  Array.prototype.forEach.call(document.querySelectorAll('input.f,textarea.f'),function(e){e.classList.remove('err');}); }
+$('submitBtn').addEventListener('click',function(){
+  if(sending||!cart.length) return;
+  clearErrors();
+  var customer={firstName:$('firstName').value,lastName:$('lastName').value,phone:$('phone').value,email:$('email').value,
+    notes:$('notes').value,city:$('city').value,street:$('street').value,houseNumber:$('houseNumber').value,
+    entrance:$('entrance').value,floor:$('floor').value,apartment:$('apartment').value,zip:$('zip').value};
+  sending=true; updateSubmit(); this.textContent='שולח…';
+  var self=this;
+  fetch('/api/checkout/submit',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({shippingMethod:shippingMethod,items:cart.map(function(it){return {productId:it.productId,size:it.size,quantity:it.quantity};}),customer:customer})})
+  .then(function(r){return r.json().then(function(d){return {status:r.status,d:d};});})
+  .then(function(res){
+    sending=false; self.textContent='אישור הזמנה'; updateSubmit();
+    if(res.status===201){
+      $('okOrderId').textContent=res.d.orderId;
+      $('okPay').textContent=res.d.paymentLabel;
+      $('okTotal').textContent='סה"כ '+money(res.d.totals.grandTotal);
+      $('shop').classList.add('hide'); $('stickyBar').classList.add('hide'); $('successView').classList.remove('hide');
+      window.scrollTo(0,0);
+    } else if(res.status===422){
+      var f=res.d.fields||{};
+      Object.keys(f).forEach(function(k){
+        var inp=$(k); if(inp){ inp.classList.add('err'); }
+        var ee=document.querySelector('[data-err="'+k+'"]'); if(ee) ee.textContent=f[k];
+      });
+      toast('יש שדות לא תקינים בטופס',true);
+      var first=document.querySelector('input.f.err'); if(first) first.scrollIntoView({behavior:'smooth',block:'center'});
+    } else {
+      toast(res.d.error||'אירעה שגיאה',true);
+    }
+  }).catch(function(){ sending=false; self.textContent='אישור הזמנה'; updateSubmit(); toast('שגיאת תקשורת',true); });
+});
+</script>
+</body>
+</html>

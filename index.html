@@ -680,10 +680,10 @@ body[data-lang="he"] .lang-en,body[data-lang="he"] .lang-fr,body[data-lang="en"]
       <span class="sidebar-subtotal-label"><span class="lang-he">סכום ביניים</span><span class="lang-en">Subtotal</span><span class="lang-fr">Sous-total</span></span>
       <span class="sidebar-subtotal-value" id="cartSubtotal">—</span>
     </div>
-    <div class="sidebar-note"><span class="lang-he">מחיר סופי יינתן בייעוץ אישי</span><span class="lang-en">Final pricing in personal consultation</span><span class="lang-fr">Prix final lors de la consultation</span></div>
+    <div class="sidebar-note"><span class="lang-he">תשלום במזומן · לשליח או באיסוף עצמי</span><span class="lang-en">Cash payment · courier or self-pickup</span><span class="lang-fr">Paiement en espèces · livraison ou retrait</span></div>
     <button class="sidebar-btn sidebar-btn-primary" id="cartCheckout">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-      <span class="lang-he">לתשלום · התקשרו</span><span class="lang-en">Checkout · Call</span><span class="lang-fr">Paiement · Appel</span>
+      <span class="lang-he">מעבר לתשלום</span><span class="lang-en">Checkout</span><span class="lang-fr">Paiement</span>
     </button>
     <button class="sidebar-btn sidebar-btn-wa" id="cartWhatsapp">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1s-1.3-.5-2.4-1.5c-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.1-.2-.5-.5-.4-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.2.2 2.1 3.2 5 4.4.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.1-.5-.2z"/></svg>
@@ -748,10 +748,11 @@ const LINEN_VEST_COLORS=[{id:'green',name_he:'ירוק',name_en:'Green',name_fr:
 const BELT_COLORS=[{id:'black',name_he:'שחור',name_en:'Black',name_fr:'Noir',hex:'#1A1815'},{id:'brown',name_he:'חום',name_en:'Brown',name_fr:'Marron',hex:'#8B5A2B'},{id:'dark-brown',name_he:'חום כהה',name_en:'Dark Brown',name_fr:'Marron Foncé',hex:'#4A2C1A'},{id:'navy',name_he:'כחול נייבי',name_en:'Navy',name_fr:'Marine',hex:'#1F2F4F'}];
 const BOWTIE_COLORS=[{id:'mint-green',name_he:'ירוק מנטה',name_en:'Mint Green',name_fr:'Vert Menthe',hex:'#98D8B8'},{id:'stone',name_he:'אבן',name_en:'Stone',name_fr:'Pierre',hex:'#C8B99C'},{id:'sky-blue',name_he:'תכלת',name_en:'Sky Blue',name_fr:'Bleu Ciel',hex:'#87CEEB'},{id:'black',name_he:'שחור',name_en:'Black',name_fr:'Noir',hex:'#1A1815'},{id:'navy',name_he:'כחול נייבי',name_en:'Navy',name_fr:'Marine',hex:'#1F2F4F'}];
 
-const YOUTH_CLOTHING_SIZES=['S','M','L','XL','XXL'];
-const CHILDREN_CLOTHING_SIZES=['2','4','6','8','10','12','14'];
-const YOUTH_SHOE_SIZES=['40','41','42','43','44','45','46'];
-const CHILDREN_SHOE_SIZES=['20','22','24','26','28','30','32','34','36','38'];
+const mkRange=(a,b)=>Array.from({length:b-a+1},(_,i)=>String(a+i));
+const YOUTH_CLOTHING_SIZES=mkRange(8,22);    // נוער 8–22
+const CHILDREN_CLOTHING_SIZES=mkRange(0,7);  // ילדים 0–7
+const YOUTH_SHOE_SIZES=mkRange(20,46);       // נעליים 20–46
+const CHILDREN_SHOE_SIZES=mkRange(20,46);    // נעליים 20–46
 const BELT_SIZES=['S','M','L','XL'];
 const BOWTIE_SIZES=[{id:'one-size',name_he:'אחיד',name_en:'One Size',name_fr:'Taille Unique'}];
 
@@ -806,6 +807,25 @@ const CATALOG={
   youth:buildProducts('y',{clothing:YOUTH_CLOTHING_SIZES,shoes:YOUTH_SHOE_SIZES}),
   children:buildProducts('c',{clothing:CHILDREN_CLOTHING_SIZES,shoes:CHILDREN_SHOE_SIZES})
 };
+/* ===== PRICING — matched to the order server (ILS, VAT incl.) ===== */
+function productPrice(id){
+  if(!id) return null;
+  var youth=id.indexOf('y-')===0;
+  if(id.indexOf('-suit-')>=0)          return youth?650:550;
+  if(id.indexOf('-shirt-linen')>=0)    return 249;
+  if(id.indexOf('-shirt-classic')>=0)  return 199;
+  if(id.indexOf('-pants-linen')>=0)    return youth?279:249;
+  if(id.indexOf('-pants-parade')>=0)   return youth?279:249;
+  if(id.indexOf('-pants-oversized')>=0)return youth?279:249;
+  if(id.indexOf('-vest-')>=0)          return 199;
+  if(id.indexOf('-shoes-')>=0)         return 249;
+  if(id.indexOf('-belt')>=0)           return 70;
+  if(id.indexOf('-bowtie')>=0)         return 39;
+  return null;
+}
+Object.keys(CATALOG).forEach(function(cat){ Object.keys(CATALOG[cat]).forEach(function(sub){
+  CATALOG[cat][sub].forEach(function(p){ if(p.price==null) p.price=productPrice(p.id); });
+}); });
 
 /* ========== PRODUCT IMAGES ==========
    Keys can be either product ID (e.g. 'y-suit-parade') or variant key (e.g. 'y-suit-linen__mint-green').
@@ -1354,7 +1374,7 @@ function renderProduct(id,preselectColorId){
     const val=typeof s==='string'?s:s.id;
     return '<button class="pd-size" data-size="'+val+'">'+label+'</button>';
   }).join('');
-  const variantNote=p.variantNote_he?'<div class="pd-variant-note"><span class="lang-he">'+p.variantNote_he+'</span><span class="lang-en">'+(p.variantNote_en||p.variantNote_he)+'</span></div>':'';
+  const variantNote='';
   const vpActive=pdApplied(p,activeColor);
   const priceDisplay=pdPriceHTML(vpActive);
   const priceClass=(vpActive.price===null||vpActive.price===undefined)?'pd-price':'pd-price fixed';
@@ -1379,7 +1399,7 @@ function renderProduct(id,preselectColorId){
           variantNote+
           '<div class="pd-selector-label"><span>'+t('color')+'</span> <strong id="pdColorName">'+tr(p.colors[colorIdx],'name')+'</strong></div>'+
           '<div class="pd-colors" id="pdColors">'+colorsHTML+'</div>'+
-          '<div class="pd-selector-label"><span>'+t('size')+'</span><span class="size-guide-link" id="sizeGuideBtn">'+t('sizeGuide')+'</span></div>'+
+          '<div class="pd-selector-label"><span>'+t('size')+'</span></div>'+
           '<div class="pd-sizes" id="pdSizes">'+sizesHTML+'</div>'+
           '<div class="pd-selector-label"><span>'+t('qty')+'</span></div>'+
           '<div class="pd-qty"><button id="qtyMinus">−</button><input type="text" id="qtyInput" value="1" readonly><button id="qtyPlus">+</button></div>'+
@@ -1387,11 +1407,6 @@ function renderProduct(id,preselectColorId){
             '<button class="pd-btn pd-btn-primary" id="pdAddCart" disabled><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>'+t('addToCart')+'</button>'+
             '<button class="pd-btn pd-btn-secondary" id="pdWish"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'+t('addToWishlist')+'</button>'+
             '<a href="https://wa.me/972546398638?text='+encodeURIComponent('שלום, אני מתעניין ב: '+tr(p,'name'))+'" target="_blank" class="pd-btn pd-btn-wa"><svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1s-1.3-.5-2.4-1.5c-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.1-.2-.5-.5-.4-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.2.2 2.1 3.2 5 4.4.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.1-.5-.2z"/></svg>'+t('consultWA')+'</a>'+
-          '</div>'+
-          '<div class="pd-features">'+
-            '<div class="pd-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>'+t('feature1')+'</div>'+
-            '<div class="pd-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>'+t('feature2')+'</div>'+
-            '<div class="pd-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>'+t('feature3')+'</div>'+
           '</div>'+
         '</div>'+
       '</section>'+
@@ -1454,7 +1469,7 @@ function attachProductDetailEvents(){
     toggleWishlist(p.id);
     toast(STATE.wishlist.indexOf(p.id)>=0?t('addedToWish'):t('removedFromWish'));
   });
-  document.getElementById('sizeGuideBtn').addEventListener('click',openSizeGuide);
+  var _sgBtn=document.getElementById('sizeGuideBtn'); if(_sgBtn) _sgBtn.addEventListener('click',openSizeGuide);
 }
 function checkAddReady(){ document.getElementById('pdAddCart').disabled=!pdState.size; }
 
@@ -1637,6 +1652,112 @@ function toast(msg){
 /* ========== MODAL / SIZE GUIDE ========== */
 function openModal(html){ document.getElementById('modal').innerHTML='<button class="modal-close" onclick="closeModal()">&times;</button>'+html; document.getElementById('modalBackdrop').classList.add('active'); }
 function closeModal(){ document.getElementById('modalBackdrop').classList.remove('active'); }
+
+/* ===================== CHECKOUT → real order (/api/store/submit) ===================== */
+var CO={method:'courier'};
+var CO_T={
+  he:{title:'השלמת הזמנה',first:'שם פרטי',last:'שם משפחה',phone:'טלפון נייד',email:'אימייל',shipm:'שיטת משלוח',courier:'שליח עד הבית',pickup:'איסוף עצמי',city:'עיר / יישוב',street:'רחוב',house:'מספר בית',entrance:'כניסה',floor:'קומה',apt:'דירה',zip:'מיקוד',notes:'הערות למשלוח',sub:'סכום ביניים',ship:'דמי משלוח',total:'סה״כ לתשלום',free:'חינם',submit:'אישור הזמנה',sending:'שולח…',successT:'ההזמנה התקבלה!',ordno:'מספר הזמנה',close:'סגירה',pickupNote:'איסוף מהסטודיו · הבונים 3, נתניה',courierNote:'אספקה תוך 3–5 ימי עסקים',thanks:'ניצור איתך קשר בהקדם לתיאום. תודה שבחרת ב-RAFAEL 🤍'},
+  en:{title:'Complete Order',first:'First name',last:'Last name',phone:'Mobile phone',email:'Email',shipm:'Shipping method',courier:'Home delivery',pickup:'Self pickup',city:'City',street:'Street',house:'House no.',entrance:'Entrance',floor:'Floor',apt:'Apartment',zip:'Zip',notes:'Delivery notes',sub:'Subtotal',ship:'Shipping',total:'Total',free:'Free',submit:'Place order',sending:'Sending…',successT:'Order received!',ordno:'Order number',close:'Close',pickupNote:'Pickup from studio · HaBonim 3, Netanya',courierNote:'Delivery within 3–5 business days',thanks:"We'll contact you shortly. Thank you for choosing RAFAEL 🤍"},
+  fr:{title:'Finaliser la commande',first:'Prénom',last:'Nom',phone:'Téléphone',email:'Email',shipm:'Mode de livraison',courier:'Livraison à domicile',pickup:'Retrait sur place',city:'Ville',street:'Rue',house:'N° maison',entrance:'Entrée',floor:'Étage',apt:'Appartement',zip:'Code postal',notes:'Notes de livraison',sub:'Sous-total',ship:'Livraison',total:'Total',free:'Gratuit',submit:'Commander',sending:'Envoi…',successT:'Commande reçue !',ordno:'N° de commande',close:'Fermer',pickupNote:'Retrait au studio · HaBonim 3, Netanya',courierNote:'Livraison sous 3–5 jours ouvrés',thanks:'Nous vous contacterons bientôt. Merci d’avoir choisi RAFAEL 🤍'}
+};
+function coL(){ return CO_T[STATE.lang]||CO_T.he; }
+function coVal(id){ var e=document.getElementById(id); return e?e.value.trim():''; }
+function coLines(){
+  return STATE.cart.map(function(item){
+    var f=findProductById(item.productId); if(!f) return null;
+    var p=RFStore?RFStore.applyToProduct(f.product):f.product;
+    var color=p.colors.find(function(c){return c.id===item.colorId;})||p.colors[0];
+    var unit=typeof p.price==='number'?p.price:0;
+    return {productId:item.productId,name:tr(p,'name'),color:color?tr(color,'name'):'',size:item.size,quantity:item.quantity,price:unit};
+  }).filter(Boolean);
+}
+function coTotals(){
+  var lines=coLines();
+  var sub=lines.reduce(function(s,l){return s+l.price*l.quantity;},0);
+  var ship=CO.method==='self_pickup'?0:(sub>=1500?0:40);
+  return {sub:sub,ship:ship,total:sub+ship,lines:lines};
+}
+function coField(id,label,req,ph){
+  return '<div style="flex:1;min-width:120px"><label style="display:block;font-size:.72rem;color:var(--mute);margin:.5rem 0 .2rem">'+label+(req?' *':'')+'</label>'+
+    '<input id="'+id+'" '+(ph?'placeholder="'+ph+'"':'')+' style="width:100%;padding:.6rem .65rem;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:.92rem;background:#fff"><div class="co-err" data-for="'+id+'" style="color:#b3473a;font-size:.7rem;min-height:.85rem"></div></div>';
+}
+function openCheckout(){
+  if(!STATE.cart.length) return;
+  closeCart(); CO.method='courier';
+  var l=coL();
+  openModal(
+    '<h3 style="font-family:var(--font-display);font-size:1.5rem;margin-bottom:1rem">'+l.title+'</h3>'+
+    '<div id="co_msg" style="display:none;background:#fdf4f2;color:#b3473a;border-radius:8px;padding:.6rem .8rem;font-size:.85rem;margin-bottom:.8rem"></div>'+
+    '<div style="display:flex;gap:.6rem;flex-wrap:wrap">'+coField('co_first',l.first,true)+coField('co_last',l.last,true)+'</div>'+
+    '<div style="display:flex;gap:.6rem;flex-wrap:wrap">'+coField('co_phone',l.phone,true,'050-0000000')+coField('co_email',l.email,true,'name@mail.com')+'</div>'+
+    '<label style="display:block;font-size:.72rem;color:var(--mute);margin:.7rem 0 .3rem">'+l.shipm+'</label>'+
+    '<div style="display:flex;gap:.5rem;background:var(--wash,#f0ede6);border:1px solid var(--line);border-radius:10px;padding:.3rem">'+
+      '<button type="button" id="co_courier" onclick="coSetMethod(\'courier\')" style="flex:1;border:none;padding:.6rem;border-radius:7px;font-family:inherit;font-weight:500;cursor:pointer;background:#fff">'+l.courier+'</button>'+
+      '<button type="button" id="co_pickup" onclick="coSetMethod(\'self_pickup\')" style="flex:1;border:none;padding:.6rem;border-radius:7px;font-family:inherit;font-weight:500;cursor:pointer;background:transparent;color:var(--mute)">'+l.pickup+'</button>'+
+    '</div>'+
+    '<div id="co_shipnote" style="font-size:.78rem;color:var(--mute);margin:.4rem 0">'+l.courierNote+'</div>'+
+    '<div id="co_addr">'+
+      '<div style="display:flex;gap:.6rem">'+coField('co_city',l.city,true)+'</div>'+
+      '<div style="display:flex;gap:.6rem;flex-wrap:wrap">'+coField('co_street',l.street,true)+coField('co_house',l.house,true)+'</div>'+
+      '<div style="display:flex;gap:.6rem;flex-wrap:wrap">'+coField('co_entrance',l.entrance)+coField('co_floor',l.floor)+coField('co_apt',l.apt)+coField('co_zip',l.zip)+'</div>'+
+    '</div>'+
+    '<label style="display:block;font-size:.72rem;color:var(--mute);margin:.5rem 0 .2rem">'+l.notes+'</label>'+
+    '<textarea id="co_notes" rows="2" style="width:100%;padding:.6rem;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:.92rem;background:#fff"></textarea>'+
+    '<div id="co_summary" style="border-top:1px solid var(--line);margin-top:1rem;padding-top:.8rem"></div>'+
+    '<button id="co_submit" onclick="coSubmit(this)" style="width:100%;margin-top:1rem;padding:.85rem;border:none;border-radius:9px;background:var(--ink);color:#fff;font-family:inherit;font-weight:500;font-size:1rem;cursor:pointer">'+l.submit+'</button>'
+  );
+  coRenderSummary();
+}
+function coSetMethod(m){
+  CO.method=m; var l=coL();
+  document.getElementById('co_courier').style.background=m==='courier'?'#fff':'transparent';
+  document.getElementById('co_courier').style.color=m==='courier'?'var(--ink)':'var(--mute)';
+  document.getElementById('co_pickup').style.background=m==='self_pickup'?'#fff':'transparent';
+  document.getElementById('co_pickup').style.color=m==='self_pickup'?'var(--ink)':'var(--mute)';
+  document.getElementById('co_addr').style.display=m==='self_pickup'?'none':'block';
+  document.getElementById('co_shipnote').textContent=m==='self_pickup'?l.pickupNote:l.courierNote;
+  coRenderSummary();
+}
+function coRenderSummary(){
+  var l=coL(); var t=coTotals();
+  document.getElementById('co_summary').innerHTML=
+    '<div style="display:flex;justify-content:space-between;font-size:.92rem;padding:.2rem 0"><span>'+l.sub+'</span><span>₪'+t.sub.toLocaleString()+'</span></div>'+
+    '<div style="display:flex;justify-content:space-between;font-size:.92rem;padding:.2rem 0"><span>'+l.ship+'</span><span>'+(t.ship===0?l.free:'₪'+t.ship.toLocaleString())+'</span></div>'+
+    '<div style="display:flex;justify-content:space-between;font-weight:700;font-size:1.15rem;border-top:1px solid var(--line);margin-top:.4rem;padding-top:.5rem"><span>'+l.total+'</span><span>₪'+t.total.toLocaleString()+'</span></div>';
+}
+function coSubmit(btn){
+  var l=coL();
+  document.querySelectorAll('.co-err').forEach(function(e){e.textContent='';});
+  document.getElementById('co_msg').style.display='none';
+  var t=coTotals();
+  var customer={firstName:coVal('co_first'),lastName:coVal('co_last'),phone:coVal('co_phone'),email:coVal('co_email'),notes:coVal('co_notes'),
+    city:coVal('co_city'),street:coVal('co_street'),houseNumber:coVal('co_house'),entrance:coVal('co_entrance'),floor:coVal('co_floor'),apartment:coVal('co_apt'),zip:coVal('co_zip')};
+  btn.disabled=true; btn.textContent=l.sending;
+  fetch('/api/store/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({shippingMethod:CO.method,items:t.lines,customer:customer})})
+  .then(function(r){return r.json().then(function(d){return {status:r.status,d:d};});})
+  .then(function(res){
+    if(res.status===201){
+      STATE.cart=[]; saveCart(); renderCart();
+      document.getElementById('modal').innerHTML='<button class="modal-close" onclick="closeModal()">&times;</button>'+
+        '<div style="text-align:center;padding:1.5rem .5rem">'+
+        '<div style="width:64px;height:64px;border-radius:50%;background:#3f7d50;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 1rem">✓</div>'+
+        '<h3 style="font-family:var(--font-display);font-size:1.5rem">'+l.successT+'</h3>'+
+        '<div style="color:var(--mute);margin:.6rem 0 .2rem">'+l.ordno+'</div>'+
+        '<div style="font-size:1.3rem;font-weight:700">'+res.d.orderId+'</div>'+
+        '<div style="margin:1rem 0;padding:.9rem;background:var(--wash,#f0ede6);border-radius:10px"><div style="font-weight:600">'+res.d.paymentLabel+'</div><div style="font-size:1.2rem;font-weight:700;margin-top:.2rem">₪'+Number(res.d.totals.grandTotal).toLocaleString()+'</div></div>'+
+        '<div style="color:var(--mute);font-size:.88rem">'+l.thanks+'</div>'+
+        '<button onclick="closeModal()" style="margin-top:1.2rem;padding:.7rem 1.6rem;border:1px solid var(--line);border-radius:9px;background:transparent;font-family:inherit;cursor:pointer">'+l.close+'</button></div>';
+    } else if(res.status===422){
+      var f=res.d.fields||{}; var map={firstName:'co_first',lastName:'co_last',phone:'co_phone',email:'co_email',city:'co_city',street:'co_street',houseNumber:'co_house'};
+      Object.keys(f).forEach(function(k){ var fe=document.querySelector('.co-err[data-for="'+(map[k]||k)+'"]'); if(fe) fe.textContent=f[k]; });
+      var msg=document.getElementById('co_msg'); msg.style.display='block'; msg.textContent=res.d.error||'יש שדות לא תקינים';
+      btn.disabled=false; btn.textContent=l.submit;
+    } else {
+      var m2=document.getElementById('co_msg'); m2.style.display='block'; m2.textContent=res.d.error||'אירעה שגיאה';
+      btn.disabled=false; btn.textContent=l.submit;
+    }
+  }).catch(function(){ var m3=document.getElementById('co_msg'); m3.style.display='block'; m3.textContent='שגיאת תקשורת'; btn.disabled=false; btn.textContent=l.submit; });
+}
 function openSizeGuide(){
   const isShoe=pdState.sub==='shoes';
   const title=STATE.lang==='he'?'מדריך מידות':(STATE.lang==='fr'?'Guide des Tailles':'Size Guide');
@@ -1705,7 +1826,7 @@ function init(){
   document.querySelectorAll('[data-close-wishlist]').forEach(el=>el.addEventListener('click',closeWishlist));
   document.getElementById('cartBackdrop').addEventListener('click',closeCart);
   document.getElementById('wishlistBackdrop').addEventListener('click',closeWishlist);
-  document.getElementById('cartCheckout').addEventListener('click',function(){ closeCart(); window.location.href='tel:0546398638'; });
+  document.getElementById('cartCheckout').addEventListener('click',openCheckout);
   document.getElementById('cartWhatsapp').addEventListener('click',sendCartWhatsApp);
   document.getElementById('modalBackdrop').addEventListener('click',function(e){ if(e.target.id==='modalBackdrop') closeModal(); });
 

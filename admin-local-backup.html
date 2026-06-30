@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ניהול · Rafael</title>
+<link rel="icon" href="photos/raf1.jpeg" type="image/jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700&display=swap">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--bg:#F3F1EC;--card:#fff;--ink:#1f1b16;--mute:#8a7f70;--line:#e3ddd2;--accent:#1f1b16;--ok:#3f7d50;--warn:#b5852f;--bad:#b3473a;--blue:#3a5a8a}
+  body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;font-weight:300}
+  h1,h2,h3{font-weight:500}
+  a{color:inherit}
+  .wrap{max-width:1180px;margin:0 auto;padding:1.5rem}
+  /* login */
+  #login{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.2rem;padding:2rem}
+  #login img{height:70px;border-radius:50%}
+  #login h1{font-family:'Frank Ruhl Libre',serif;font-weight:400;letter-spacing:.04em}
+  .login-box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:2rem;width:100%;max-width:340px;text-align:center}
+  input,select,textarea{font-family:inherit;font-size:.92rem;width:100%;padding:.6rem .7rem;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink);outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--ink)}
+  textarea{resize:vertical;min-height:60px}
+  label{display:block;font-size:.74rem;color:var(--mute);margin:.5rem 0 .25rem;font-weight:500}
+  .btn{display:inline-flex;align-items:center;gap:.4rem;background:var(--ink);color:#fff;border:none;border-radius:7px;padding:.55rem 1.1rem;font-family:inherit;font-size:.86rem;font-weight:500;cursor:pointer;transition:opacity .2s}
+  .btn:hover{opacity:.86}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn.sm{padding:.35rem .7rem;font-size:.78rem}
+  .btn.danger{background:var(--bad)}
+  .btn.ok{background:var(--ok)}
+  /* header */
+  header{position:sticky;top:0;z-index:50;background:rgba(243,241,236,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .head{display:flex;align-items:center;gap:1rem;max-width:1180px;margin:0 auto;padding:.7rem 1.5rem}
+  .head img{height:38px;border-radius:50%}
+  .head .title{font-family:'Frank Ruhl Libre',serif;font-size:1.2rem;font-weight:500}
+  .head .spacer{flex:1}
+  .tabs{display:flex;gap:.2rem;flex-wrap:wrap;max-width:1180px;margin:0 auto;padding:0 1.5rem .5rem}
+  .tab{padding:.5rem .9rem;font-size:.82rem;font-weight:500;color:var(--mute);cursor:pointer;border-radius:7px;border:1px solid transparent}
+  .tab.active{color:var(--ink);background:var(--card);border-color:var(--line)}
+  /* cards & layout */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.2rem;margin-bottom:1rem}
+  .grid{display:grid;gap:1rem}
+  .stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1rem 1.2rem}
+  .stat .n{font-size:1.8rem;font-weight:600;font-family:'Frank Ruhl Libre',serif}
+  .stat .l{font-size:.78rem;color:var(--mute)}
+  .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+  .between{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  .muted{color:var(--mute);font-size:.84rem}
+  .pill{display:inline-block;font-size:.68rem;font-weight:600;padding:.12rem .5rem;border-radius:99px;letter-spacing:.02em}
+  .pill.new{background:#e8f0e9;color:var(--ok)}
+  .pill.bestseller{background:#fbf0da;color:var(--warn)}
+  .pill.featured{background:#e7eefb;color:var(--blue)}
+  .pill.out{background:#f7e3e0;color:var(--bad)}
+  /* product table */
+  .ptable{width:100%;border-collapse:collapse;font-size:.86rem}
+  .ptable th{text-align:right;font-size:.72rem;color:var(--mute);font-weight:600;padding:.5rem;border-bottom:1px solid var(--line)}
+  .ptable td{padding:.55rem .5rem;border-bottom:1px solid var(--line);vertical-align:middle}
+  .ptable input,.ptable select{padding:.35rem .45rem;font-size:.82rem}
+  .w-price{width:90px}
+  .thumb{width:42px;height:42px;border-radius:6px;object-fit:cover;background:#eee;border:1px solid var(--line)}
+  .switch{position:relative;display:inline-block;width:42px;height:24px}
+  .switch input{display:none}
+  .slider{position:absolute;inset:0;background:#ccc;border-radius:99px;transition:.2s;cursor:pointer}
+  .slider:before{content:"";position:absolute;height:18px;width:18px;right:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+  .switch input:checked+.slider{background:var(--ok)}
+  .switch input:checked+.slider:before{transform:translateX(-18px)}
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:100;padding:1rem}
+  .modal-bg.show{display:flex}
+  .modal{background:var(--card);border-radius:12px;max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:1.5rem}
+  .field2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+  .field3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem}
+  .toast{position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:.7rem 1.3rem;border-radius:99px;font-size:.86rem;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+  .toast.show{opacity:1}
+  .hide{display:none!important}
+  .imgrow{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem}
+  .imgrow .ic{position:relative}
+  .imgrow img{width:54px;height:54px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
+  .imgrow .x{position:absolute;top:-6px;left:-6px;background:var(--bad);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:.7rem;cursor:pointer;line-height:1}
+  .order-card{border:1px solid var(--line);border-radius:9px;padding:.9rem;margin-bottom:.7rem}
+  .ord-line{font-size:.83rem;color:var(--ink)}
+  .banner-note{background:#fbf0da;border:1px solid #ecdcb6;color:#7a5a1e;padding:.7rem .9rem;border-radius:8px;font-size:.82rem;margin-bottom:1rem}
+  @media(max-width:680px){ .field2,.field3{grid-template-columns:1fr} .ptable .col-hide{display:none} }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <img src="photos/raf1.jpeg" alt="Rafael">
+  <h1>ניהול האתר · Rafael</h1>
+  <div class="login-box">
+    <label style="text-align:right">סיסמה</label>
+    <input type="password" id="pass" placeholder="הקלד סיסמה" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn" style="width:100%;margin-top:.8rem;justify-content:center" onclick="doLogin()">כניסה</button>
+    <div class="muted" style="margin-top:.7rem;font-size:.74rem">סיסמת ברירת מחדל: 1234 · ניתן לשנות בהגדרות</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hide">
+  <header>
+    <div class="head">
+      <img src="photos/raf1.jpeg" alt="Rafael">
+      <div class="title">ניהול האתר</div>
+      <div class="spacer"></div>
+      <a class="btn ghost sm" href="index.html" target="_blank">↗ צפייה באתר</a>
+      <button class="btn ghost sm" onclick="logout()">יציאה</button>
+    </div>
+    <div class="tabs" id="tabs"></div>
+  </header>
+  <div class="wrap" id="view"></div>
+</div>
+
+<div class="modal-bg" id="modalBg"><div class="modal" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="rf-store.js"></script>
+<script>
+/* ============ helpers ============ */
+var S = window.RFStore;
+function $(id){ return document.getElementById(id); }
+function toast(m){ var t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},1900); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function money(v){ return v==null||v===''? '' : (S.getSettings().currency + Number(v).toLocaleString()); }
+function openModal(html){ $('modalBox').innerHTML=html; $('modalBg').classList.add('show'); }
+function closeModal(){ $('modalBg').classList.remove('show'); }
+$('modalBg').addEventListener('click',function(e){ if(e.target===this) closeModal(); });
+
+/* ============ auth ============ */
+function doLogin(){
+  var p = $('pass').value;
+  if(p === S.getSettings().adminPass){ sessionStorage.setItem('rf_admin_ok','1'); showApp(); }
+  else toast('סיסמה שגויה');
+}
+function logout(){ sessionStorage.removeItem('rf_admin_ok'); location.reload(); }
+function showApp(){ $('login').classList.add('hide'); $('app').classList.remove('hide'); buildTabs(); go('dashboard'); }
+
+/* ============ tabs ============ */
+var TABS = [
+  ['dashboard','סקירה'],['products','מוצרים'],['orders','הזמנות'],
+  ['covers','תמונות שער'],['banner','באנר ושפות'],['coupons','קופונים'],
+  ['settings','הגדרות'],['backup','גיבוי']
+];
+var cur='dashboard';
+function buildTabs(){
+  $('tabs').innerHTML = TABS.map(function(t){ return '<div class="tab" data-t="'+t[0]+'" onclick="go(\''+t[0]+'\')">'+t[1]+'</div>'; }).join('');
+}
+function go(t){
+  cur=t;
+  document.querySelectorAll('.tab').forEach(function(el){ el.classList.toggle('active', el.dataset.t===t); });
+  ({dashboard:viewDashboard,products:viewProducts,orders:viewOrders,covers:viewCovers,banner:viewBanner,coupons:viewCoupons,settings:viewSettings,backup:viewBackup}[t])();
+}
+
+/* ============ catalog snapshot ============ */
+function snapshot(){ return S.getSnapshot(); }
+function allProductsForAdmin(){
+  // base snapshot (with overrides applied for display) + custom products, minus removed
+  var snap = snapshot().map(function(p){ return S.applyToProduct(p); });
+  var custom = S.getCustom();
+  return { snap: snap, custom: custom };
+}
+function noSnapshotNote(){
+  return '<div class="banner-note">כדי לנהל מוצרים, פתח קודם את <a href="index.html" target="_blank" style="text-decoration:underline">דף האתר</a> פעם אחת (זה טוען את רשימת המוצרים לכאן), ואז חזור ורענן.</div>';
+}
+
+/* ============ DASHBOARD ============ */
+function viewDashboard(){
+  var orders=S.getOrders(), snap=snapshot();
+  var newOrders=orders.filter(function(o){return o.status==='new';}).length;
+  var out = snap.map(function(p){return S.applyToProduct(p);}).filter(function(p){return p.inStock===false;}).length;
+  var revenue=orders.reduce(function(s,o){return s+(Number(o.total)||0);},0);
+  $('view').innerHTML =
+    '<div class="grid stats">'+
+      stat(orders.length,'הזמנות סה"כ')+
+      stat(newOrders,'הזמנות חדשות')+
+      stat(snap.length + S.getCustom().length,'מוצרים')+
+      stat(out,'אזלו מהמלאי')+
+      stat(money(revenue)||'₪0','סכום הזמנות')+
+    '</div>'+
+    '<div class="card"><div class="between"><h3>הזמנות אחרונות</h3><button class="btn ghost sm" onclick="go(\'orders\')">לכל ההזמנות</button></div>'+
+      (orders.length? orders.slice(0,5).map(orderMini).join('') : '<div class="muted" style="margin-top:.6rem">אין הזמנות עדיין. הזמנות מהאתר יופיעו כאן.</div>')+
+    '</div>'+
+    (snapshot().length? '' : '<div class="card">'+noSnapshotNote()+'</div>');
+}
+function stat(n,l){ return '<div class="stat"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>'; }
+function orderMini(o){
+  return '<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:.5rem 0">'+
+    '<div><b>'+esc(o.id)+'</b> · '+esc(o.customer&&o.customer.name||'לקוח')+' <span class="muted">('+(o.items?o.items.length:0)+' פריטים)</span></div>'+
+    '<div>'+statusPill(o.status)+'</div></div>';
+}
+
+/* ============ PRODUCTS ============ */
+function viewProducts(){
+  var data=allProductsForAdmin();
+  if(!data.snap.length && !data.custom.length){ $('view').innerHTML=noSnapshotNote(); return; }
+  var rows = data.snap.map(function(p){ return prodRow(p,false); }).join('') +
+             data.custom.map(function(p){ return prodRow(p,true); }).join('');
+  $('view').innerHTML =
+    '<div class="card"><div class="between"><h3>מוצרים</h3>'+
+      '<button class="btn" onclick="editProduct(null)">＋ מוצר חדש</button></div>'+
+      '<div style="overflow:auto;margin-top:.8rem"><table class="ptable"><thead><tr>'+
+        '<th>תמונה</th><th>שם</th><th class="col-hide">קטגוריה</th><th>מחיר</th><th>מבצע</th><th>תווית</th><th>במלאי</th><th></th>'+
+      '</tr></thead><tbody>'+rows+'</tbody></table></div></div>';
+}
+function prodRow(p,isCustom){
+  var img = (p._thumb)||'';
+  return '<tr>'+
+    '<td>'+(img?'<img class="thumb" src="'+esc(img)+'">':'<div class="thumb"></div>')+'</td>'+
+    '<td><b>'+esc(p.name_he||p.id)+'</b>'+(isCustom?' <span class="pill featured">מותאם</span>':'')+'<div class="muted" style="font-size:.72rem">'+esc(p.id)+'</div></td>'+
+    '<td class="col-hide muted">'+esc((p._catName||p.cat||'')+' · '+(p._subName||p.sub||''))+'</td>'+
+    '<td><input class="w-price" type="number" value="'+(p.price==null?'':p.price)+'" placeholder="לבירור" onchange="setField(\''+p.id+'\',\'price\',this.value,'+isCustom+')"></td>'+
+    '<td><input class="w-price" type="number" value="'+(p.salePrice==null?'':p.salePrice)+'" placeholder="—" onchange="setField(\''+p.id+'\',\'salePrice\',this.value,'+isCustom+')"></td>'+
+    '<td><select onchange="setField(\''+p.id+'\',\'badge\',this.value,'+isCustom+')">'+
+        badgeOpt('',p.badge,'—')+badgeOpt('new',p.badge,'חדש')+badgeOpt('bestseller',p.badge,'רב-מכר')+badgeOpt('featured',p.badge,'מומלץ')+
+      '</select></td>'+
+    '<td><label class="switch"><input type="checkbox" '+(p.inStock!==false?'checked':'')+' onchange="setField(\''+p.id+'\',\'inStock\',this.checked,'+isCustom+')"><span class="slider"></span></label></td>'+
+    '<td class="row"><button class="btn ghost sm" onclick="editProduct(\''+p.id+'\','+isCustom+')">פרטים</button>'+
+      (isCustom? '<button class="btn danger sm" onclick="delCustom(\''+p.id+'\')">מחק</button>'
+               : '<button class="btn ghost sm" onclick="toggleRemove(\''+p.id+'\')">'+(p._removed?'שחזר':'הסתר')+'</button>')+
+    '</td></tr>';
+}
+function badgeOpt(v,cur,label){ return '<option value="'+v+'" '+(cur===v||(!cur&&!v)?'selected':'')+'>'+label+'</option>'; }
+function setField(id,field,val,isCustom){
+  if(field==='price'||field==='salePrice') val = (val===''? (field==='price'?null:'') : Number(val));
+  if(isCustom){ var c=S.getCustom().find(function(p){return p.id===id;}); if(c){ c[field]=val; S.saveCustom(c);} }
+  else { S.setOverride(id, putField({},field,val)); }
+  toast('נשמר');
+}
+function putField(o,f,v){ o[f]=v; return o; }
+function toggleRemove(id){ S.setRemoved(id, !S.isRemoved(id)); toast('עודכן'); viewProducts(); }
+function delCustom(id){ if(confirm('למחוק את המוצר?')){ S.deleteCustom(id); toast('נמחק'); viewProducts(); } }
+
+/* ---- product detail / create modal ---- */
+function editProduct(id,isCustom){
+  var p;
+  if(id){
+    if(isCustom) p = S.getCustom().find(function(x){return x.id===id;});
+    else { p = snapshot().find(function(x){return x.id===id;}); p = S.applyToProduct(p); }
+  } else {
+    p = {id:'custom-'+Date.now().toString(36), name_he:'',name_en:'',name_fr:'', cat:'youth', sub:'suits', price:null, inStock:true, _new:true, images:[] };
+  }
+  var imgs = (id&&!isCustom ? (S.getImagesFor(id)||p.images) : (p.images)) || [];
+  openModal(
+    '<div class="between"><h3>'+(p._new?'מוצר חדש':'עריכת מוצר')+'</h3><button class="btn ghost sm" onclick="closeModal()">✕</button></div>'+
+    '<div class="field3" style="margin-top:.8rem">'+
+      fld('שם (עברית)','name_he',p)+fld('שם (אנגלית)','name_en',p)+fld('שם (צרפתית)','name_fr',p)+
+    '</div>'+
+    '<div class="field3">'+
+      fld('תיאור (עברית)','desc_he',p,true)+fld('תיאור (אנגלית)','desc_en',p,true)+fld('תיאור (צרפתית)','desc_fr',p,true)+
+    '</div>'+
+    '<div class="field3">'+
+      '<div><label>מחיר</label><input type="number" id="m_price" value="'+(p.price==null?'':p.price)+'" placeholder="לבירור"></div>'+
+      '<div><label>מחיר מבצע</label><input type="number" id="m_sale" value="'+(p.salePrice==null?'':p.salePrice)+'"></div>'+
+      '<div><label>תווית</label><select id="m_badge">'+badgeOpt('',p.badge,'—')+badgeOpt('new',p.badge,'חדש')+badgeOpt('bestseller',p.badge,'רב-מכר')+badgeOpt('featured',p.badge,'מומלץ')+'</select></div>'+
+    '</div>'+
+    (p._new? '<div class="field2"><div><label>קטגוריה</label><select id="m_cat"><option value="youth">נוער</option><option value="children">ילדים</option></select></div>'+
+      '<div><label>תת-קטגוריה</label><select id="m_sub"><option value="suits">חליפות</option><option value="pants">מכנסיים</option><option value="shirts">חולצות</option><option value="vests">וסטים</option><option value="shoes">נעליים</option><option value="accessories">אביזרים</option></select></div></div>'
+      : '')+
+    '<label style="margin-top:.6rem">מלאי לפי מידה (סמן מידות שאזלו)</label><div id="m_sizes" class="row">'+sizeChips(p)+'</div>'+
+    '<label style="margin-top:.6rem">תמונות</label>'+
+      '<div class="imgrow" id="m_imgs">'+imgs.map(function(u,i){return imgChip(u,i);}).join('')+'</div>'+
+      '<input type="file" accept="image/*" multiple style="margin-top:.5rem" onchange="addImgs(event)">'+
+      '<div class="muted" style="font-size:.72rem;margin-top:.3rem">העלאת קבצים נשמרת מקומית. עם חיבור הענן — התמונות יעלו לאחסון ענן (מומלץ לקבצים רבים).</div>'+
+    '<div class="row" style="margin-top:1rem;justify-content:flex-end">'+
+      '<button class="btn ghost" onclick="closeModal()">ביטול</button>'+
+      '<button class="btn ok" onclick="saveProductModal(\''+p.id+'\','+(!!isCustom||!!p._new)+')">שמירה</button>'+
+    '</div>'
+  );
+  window._editImgs = imgs.slice();
+}
+function fld(label,key,p,area){
+  var v=esc(p[key]||'');
+  return '<div><label>'+label+'</label>'+(area?'<textarea id="m_'+key+'">'+v+'</textarea>':'<input id="m_'+key+'" value="'+v+'">')+'</div>';
+}
+function sizeChips(p){
+  var sizes = p._sizes || p.sizes || [];
+  var out = (p.outSizes||[]);
+  if(!sizes.length) return '<span class="muted" style="font-size:.78rem">—</span>';
+  return sizes.map(function(s){ var lab=(typeof s==='string'?s:(s.name_he||s.id)); var val=(typeof s==='string'?s:s.id);
+    var on=out.indexOf(val)>=0;
+    return '<button class="btn '+(on?'danger':'ghost')+' sm" data-sz="'+esc(val)+'" onclick="this.classList.toggle(\'danger\');this.classList.toggle(\'ghost\')">'+esc(lab)+'</button>';
+  }).join('');
+}
+function imgChip(u,i){ return '<div class="ic"><img src="'+esc(u)+'"><button class="x" onclick="rmImg('+i+')">✕</button></div>'; }
+function rmImg(i){ window._editImgs.splice(i,1); $('m_imgs').innerHTML = window._editImgs.map(function(u,ix){return imgChip(u,ix);}).join(''); }
+function addImgs(e){
+  var files=[].slice.call(e.target.files);
+  files.forEach(function(f){ var r=new FileReader(); r.onload=function(){ window._editImgs.push(r.result); $('m_imgs').innerHTML=window._editImgs.map(function(u,ix){return imgChip(u,ix);}).join(''); }; r.readAsDataURL(f); });
+}
+function saveProductModal(id,isCustomOrNew){
+  var get=function(k){ var el=$('m_'+k); return el?el.value:''; };
+  var outSizes=[]; document.querySelectorAll('#m_sizes [data-sz]').forEach(function(b){ if(b.classList.contains('danger')) outSizes.push(b.dataset.sz); });
+  var price = get('price')===''?null:Number(get('price'));
+  var sale  = get('sale')===''?'':Number(get('sale'));
+  var fields={ name_he:get('name_he'),name_en:get('name_en'),name_fr:get('name_fr'),
+    desc_he:get('desc_he'),desc_en:get('desc_en'),desc_fr:get('desc_fr'),
+    price:price, salePrice:sale, badge:get('badge'), outSizes:outSizes, images:window._editImgs.slice() };
+  var snap = snapshot().find(function(x){return x.id===id;});
+  if(isCustomOrNew && !snap){
+    // custom product
+    var existing = S.getCustom().find(function(x){return x.id===id;}) || {id:id, inStock:true};
+    var prod = Object.assign(existing, fields);
+    if($('m_cat')) prod.cat=$('m_cat').value;
+    if($('m_sub')) prod.sub=$('m_sub').value;
+    prod.colors = prod.colors || [{id:'default',name_he:'',name_en:'',name_fr:''}];
+    prod.sizes = prod.sizes || [];
+    S.saveCustom(prod);
+  } else {
+    // override on this variant (id === variant key)
+    S.setOverride(id, fields);
+    S.setImagesFor(id, window._editImgs.slice());
+  }
+  closeModal(); toast('נשמר'); viewProducts();
+}
+
+/* ============ ORDERS ============ */
+function viewOrders(){
+  var orders=S.getOrders();
+  $('view').innerHTML =
+    '<div class="card"><div class="between"><h3>הזמנות ('+orders.length+')</h3>'+
+      '<button class="btn ghost sm" onclick="exportOrdersCSV()">⬇ ייצוא לאקסל (CSV)</button></div>'+
+      (orders.length? '<div style="margin-top:.8rem">'+orders.map(orderCard).join('')+'</div>'
+        : '<div class="muted" style="margin-top:.6rem">אין הזמנות עדיין. כשלקוח ישלים הזמנה באתר — היא תופיע כאן (לאחר חיבור הענן, גם ממכשירים אחרים).</div>')+
+    '</div>';
+}
+function orderCard(o){
+  var items=(o.items||[]).map(function(it){ return '<div class="ord-line">• '+esc(it.name)+' — '+esc(it.color||'')+' / '+esc(it.size||'')+' × '+it.qty+'</div>'; }).join('');
+  return '<div class="order-card"><div class="between">'+
+    '<div><b>'+esc(o.id)+'</b> · <span class="muted">'+esc(o.date||'')+'</span></div>'+
+    '<div class="row"><select onchange="S.updateOrder(\''+o.id+'\',{status:this.value});toast(\'עודכן\')">'+
+      ['new','processing','shipped','done'].map(function(s){ return '<option value="'+s+'" '+(o.status===s?'selected':'')+'>'+statusLabel(s)+'</option>'; }).join('')+
+    '</select><button class="btn danger sm" onclick="if(confirm(\'למחוק?\')){S.deleteOrder(\''+o.id+'\');viewOrders();}">מחק</button></div>'+
+    '</div>'+
+    '<div style="margin:.5rem 0">'+items+'</div>'+
+    '<div class="muted" style="font-size:.8rem">'+esc(o.customer&&o.customer.name||'')+' '+esc(o.customer&&o.customer.phone||'')+
+      (o.total?(' · סה"כ '+money(o.total)):'')+(o.coupon?(' · קופון '+esc(o.coupon)):'')+'</div>'+
+  '</div>';
+}
+function statusLabel(s){ return {new:'חדשה',processing:'בטיפול',shipped:'נשלחה',done:'הושלמה'}[s]||s; }
+function statusPill(s){ return '<span class="pill '+(s==='new'?'new':(s==='shipped'?'featured':'bestseller'))+'">'+statusLabel(s)+'</span>'; }
+function exportOrdersCSV(){
+  var orders=S.getOrders();
+  if(!orders.length){ toast('אין הזמנות'); return; }
+  var rows=[['מספר הזמנה','תאריך','סטטוס','לקוח','טלפון','פריטים','סה"כ','קופון']];
+  orders.forEach(function(o){ rows.push([o.id,o.date||'',statusLabel(o.status),(o.customer&&o.customer.name)||'',(o.customer&&o.customer.phone)||'',
+    (o.items||[]).map(function(it){return it.name+' '+(it.color||'')+'/'+(it.size||'')+'x'+it.qty;}).join(' | '), o.total||'', o.coupon||'']); });
+  var csv='﻿'+rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+  dl('orders-'+Date.now()+'.csv', csv, 'text/csv');
+}
+
+/* ============ COVERS ============ */
+var SUBS=[['suits','חליפות'],['pants','מכנסיים'],['shirts','חולצות'],['vests','וסטים'],['shoes','נעליים'],['accessories','אביזרים']];
+var CATS=[['youth','נוער'],['children','ילדים']];
+function viewCovers(){
+  var covers=S.getCoversMap();
+  var html='<div class="card"><h3>תמונות שער של מחלקות</h3><div class="muted" style="margin:.3rem 0 1rem">תמונה לכל קטגוריה ותת-קטגוריה. שינוי כאן דורס את ברירת המחדל באתר.</div>';
+  CATS.forEach(function(c){
+    html+='<h4 style="margin:.8rem 0 .4rem">'+c[1]+'</h4><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">';
+    SUBS.forEach(function(s){
+      var key=c[0]+'/'+s[0]; var url=covers[key]||'';
+      html+='<div class="card" style="margin:0"><div class="muted">'+s[1]+'</div>'+
+        (url?'<img src="'+esc(url)+'" style="width:100%;height:120px;object-fit:cover;border-radius:7px;margin:.4rem 0">':'<div style="height:120px;background:#eee;border-radius:7px;margin:.4rem 0"></div>')+
+        '<input type="file" accept="image/*" onchange="setCoverFile(\''+key+'\',event)"></div>';
+    });
+    html+='</div>';
+  });
+  html+='</div>';
+  $('view').innerHTML=html;
+}
+function setCoverFile(key,e){ var f=e.target.files[0]; if(!f)return; var r=new FileReader(); r.onload=function(){ S.setCover(key,r.result); toast('נשמר'); viewCovers(); }; r.readAsDataURL(f); }
+
+/* ============ BANNER & LANG ============ */
+function viewBanner(){
+  var s=S.getSettings();
+  $('view').innerHTML='<div class="card"><h3>הבאנר העליון</h3><div class="muted" style="margin:.3rem 0 .8rem">הטקסט הרץ בראש האתר, לכל שפה.</div>'+
+    '<label>עברית</label><input id="b_he" value="'+esc(s.banner_he)+'">'+
+    '<label>אנגלית</label><input id="b_en" value="'+esc(s.banner_en)+'">'+
+    '<label>צרפתית</label><input id="b_fr" value="'+esc(s.banner_fr)+'">'+
+    '<button class="btn ok" style="margin-top:.9rem" onclick="S.saveSettings({banner_he:$(\'b_he\').value,banner_en:$(\'b_en\').value,banner_fr:$(\'b_fr\').value});toast(\'נשמר\')">שמירה</button></div>';
+}
+
+/* ============ COUPONS ============ */
+function viewCoupons(){
+  var s=S.getSettings(), cs=s.coupons||[];
+  $('view').innerHTML='<div class="card"><div class="between"><h3>קופונים</h3><button class="btn" onclick="addCoupon()">＋ קופון</button></div>'+
+    (cs.length? '<table class="ptable" style="margin-top:.8rem"><thead><tr><th>קוד</th><th>סוג</th><th>ערך</th><th>פעיל</th><th></th></tr></thead><tbody>'+
+      cs.map(function(c,i){ return '<tr><td><b>'+esc(c.code)+'</b></td><td>'+(c.type==='percent'?'אחוז':'סכום')+'</td><td>'+c.value+(c.type==='percent'?'%':'₪')+'</td>'+
+        '<td><label class="switch"><input type="checkbox" '+(c.active?'checked':'')+' onchange="toggleCoupon('+i+',this.checked)"><span class="slider"></span></label></td>'+
+        '<td><button class="btn danger sm" onclick="delCoupon('+i+')">מחק</button></td></tr>'; }).join('')+'</tbody></table>'
+      : '<div class="muted" style="margin-top:.6rem">אין קופונים.</div>')+'</div>';
+}
+function addCoupon(){
+  openModal('<h3>קופון חדש</h3><label>קוד</label><input id="c_code"><div class="field2"><div><label>סוג</label><select id="c_type"><option value="percent">אחוז הנחה</option><option value="fixed">סכום קבוע</option></select></div><div><label>ערך</label><input id="c_val" type="number"></div></div>'+
+    '<div class="row" style="margin-top:1rem;justify-content:flex-end"><button class="btn ghost" onclick="closeModal()">ביטול</button><button class="btn ok" onclick="saveCoupon()">שמירה</button></div>');
+}
+function saveCoupon(){
+  var s=S.getSettings(); s.coupons=s.coupons||[];
+  s.coupons.push({code:$('c_code').value.trim(),type:$('c_type').value,value:Number($('c_val').value),active:true});
+  S.saveSettings({coupons:s.coupons}); closeModal(); toast('נוסף'); viewCoupons();
+}
+function toggleCoupon(i,v){ var s=S.getSettings(); s.coupons[i].active=v; S.saveSettings({coupons:s.coupons}); }
+function delCoupon(i){ var s=S.getSettings(); s.coupons.splice(i,1); S.saveSettings({coupons:s.coupons}); viewCoupons(); }
+
+/* ============ SETTINGS ============ */
+function viewSettings(){
+  var s=S.getSettings();
+  $('view').innerHTML='<div class="card"><h3>הגדרות כלליות</h3>'+
+    '<div class="field2"><div><label>סיסמת ניהול</label><input id="s_pass" value="'+esc(s.adminPass)+'"></div>'+
+    '<div><label>מספר וואטסאפ (כולל קידומת מדינה)</label><input id="s_wa" value="'+esc(s.whatsapp)+'"></div></div>'+
+    '<div class="field2"><div><label>סמל מטבע</label><input id="s_cur" value="'+esc(s.currency)+'"></div></div>'+
+    '<button class="btn ok" style="margin-top:.9rem" onclick="S.saveSettings({adminPass:$(\'s_pass\').value,whatsapp:$(\'s_wa\').value,currency:$(\'s_cur\').value});toast(\'נשמר\')">שמירה</button></div>'+
+    '<div class="card"><h3>חיבור לענן (Firebase)</h3><div class="muted" style="margin-top:.4rem">לאחר שתפתח חשבון Firebase ותשלח לי את המפתחות — נחבר כאן את האתר לענן, וההזמנות והשינויים יהפכו חיים לכל המבקרים ויסונכרנו בין מכשירים.</div>'+
+    '<div class="banner-note" style="margin-top:.7rem">כרגע המערכת עובדת <b>מקומית</b> (על הדפדפן הזה). הכל מוכן לחיבור הענן.</div></div>';
+}
+
+/* ============ BACKUP ============ */
+function viewBackup(){
+  $('view').innerHTML='<div class="card"><h3>גיבוי ושחזור</h3><div class="muted" style="margin:.3rem 0 .9rem">ייצוא כל נתוני הניהול (מוצרים, מחירים, מלאי, הזמנות, הגדרות) לקובץ, ושחזור ממנו.</div>'+
+    '<div class="row"><button class="btn" onclick="doExport()">⬇ ייצוא גיבוי</button>'+
+    '<label class="btn ghost" style="cursor:pointer">⬆ ייבוא גיבוי<input type="file" accept="application/json" style="display:none" onchange="doImport(event)"></label></div>'+
+    '<div class="banner-note" style="margin-top:1rem">⚠️ איפוס מוחק את כל ההגדרות וההזמנות המקומיות.</div>'+
+    '<button class="btn danger" onclick="if(confirm(\'לאפס הכל?\')){S.wipe();toast(\'אופס\');go(\'dashboard\')}">איפוס מלא</button></div>';
+}
+function doExport(){ dl('rafael-backup-'+Date.now()+'.json', JSON.stringify(S.exportAll(),null,2), 'application/json'); }
+function doImport(e){ var f=e.target.files[0]; if(!f)return; var r=new FileReader(); r.onload=function(){ try{ S.importAll(JSON.parse(r.result)); toast('שוחזר'); go('dashboard'); }catch(err){ toast('קובץ לא תקין'); } }; r.readAsText(f); }
+
+/* ============ util ============ */
+function dl(name,content,type){ var b=new Blob([content],{type:type}); var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; a.click(); }
+
+/* ============ boot ============ */
+if(sessionStorage.getItem('rf_admin_ok')==='1') showApp();
+</script>
+</body>
+</html>
