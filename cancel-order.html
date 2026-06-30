@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAFAEL · ביטול עסקה | Cancel Order</title>
+<meta name="description" content="טופס בקשת ביטול עסקה באתר RAFAEL — מילוי פרטי ההזמנה ושליחת בקשת ביטול לשירות הלקוחות.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;600&family=Frank+Ruhl+Libre:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="legal.css">
+</head>
+<body data-lang="he">
+
+<header class="legal-header">
+  <div class="legal-header-in">
+    <a class="legal-brand" href="/">RAFAEL</a>
+    <nav class="legal-nav" aria-label="ניווט עליון">
+      <a href="/"><span class="lang-he">חזרה לאתר</span><span class="lang-en">Back to store</span></a>
+      <button id="langToggle" type="button" aria-label="Switch to English">EN</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <article class="legal-wrap">
+    <p class="legal-eyebrow"><span class="lang-he">שירות לקוחות</span><span class="lang-en">Customer Service</span></p>
+    <h1><span class="lang-he">בקשת ביטול עסקה</span><span class="lang-en">Cancellation Request</span></h1>
+    <p class="legal-sub">
+      <span class="lang-he">מלאו את הפרטים ונחזור אליכם בהקדם לטיפול בבקשה. ניתן לעיין בתנאי הביטול ב<a href="terms.html">תקנון</a>.</span>
+      <span class="lang-en">Fill in the details and we will get back to you shortly to process your request. Cancellation terms are available in our <a href="terms.html">Terms</a>.</span>
+    </p>
+
+    <form id="cancelForm" class="legal-form" novalidate>
+      <div class="field">
+        <label for="fullName">
+          <span class="lang-he">שם מלא <span class="req">*</span></span>
+          <span class="lang-en">Full Name <span class="req">*</span></span>
+        </label>
+        <input type="text" id="fullName" name="fullName" autocomplete="name" required
+               aria-required="true"
+               placeholder="">
+      </div>
+
+      <div class="field">
+        <label for="orderNumber">
+          <span class="lang-he">מספר הזמנה <span class="req">*</span></span>
+          <span class="lang-en">Order Number <span class="req">*</span></span>
+        </label>
+        <input type="text" id="orderNumber" name="orderNumber" required
+               aria-required="true"
+               placeholder="RF-0000">
+        <span class="hint">
+          <span class="lang-he">מופיע באישור ההזמנה שקיבלתם.</span>
+          <span class="lang-en">Shown on your order confirmation.</span>
+        </span>
+      </div>
+
+      <div class="field">
+        <label for="phone">
+          <span class="lang-he">טלפון <span class="req">*</span></span>
+          <span class="lang-en">Phone <span class="req">*</span></span>
+        </label>
+        <input type="tel" id="phone" name="phone" autocomplete="tel" required
+               aria-required="true" inputmode="tel"
+               pattern="^0\d{8,9}$"
+               placeholder="054-0000000">
+      </div>
+
+      <div class="field">
+        <label for="reason">
+          <span class="lang-he">סיבת הביטול</span>
+          <span class="lang-en">Cancellation Reason</span>
+          <span class="hint">
+            <span class="lang-he">אופציונלי</span>
+            <span class="lang-en">Optional</span>
+          </span>
+        </label>
+        <textarea id="reason" name="reason" rows="4"></textarea>
+      </div>
+
+      <button type="submit" class="legal-submit">
+        <span class="lang-he">שלח בקשת ביטול</span>
+        <span class="lang-en">Submit Cancellation Request</span>
+      </button>
+    </form>
+
+    <div id="cancelSuccess" class="form-success" role="status" aria-live="polite">
+      <div class="tick" aria-hidden="true">✓</div>
+      <h3>
+        <span class="lang-he">הבקשה נשלחה</span>
+        <span class="lang-en">Request Sent</span>
+      </h3>
+      <p>
+        <span class="lang-he">קיבלנו את בקשת הביטול ונחזור אליכם בהקדם לטיפול. לבירור מיידי ניתן להתקשר ל-<a href="tel:0546398638">054-639-8638</a>.</span>
+        <span class="lang-en">We have received your cancellation request and will get back to you shortly. For immediate assistance call <a href="tel:0546398638">054-639-8638</a>.</span>
+      </p>
+    </div>
+  </article>
+</main>
+
+<footer class="legal-footer">
+  <div class="lf-brand">RAFAEL</div>
+  <nav class="legal-footer-links" aria-label="קישורים משפטיים">
+    <a href="terms.html"><span class="lang-he">תקנון ומשלוחים</span><span class="lang-en">Terms &amp; Shipping</span></a>
+    <a href="accessibility.html"><span class="lang-he">הצהרת נגישות</span><span class="lang-en">Accessibility</span></a>
+    <a href="cancel-order.html"><span class="lang-he">ביטול עסקה</span><span class="lang-en">Cancel Order</span></a>
+    <a href="tel:0546398638">054-639-8638</a>
+  </nav>
+  <div class="legal-footer-meta">© 2026 Rafael · <span class="lang-he">הבונים 3, נתניה</span><span class="lang-en">3 HaBunim St, Netanya</span></div>
+</footer>
+
+<script src="legal.js"></script>
+</body>
+</html>

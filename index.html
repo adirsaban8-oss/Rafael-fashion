@@ -397,6 +397,7 @@ select{font-family:inherit}
 .sidebar-subtotal-label{color:var(--mute);letter-spacing:.18em;text-transform:uppercase;font-weight:500;font-size:.68rem}
 .sidebar-subtotal-value{font-family:var(--font-sans);font-size:1.05rem;font-weight:500;color:var(--ink);letter-spacing:.02em}
 .sidebar-note{font-size:.72rem;font-weight:300;color:var(--mute);line-height:1.6;font-style:italic;font-family:var(--font-display);font-size:.82rem}
+.pricing-dynamic-notice{/* structural hook for dynamic-pricing notices · intentionally no visual change */}
 .sidebar-btn{width:100%;height:50px;font-family:var(--font-sans);font-weight:600;font-size:.66rem;letter-spacing:.28em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:.5rem;cursor:pointer;transition:all .3s var(--ease);text-decoration:none;border:1px solid transparent}
 .sidebar-btn-primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .sidebar-btn-primary:hover{background:var(--bg);color:var(--ink)}
@@ -409,7 +410,7 @@ select{font-family:inherit}
    FOOTER
    ============================================================ */
 .footer{background:var(--ink);color:#A8A39C;padding:clamp(3.5rem,6vw,5.5rem) var(--edge) 2.5rem;margin-top:0}
-.footer-top{max-width:1500px;margin:0 auto 3.5rem;display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:3.5rem;padding-bottom:3rem;border-bottom:1px solid #252321}
+.footer-top{max-width:1500px;margin:0 auto 3.5rem;display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr 1fr;gap:2.75rem;padding-bottom:3rem;border-bottom:1px solid #252321}
 .footer-brand h3{font-family:var(--font-display);font-size:1.8rem;color:var(--bg);margin-bottom:1rem;font-weight:400;letter-spacing:.02em}
 .footer-tagline{font-size:.85rem;color:#8A8780;margin-bottom:1.5rem;font-weight:300;line-height:1.8;max-width:340px;font-style:italic;font-family:var(--font-display);font-size:.95rem}
 .footer-social{display:flex;gap:.4rem;margin-top:1.25rem}
@@ -648,11 +649,11 @@ body[data-lang="he"] .lang-en,body[data-lang="he"] .lang-fr,body[data-lang="en"]
     </div>
     <div class="footer-col">
       <h4><span class="lang-he">שירות</span><span class="lang-en">Service</span><span class="lang-fr">Service</span></h4>
-      <a><span class="lang-he">ייעוץ אישי</span><span class="lang-en">Personal Consultation</span><span class="lang-fr">Consultation Personnelle</span></a>
-      <a><span class="lang-he">תפירה והתאמה</span><span class="lang-en">Tailoring</span><span class="lang-fr">Sur Mesure</span></a>
-      <a><span class="lang-he">החזרות והחלפות</span><span class="lang-en">Returns</span><span class="lang-fr">Retours</span></a>
-      <a><span class="lang-he">משלוחים</span><span class="lang-en">Shipping</span><span class="lang-fr">Livraison</span></a>
-      <a><span class="lang-he">נגישות</span><span class="lang-en">Accessibility</span><span class="lang-fr">Accessibilité</span></a>
+      <a href="tel:0546398638"><span class="lang-he">ייעוץ אישי</span><span class="lang-en">Personal Consultation</span><span class="lang-fr">Consultation Personnelle</span></a>
+      <a href="tel:0546398638"><span class="lang-he">תפירה והתאמה</span><span class="lang-en">Tailoring</span><span class="lang-fr">Sur Mesure</span></a>
+      <a href="terms.html"><span class="lang-he">החזרות והחלפות</span><span class="lang-en">Returns</span><span class="lang-fr">Retours</span></a>
+      <a href="terms.html"><span class="lang-he">משלוחים</span><span class="lang-en">Shipping</span><span class="lang-fr">Livraison</span></a>
+      <a href="accessibility.html"><span class="lang-he">נגישות</span><span class="lang-en">Accessibility</span><span class="lang-fr">Accessibilité</span></a>
     </div>
     <div class="footer-col">
       <h4><span class="lang-he">ביקור בחנות</span><span class="lang-en">Visit Us</span><span class="lang-fr">Nous Visiter</span></h4>
@@ -661,6 +662,12 @@ body[data-lang="he"] .lang-en,body[data-lang="he"] .lang-fr,body[data-lang="en"]
       <p><span class="lang-he">ו׳ 10:00–14:00</span><span class="lang-en">Fri 10:00–14:00</span><span class="lang-fr">Ven 10:00–14:00</span></p>
       <a href="tel:0546398638">054-639-8638</a>
       <a href="https://wa.me/972546398638" target="_blank">WhatsApp</a>
+    </div>
+    <div class="footer-col">
+      <h4><span class="lang-he">קישורים משפטיים</span><span class="lang-en">Legal Links</span><span class="lang-fr">Liens Juridiques</span></h4>
+      <a href="terms.html"><span class="lang-he">תקנון ומשלוחים</span><span class="lang-en">Terms &amp; Shipping</span><span class="lang-fr">Conditions &amp; Livraison</span></a>
+      <a href="accessibility.html"><span class="lang-he">הצהרת נגישות</span><span class="lang-en">Accessibility Statement</span><span class="lang-fr">Déclaration d'Accessibilité</span></a>
+      <a href="cancel-order.html"><span class="lang-he">ביטול עסקה</span><span class="lang-en">Cancel Order</span><span class="lang-fr">Annuler une Commande</span></a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -682,7 +689,7 @@ body[data-lang="he"] .lang-en,body[data-lang="he"] .lang-fr,body[data-lang="en"]
       <span class="sidebar-subtotal-label"><span class="lang-he">סכום ביניים</span><span class="lang-en">Subtotal</span><span class="lang-fr">Sous-total</span></span>
       <span class="sidebar-subtotal-value" id="cartSubtotal">—</span>
     </div>
-    <div class="sidebar-note"><span class="lang-he">תשלום במזומן · לשליח או באיסוף עצמי</span><span class="lang-en">Cash payment · courier or self-pickup</span><span class="lang-fr">Paiement en espèces · livraison ou retrait</span></div>
+    <div class="sidebar-note pricing-dynamic-notice"><span class="lang-he">תשלום במזומן · לשליח או באיסוף עצמי</span><span class="lang-en">Cash payment · courier or self-pickup</span><span class="lang-fr">Paiement en espèces · livraison ou retrait</span></div>
     <button class="sidebar-btn sidebar-btn-primary" id="cartCheckout">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
       <span class="lang-he">מעבר לתשלום</span><span class="lang-en">Checkout</span><span class="lang-fr">Paiement</span>
@@ -705,7 +712,7 @@ body[data-lang="he"] .lang-en,body[data-lang="he"] .lang-fr,body[data-lang="en"]
   <div class="sidebar-footer" id="wishlistFooter" style="display:none">
     <a href="tel:0546398638" class="sidebar-btn sidebar-btn-primary">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-      <span class="lang-he">התקשרו לפרטים</span><span class="lang-en">Call for Details</span><span class="lang-fr">Appeler pour Détails</span>
+      <span class="pricing-dynamic-notice"><span class="lang-he">התקשרו לפרטים</span><span class="lang-en">Call for Details</span><span class="lang-fr">Appeler pour Détails</span></span>
     </a>
   </div>
 </aside>

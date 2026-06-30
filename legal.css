@@ -1,0 +1,77 @@
+/* ============================================================
+   Rafael · Legal pages shared styles
+   Matches the main store (index.html) tokens, fonts & feel.
+   Used by terms.html, accessibility.html, cancel-order.html.
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F3F1EC;--card:#fff;--ink:#1f1b16;--mid:#5b5246;--mute:#9a8f7e;
+  --line:#e6e0d5;--gold:#a98b53;--ok:#3f7d50;--wash:#faf8f4;
+  --font-sans:'Heebo',system-ui,sans-serif;--font-display:'Frank Ruhl Libre',serif;
+  --edge:clamp(1.1rem,4vw,2rem);
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--ink);font-weight:300;line-height:1.75;min-height:100vh;display:flex;flex-direction:column}
+
+/* language toggle: HE default (RTL) / EN (LTR) */
+body[data-lang="he"] .lang-en,body[data-lang="en"] .lang-he{display:none!important}
+
+/* ---------- Header ---------- */
+.legal-header{position:sticky;top:0;z-index:40;background:rgba(243,241,236,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.legal-header-in{max-width:1000px;margin:0 auto;padding:.95rem var(--edge);display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.legal-brand{font-family:var(--font-display);font-size:1.55rem;font-weight:500;letter-spacing:.14em;color:var(--ink);text-decoration:none}
+.legal-nav{display:flex;align-items:center;gap:.4rem}
+.legal-nav a,.legal-nav button{font-family:var(--font-sans);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:var(--mid);background:none;border:1px solid var(--line);border-radius:99px;padding:.5rem .95rem;cursor:pointer;text-decoration:none;transition:all .25s}
+.legal-nav a:hover,.legal-nav button:hover{color:var(--ink);border-color:var(--gold)}
+.legal-nav button:focus-visible,.legal-nav a:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* ---------- Main / article ---------- */
+main{flex:1 0 auto;width:100%}
+.legal-wrap{max-width:780px;margin:0 auto;padding:clamp(2.2rem,6vw,4rem) var(--edge) clamp(3rem,7vw,5rem)}
+.legal-eyebrow{font-size:.7rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:1rem}
+.legal-wrap h1{font-family:var(--font-display);font-weight:500;font-size:clamp(1.9rem,5vw,2.7rem);line-height:1.2;letter-spacing:.01em;margin-bottom:.6rem}
+.legal-sub{color:var(--mute);font-size:.95rem;margin-bottom:2.4rem}
+.legal-wrap section{margin-top:2.4rem}
+.legal-wrap h2{font-family:var(--font-display);font-weight:500;font-size:clamp(1.25rem,3vw,1.6rem);margin-bottom:.9rem;padding-bottom:.55rem;border-bottom:1px solid var(--line)}
+.legal-wrap h3{font-size:1.02rem;font-weight:600;margin:1.3rem 0 .5rem;color:var(--mid)}
+.legal-wrap p{margin-bottom:1rem;color:var(--mid)}
+.legal-wrap ul,.legal-wrap ol{margin:0 0 1rem;padding-inline-start:1.4rem;color:var(--mid)}
+.legal-wrap li{margin-bottom:.55rem}
+.legal-wrap strong{color:var(--ink);font-weight:600}
+.legal-wrap a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+.legal-callout{background:var(--wash);border:1px solid var(--line);border-radius:14px;padding:1.2rem 1.4rem;margin:1.4rem 0}
+.legal-callout p:last-child{margin-bottom:0}
+
+/* ---------- Form (cancel-order) ---------- */
+.legal-form{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:clamp(1.4rem,4vw,2.2rem);box-shadow:0 8px 30px rgba(31,27,22,.06);margin-top:1.6rem}
+.field{margin-bottom:1.25rem}
+.field label{display:block;font-size:.82rem;font-weight:500;letter-spacing:.04em;color:var(--ink);margin-bottom:.5rem}
+.field .req{color:var(--gold)}
+.field .hint{display:block;font-size:.74rem;color:var(--mute);font-weight:300;margin-top:.2rem}
+.field input,.field textarea{width:100%;font-family:var(--font-sans);font-size:.95rem;font-weight:300;color:var(--ink);background:var(--wash);border:1px solid var(--line);border-radius:11px;padding:.8rem .95rem;transition:border-color .2s,background .2s}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--gold);background:#fff}
+.field textarea{resize:vertical;min-height:110px;line-height:1.6}
+.legal-submit{width:100%;font-family:var(--font-sans);font-size:.92rem;font-weight:500;letter-spacing:.08em;color:#fff;background:var(--ink);border:none;border-radius:12px;padding:.95rem 1.2rem;cursor:pointer;transition:background .25s,transform .12s;margin-top:.4rem}
+.legal-submit:hover{background:#000}
+.legal-submit:active{transform:translateY(1px)}
+.form-success{display:none;background:#eef6f0;border:1px solid #cfe6d6;border-radius:14px;padding:1.3rem 1.4rem;text-align:center;margin-top:1.4rem}
+.form-success.show{display:block;animation:fadeUp .4s ease}
+.form-success .tick{width:46px;height:46px;border-radius:50%;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto .7rem}
+.form-success h3{color:var(--ink);font-size:1.1rem;margin-bottom:.3rem;border:none}
+.form-success p{color:var(--mid);font-size:.9rem;margin:0}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- Footer ---------- */
+.legal-footer{flex-shrink:0;background:var(--ink);color:#A8A39C;padding:2.6rem var(--edge);text-align:center;margin-top:auto}
+.legal-footer .lf-brand{font-family:var(--font-display);font-size:1.3rem;color:var(--bg);letter-spacing:.1em;margin-bottom:.7rem}
+.legal-footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem 1.3rem;margin-bottom:1rem;font-size:.8rem}
+.legal-footer-links a{color:#A8A39C;text-decoration:none;transition:color .25s}
+.legal-footer-links a:hover{color:var(--bg)}
+.legal-footer-meta{font-size:.7rem;color:#707068;letter-spacing:.1em}
+.legal-footer-meta a{color:inherit;text-decoration:none}
+
+@media(max-width:560px){
+  .legal-header-in{flex-direction:row}
+  .legal-brand{font-size:1.3rem}
+  .legal-nav a,.legal-nav button{padding:.45rem .7rem;font-size:.68rem}
+}
