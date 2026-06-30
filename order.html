@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAFAEL · פרטי הזמנה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500&display=swap">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--bg:#F3F1EC;--card:#fff;--ink:#1f1b16;--mid:#5b5246;--mute:#9a8f7e;--line:#e6e0d5;--gold:#a98b53;--ok:#3f7d50;--shadow:0 6px 22px rgba(31,27,22,.06)}
+  body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--ink);font-weight:300;line-height:1.6;min-height:100vh}
+  .wrap{max-width:620px;margin:0 auto;padding:2rem 1rem}
+  header{text-align:center;padding:1.5rem 0 .5rem}
+  .brand{font-family:'Frank Ruhl Libre',serif;font-size:1.9rem;font-weight:500;letter-spacing:.18em}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.4rem;box-shadow:var(--shadow);margin-top:1rem}
+  .mark{width:60px;height:60px;border-radius:50%;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto .8rem}
+  h2{font-family:'Frank Ruhl Libre',serif;font-weight:500;font-size:1.4rem;text-align:center}
+  .oid{text-align:center;font-size:1.3rem;font-weight:700;margin:.3rem 0}
+  .muted{color:var(--mute);font-size:.86rem}
+  .badge{display:inline-block;font-size:.74rem;font-weight:600;padding:.22rem .7rem;border-radius:99px;background:#fbf0da;color:#b5852f}
+  .row{display:flex;justify-content:space-between;padding:.45rem 0;font-size:.92rem;border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:none}
+  .total{font-weight:700;font-size:1.15rem;border-top:2px solid var(--line);margin-top:.3rem;padding-top:.6rem}
+  .sec-title{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin:.2rem 0 .5rem}
+  .item{padding:.5rem 0;border-bottom:1px solid var(--line);font-size:.92rem}
+  .item:last-child{border-bottom:none}
+  .center{text-align:center}
+  a.btn{display:inline-block;margin-top:1rem;padding:.6rem 1.4rem;border:1px solid var(--line);border-radius:9px;text-decoration:none;color:var(--ink);font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="brand">RAFAEL</div></header>
+  <div id="content" class="card"><div class="center muted">טוען…</div></div>
+  <div class="center"><a class="btn" href="/">חזרה לחנות</a></div>
+</div>
+<script>
+function money(n){return '₪'+Number(n||0).toLocaleString();}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+var id=new URLSearchParams(location.search).get('id');
+var statusHe={pending_cash:'ממתין לתשלום · מזומן לשליח',pending_pickup_cash:'ממתין לתשלום · בסטודיו באיסוף',completed:'הושלמה',cancelled:'בוטלה'};
+if(!id){ document.getElementById('content').innerHTML='<div class="center muted">חסר מספר הזמנה.</div>'; }
+else fetch('/api/order/'+encodeURIComponent(id)).then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});}).then(function(res){
+  if(!res.ok){ document.getElementById('content').innerHTML='<div class="center muted">'+(res.d.error||'ההזמנה לא נמצאה')+'</div>'; return; }
+  var o=res.d.order;
+  var addr=o.shippingMethod==='self_pickup'?'איסוף עצמי · הבונים 3, נתניה':[o.customer.street,o.customer.houseNumber,o.customer.city].filter(Boolean).join(' ');
+  var items=(o.items||[]).map(function(it){
+    var parts=[it.name]; if(it.color)parts.push(it.color); if(it.size&&it.size!=='ONE_SIZE')parts.push('מידה '+it.size);
+    return '<div class="item"><div style="display:flex;justify-content:space-between"><span>'+esc(parts.join(' · '))+' × '+it.quantity+'</span><span>'+money(it.price*it.quantity)+'</span></div></div>';
+  }).join('');
+  document.getElementById('content').innerHTML=
+    '<div class="mark">✓</div>'+
+    '<h2>ההזמנה התקבלה בהצלחה!</h2>'+
+    '<div class="oid">'+esc(o.id)+'</div>'+
+    '<div class="center" style="margin:.3rem 0 1rem"><span class="badge">'+(statusHe[o.status]||o.status)+'</span></div>'+
+    '<div class="sec-title">פריטים</div>'+items+
+    '<div style="margin-top:1rem">'+
+      '<div class="row"><span>סכום ביניים</span><span>'+money(o.subtotal)+'</span></div>'+
+      '<div class="row"><span>דמי משלוח</span><span>'+(o.shipping===0?'חינם':money(o.shipping))+'</span></div>'+
+      '<div class="row total"><span>סה"כ</span><span>'+money(o.grandTotal)+'</span></div>'+
+    '</div>'+
+    '<div class="sec-title" style="margin-top:1.2rem">פרטי משלוח ותשלום</div>'+
+    '<div class="muted" style="font-size:.92rem;line-height:1.8">'+
+      '<div><b style="color:var(--ink)">'+esc(o.customer.fullName||'')+'</b> · '+esc(o.customer.phone||'')+'</div>'+
+      '<div>'+esc(addr)+'</div>'+
+      '<div>אמצעי תשלום: '+esc(o.paymentLabel||'')+'</div>'+
+      (o.customer.notes?'<div>הערה: '+esc(o.customer.notes)+'</div>':'')+
+    '</div>'+
+    '<div class="center muted" style="margin-top:1.2rem;font-size:.84rem">ניצור איתך קשר בהקדם לתיאום. תודה שבחרת ב-RAFAEL 🤍</div>';
+}).catch(function(){ document.getElementById('content').innerHTML='<div class="center muted">שגיאה בטעינת ההזמנה.</div>'; });
+</script>
+</body>
+</html>

@@ -219,15 +219,16 @@ select{font-family:inherit}
 /* ============================================================
    CATEGORY LANDING PAGE
    ============================================================ */
-.cat-banner{position:relative;height:48vh;min-height:340px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:var(--ink)}
+.cat-banner{position:relative;height:48vh;min-height:340px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:#F3F1EC}
 .cat-banner-media{position:absolute;inset:0}
-.cat-banner-media.youth{background:linear-gradient(180deg,#1A1714,#0A0908)}
-.cat-banner-media.children{background:linear-gradient(180deg,#2A211A 0%,#1A1410 100%)}
-.cat-banner-media::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.45))}
-.cat-banner-content{position:relative;z-index:2;padding:2rem;color:var(--bg)}
-.cat-banner-eyebrow{font-size:.7rem;font-weight:500;letter-spacing:.45em;text-transform:uppercase;color:rgba(250,250,248,.82);margin-bottom:1rem}
-.cat-banner-title{font-family:var(--font-display);font-size:clamp(2.8rem,6vw,5rem);font-weight:400;line-height:1;letter-spacing:.005em}
-.cat-banner-desc{font-size:.92rem;font-weight:300;margin-top:1.25rem;max-width:540px;line-height:1.7;color:rgba(250,250,248,.85);margin-left:auto;margin-right:auto}
+.cat-banner-media.youth{background:linear-gradient(180deg,#F6F4EF,#ECE7DD)}
+.cat-banner-media.children{background:linear-gradient(180deg,#F7F3EB,#EEE7DA)}
+.cat-banner-media::before{content:'';position:absolute;inset:0;background:url("photos/raf1.jpeg") center/clamp(190px,24vw,320px) no-repeat;opacity:.10;mix-blend-mode:multiply;filter:grayscale(1)}
+.cat-banner-media::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(243,241,236,0) 38%,rgba(243,241,236,.55) 100%)}
+.cat-banner-content{position:relative;z-index:2;padding:2rem;color:var(--ink)}
+.cat-banner-eyebrow{font-size:.7rem;font-weight:500;letter-spacing:.45em;text-transform:uppercase;color:#a98b53;margin-bottom:1rem}
+.cat-banner-title{font-family:var(--font-display);font-size:clamp(2.8rem,6vw,5rem);font-weight:400;line-height:1;letter-spacing:.005em;color:var(--ink)}
+.cat-banner-desc{font-size:.92rem;font-weight:300;margin-top:1.25rem;max-width:540px;line-height:1.7;color:var(--ink-mid);margin-left:auto;margin-right:auto}
 
 .sub-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line)}
 .sub-card{position:relative;aspect-ratio:3/2;overflow:hidden;cursor:pointer;background:var(--wash)}
@@ -562,12 +563,12 @@ body[data-lang="he"] .lang-en,body[data-lang="he"] .lang-fr,body[data-lang="en"]
 <!-- ANNOUNCEMENT -->
 <div class="announcement">
   <div class="announcement-track">
-    <span class="lang-he">משלוחים חינם בקניית חליפה · ייעוץ אישי לאירועים · נתניה</span>
-    <span class="lang-en">Free shipping with suit purchase · Personal consultation · Netanya</span><span class="lang-fr">Livraison gratuite à l'achat d'un costume · Consultation personnelle · Netanya</span>
-    <span class="lang-he">משלוחים חינם בקניית חליפה · ייעוץ אישי לאירועים · נתניה</span>
-    <span class="lang-en">Free shipping with suit purchase · Personal consultation · Netanya</span><span class="lang-fr">Livraison gratuite à l'achat d'un costume · Consultation personnelle · Netanya</span>
-    <span class="lang-he">משלוחים חינם בקניית חליפה · ייעוץ אישי לאירועים · נתניה</span>
-    <span class="lang-en">Free shipping with suit purchase · Personal consultation · Netanya</span><span class="lang-fr">Livraison gratuite à l'achat d'un costume · Consultation personnelle · Netanya</span>
+    <span class="lang-he">חליפות לבר מצווה · חליפות לשושבינים · חליפות לחתונות</span>
+    <span class="lang-en">Bar Mitzvah Suits · Groomsmen Suits · Wedding Suits</span><span class="lang-fr">Costumes Bar Mitzvah · Costumes Garçons d'honneur · Costumes de Mariage</span>
+    <span class="lang-he">חליפות לבר מצווה · חליפות לשושבינים · חליפות לחתונות</span>
+    <span class="lang-en">Bar Mitzvah Suits · Groomsmen Suits · Wedding Suits</span><span class="lang-fr">Costumes Bar Mitzvah · Costumes Garçons d'honneur · Costumes de Mariage</span>
+    <span class="lang-he">חליפות לבר מצווה · חליפות לשושבינים · חליפות לחתונות</span>
+    <span class="lang-en">Bar Mitzvah Suits · Groomsmen Suits · Wedding Suits</span><span class="lang-fr">Costumes Bar Mitzvah · Costumes Garçons d'honneur · Costumes de Mariage</span>
   </div>
 </div>
 
@@ -807,25 +808,35 @@ const CATALOG={
   youth:buildProducts('y',{clothing:YOUTH_CLOTHING_SIZES,shoes:YOUTH_SHOE_SIZES}),
   children:buildProducts('c',{clothing:CHILDREN_CLOTHING_SIZES,shoes:CHILDREN_SHOE_SIZES})
 };
-/* ===== PRICING — matched to the order server (ILS, VAT incl.) ===== */
-function productPrice(id){
+/* ===== PRICING — driven by the order server (admin-editable). Falls back to defaults offline. ===== */
+var DEFAULT_PRICES={'suit-kids':550,'suit-youth':650,'linen-shirt-kids':249,'shirt-regular':199,'linen-pants-kids':249,'linen-pants-youth':279,'parade-pants-kids':249,'parade-pants-youth':279,'oversized-pants-kids':249,'oversized-pants-youth':279,'vest':199,'shoes':249,'belt':70,'bowtie':39};
+var PRICE_OVERRIDES={};
+function catalogIdForId(id){
   if(!id) return null;
   var youth=id.indexOf('y-')===0;
-  if(id.indexOf('-suit-')>=0)          return youth?650:550;
-  if(id.indexOf('-shirt-linen')>=0)    return 249;
-  if(id.indexOf('-shirt-classic')>=0)  return 199;
-  if(id.indexOf('-pants-linen')>=0)    return youth?279:249;
-  if(id.indexOf('-pants-parade')>=0)   return youth?279:249;
-  if(id.indexOf('-pants-oversized')>=0)return youth?279:249;
-  if(id.indexOf('-vest-')>=0)          return 199;
-  if(id.indexOf('-shoes-')>=0)         return 249;
-  if(id.indexOf('-belt')>=0)           return 70;
-  if(id.indexOf('-bowtie')>=0)         return 39;
+  if(id.indexOf('-suit-')>=0)          return youth?'suit-youth':'suit-kids';
+  if(id.indexOf('-shirt-linen')>=0)    return 'linen-shirt-kids';
+  if(id.indexOf('-shirt-classic')>=0)  return 'shirt-regular';
+  if(id.indexOf('-pants-linen')>=0)    return youth?'linen-pants-youth':'linen-pants-kids';
+  if(id.indexOf('-pants-parade')>=0)   return youth?'parade-pants-youth':'parade-pants-kids';
+  if(id.indexOf('-pants-oversized')>=0)return youth?'oversized-pants-youth':'oversized-pants-kids';
+  if(id.indexOf('-vest-')>=0)          return 'vest';
+  if(id.indexOf('-shoes-')>=0)         return 'shoes';
+  if(id.indexOf('-belt')>=0)           return 'belt';
+  if(id.indexOf('-bowtie')>=0)         return 'bowtie';
   return null;
 }
-Object.keys(CATALOG).forEach(function(cat){ Object.keys(CATALOG[cat]).forEach(function(sub){
-  CATALOG[cat][sub].forEach(function(p){ if(p.price==null) p.price=productPrice(p.id); });
-}); });
+function productPrice(id){
+  var cid=catalogIdForId(id); if(!cid) return null;
+  if(PRICE_OVERRIDES[cid]!=null) return PRICE_OVERRIDES[cid];
+  return DEFAULT_PRICES[cid]!=null?DEFAULT_PRICES[cid]:null;
+}
+function applyCatalogPrices(){
+  Object.keys(CATALOG).forEach(function(cat){ Object.keys(CATALOG[cat]).forEach(function(sub){
+    CATALOG[cat][sub].forEach(function(p){ p.price=productPrice(p.id); });
+  }); });
+}
+applyCatalogPrices();
 
 /* ========== PRODUCT IMAGES ==========
    Keys can be either product ID (e.g. 'y-suit-parade') or variant key (e.g. 'y-suit-linen__mint-green').
@@ -941,6 +952,10 @@ const SUBCAT_COVERS={
 };
 function withVer(arr){ return arr.map(s=>s+'?'+IMG_VERSION); }
 function getImages(product){
+  if(window.IMG_SRV){
+    const sk=product._variantKey||product.id;
+    if(IMG_SRV[sk]&&IMG_SRV[sk].length) return IMG_SRV[sk];
+  }
   if(window.RFStore){
     const ov=RFStore.getImagesFor(product._variantKey||product.id);
     if(ov&&ov.length) return ov;
@@ -1129,12 +1144,6 @@ function renderHome(){
           '</div>'+
         '</div>'+
       '</section>'+
-      // SERVICES
-      '<section class="services">'+
-        serviceHTML('M3 7h18M3 12h18M3 17h18',t('service1Title'),t('service1Desc'))+
-        serviceHTML('M4 18l5-5-5-5M20 18l-5-5 5-5M12 2v20',t('service2Title'),t('service2Desc'))+
-        serviceHTML('M21 10l-9 9-3-3M3 10l9-9 3 3',t('service3Title'),t('service3Desc'))+
-      '</section>'+
     '</div>';
 }
 
@@ -1172,7 +1181,7 @@ function renderCategory(cat){
   const subcards=Object.keys(SUBCATS).map(sub=>{
     const s=SUBCATS[sub];
     const count=countSubcat(cat,sub);
-    const cover=(window.RFStore&&RFStore.getCoversMap()[cat+'/'+sub])||SUBCAT_COVERS[cat+'/'+sub];
+    const cover=(window.COVER_SRV&&COVER_SRV[cat+'/'+sub])||(window.RFStore&&RFStore.getCoversMap()[cat+'/'+sub])||SUBCAT_COVERS[cat+'/'+sub];
     const bgHtml=cover
       ?'<div class="sub-card-bg sub-card-bg-img" style="background-image:url(\''+cover+(cover.indexOf('data:')===0?'':'?'+IMG_VERSION)+'\')"></div>'
       :'<div class="sub-card-bg">'+(ICONS[{suits:'suit',pants:'pants',shirts:'shirt',vests:'vest',shoes:'shoe',accessories:'accessory'}[sub]]||'')+'</div>';
@@ -1656,9 +1665,9 @@ function closeModal(){ document.getElementById('modalBackdrop').classList.remove
 /* ===================== CHECKOUT → real order (/api/store/submit) ===================== */
 var CO={method:'courier'};
 var CO_T={
-  he:{title:'השלמת הזמנה',first:'שם פרטי',last:'שם משפחה',phone:'טלפון נייד',email:'אימייל',shipm:'שיטת משלוח',courier:'שליח עד הבית',pickup:'איסוף עצמי',city:'עיר / יישוב',street:'רחוב',house:'מספר בית',entrance:'כניסה',floor:'קומה',apt:'דירה',zip:'מיקוד',notes:'הערות למשלוח',sub:'סכום ביניים',ship:'דמי משלוח',total:'סה״כ לתשלום',free:'חינם',submit:'אישור הזמנה',sending:'שולח…',successT:'ההזמנה התקבלה!',ordno:'מספר הזמנה',close:'סגירה',pickupNote:'איסוף מהסטודיו · הבונים 3, נתניה',courierNote:'אספקה תוך 3–5 ימי עסקים',thanks:'ניצור איתך קשר בהקדם לתיאום. תודה שבחרת ב-RAFAEL 🤍'},
-  en:{title:'Complete Order',first:'First name',last:'Last name',phone:'Mobile phone',email:'Email',shipm:'Shipping method',courier:'Home delivery',pickup:'Self pickup',city:'City',street:'Street',house:'House no.',entrance:'Entrance',floor:'Floor',apt:'Apartment',zip:'Zip',notes:'Delivery notes',sub:'Subtotal',ship:'Shipping',total:'Total',free:'Free',submit:'Place order',sending:'Sending…',successT:'Order received!',ordno:'Order number',close:'Close',pickupNote:'Pickup from studio · HaBonim 3, Netanya',courierNote:'Delivery within 3–5 business days',thanks:"We'll contact you shortly. Thank you for choosing RAFAEL 🤍"},
-  fr:{title:'Finaliser la commande',first:'Prénom',last:'Nom',phone:'Téléphone',email:'Email',shipm:'Mode de livraison',courier:'Livraison à domicile',pickup:'Retrait sur place',city:'Ville',street:'Rue',house:'N° maison',entrance:'Entrée',floor:'Étage',apt:'Appartement',zip:'Code postal',notes:'Notes de livraison',sub:'Sous-total',ship:'Livraison',total:'Total',free:'Gratuit',submit:'Commander',sending:'Envoi…',successT:'Commande reçue !',ordno:'N° de commande',close:'Fermer',pickupNote:'Retrait au studio · HaBonim 3, Netanya',courierNote:'Livraison sous 3–5 jours ouvrés',thanks:'Nous vous contacterons bientôt. Merci d’avoir choisi RAFAEL 🤍'}
+  he:{title:'השלמת הזמנה',first:'שם פרטי',last:'שם משפחה',phone:'טלפון נייד',email:'אימייל',shipm:'שיטת משלוח',courier:'שליח עד הבית',pickup:'איסוף עצמי',city:'עיר / יישוב',street:'רחוב',house:'מספר בית',entrance:'כניסה',floor:'קומה',apt:'דירה',zip:'מיקוד',notes:'הערות למשלוח',sub:'סכום ביניים',ship:'דמי משלוח',total:'סה״כ לתשלום',free:'חינם',submit:'אישור הזמנה',sending:'שולח…',successT:'ההזמנה התקבלה!',ordno:'מספר הזמנה',close:'סגירה',pickupNote:'איסוף מהסטודיו · הבונים 3, נתניה',courierNote:'אספקה תוך 3–5 ימי עסקים',thanks:'ניצור איתך קשר בהקדם לתיאום. תודה שבחרת ב-RAFAEL 🤍',payNote:'שימו לב: סליקת אשראי תתווסף בקרוב. בשלב זה התשלום מתבצע ב<b>מזומן או ב-bit</b> — לשליח בעת קבלת המשלוח, או בסטודיו בעת איסוף עצמי. באישור ההזמנה הנכם מסכימים לאופן תשלום זה.',agreePre:'קראתי ואני מאשר/ת את',agreeLink:'התקנון',mustAgree:'יש לאשר את התקנון כדי להשלים את ההזמנה',termsTitle:'תקנון משלוחים, החלפות והחזרות',payAgree:'אני מאשר/ת שהתשלום כרגע במזומן או ב-bit בלבד (אין סליקת אשראי)',mustAgreePay:'יש לאשר את אופן התשלום כדי להמשיך'},
+  en:{title:'Complete Order',first:'First name',last:'Last name',phone:'Mobile phone',email:'Email',shipm:'Shipping method',courier:'Home delivery',pickup:'Self pickup',city:'City',street:'Street',house:'House no.',entrance:'Entrance',floor:'Floor',apt:'Apartment',zip:'Zip',notes:'Delivery notes',sub:'Subtotal',ship:'Shipping',total:'Total',free:'Free',submit:'Place order',sending:'Sending…',successT:'Order received!',ordno:'Order number',close:'Close',pickupNote:'Pickup from studio · HaBonim 3, Netanya',courierNote:'Delivery within 3–5 business days',thanks:"We'll contact you shortly. Thank you for choosing RAFAEL 🤍",payNote:'Note: card payment is coming soon. For now payment is by <b>cash or bit</b> — to the courier on delivery, or at the studio on self-pickup. By confirming the order you agree to this payment method.',agreePre:'I have read and accept the',agreeLink:'Terms',mustAgree:'Please accept the terms to complete the order',termsTitle:'Shipping, Exchanges & Returns Policy',payAgree:'I confirm payment is currently by cash or bit only (no card payment yet)',mustAgreePay:'Please confirm the payment method to continue'},
+  fr:{title:'Finaliser la commande',first:'Prénom',last:'Nom',phone:'Téléphone',email:'Email',shipm:'Mode de livraison',courier:'Livraison à domicile',pickup:'Retrait sur place',city:'Ville',street:'Rue',house:'N° maison',entrance:'Entrée',floor:'Étage',apt:'Appartement',zip:'Code postal',notes:'Notes de livraison',sub:'Sous-total',ship:'Livraison',total:'Total',free:'Gratuit',submit:'Commander',sending:'Envoi…',successT:'Commande reçue !',ordno:'N° de commande',close:'Fermer',pickupNote:'Retrait au studio · HaBonim 3, Netanya',courierNote:'Livraison sous 3–5 jours ouvrés',thanks:'Nous vous contacterons bientôt. Merci d’avoir choisi RAFAEL 🤍',payNote:'Le paiement par carte arrive bientôt. Pour l’instant, le paiement se fait en <b>espèces ou bit</b> — au livreur à la réception, ou au studio lors du retrait. En confirmant, vous acceptez ce mode de paiement.',agreePre:'J’ai lu et j’accepte les',agreeLink:'Conditions',mustAgree:'Veuillez accepter les conditions pour finaliser',termsTitle:'Politique de livraison, échanges et retours',payAgree:'Je confirme que le paiement se fait par espèces ou bit uniquement (pas encore de carte)',mustAgreePay:'Veuillez confirmer le mode de paiement'}
 };
 function coL(){ return CO_T[STATE.lang]||CO_T.he; }
 function coVal(id){ var e=document.getElementById(id); return e?e.value.trim():''; }
@@ -1704,7 +1713,12 @@ function openCheckout(){
     '<label style="display:block;font-size:.72rem;color:var(--mute);margin:.5rem 0 .2rem">'+l.notes+'</label>'+
     '<textarea id="co_notes" rows="2" style="width:100%;padding:.6rem;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:.92rem;background:#fff"></textarea>'+
     '<div id="co_summary" style="border-top:1px solid var(--line);margin-top:1rem;padding-top:.8rem"></div>'+
-    '<button id="co_submit" onclick="coSubmit(this)" style="width:100%;margin-top:1rem;padding:.85rem;border:none;border-radius:9px;background:var(--ink);color:#fff;font-family:inherit;font-weight:500;font-size:1rem;cursor:pointer">'+l.submit+'</button>'
+    '<div style="margin-top:1rem;background:#fbf7ee;border:1px solid #ecdfc4;border-radius:10px;padding:.8rem .9rem;font-size:.82rem;color:#6e5a2e;line-height:1.65">💳 '+l.payNote+'</div>'+
+    '<label style="display:flex;align-items:flex-start;gap:.55rem;margin-top:.8rem;cursor:pointer;font-size:.9rem"><input type="checkbox" id="co_payok" style="margin-top:.2rem;width:18px;height:18px;flex-shrink:0;cursor:pointer;accent-color:#1f1b16"><span>'+l.payAgree+'</span></label>'+
+    '<div class="co-err" data-for="co_payok" style="color:#b3473a;font-size:.74rem;min-height:.85rem;margin-top:.2rem"></div>'+
+    '<label style="display:flex;align-items:flex-start;gap:.55rem;margin-top:.4rem;cursor:pointer;font-size:.9rem"><input type="checkbox" id="co_terms" style="margin-top:.2rem;width:18px;height:18px;flex-shrink:0;cursor:pointer;accent-color:#1f1b16"><span>'+l.agreePre+' <a onclick="event.preventDefault();openTerms()" style="color:var(--ink);text-decoration:underline;cursor:pointer;font-weight:500">'+l.agreeLink+'</a></span></label>'+
+    '<div class="co-err" data-for="co_terms" style="color:#b3473a;font-size:.74rem;min-height:.85rem;margin-top:.2rem"></div>'+
+    '<button id="co_submit" onclick="coSubmit(this)" style="width:100%;margin-top:.5rem;padding:.85rem;border:none;border-radius:9px;background:var(--ink);color:#fff;font-family:inherit;font-weight:500;font-size:1rem;cursor:pointer">'+l.submit+'</button>'
   );
   coRenderSummary();
 }
@@ -1729,6 +1743,18 @@ function coSubmit(btn){
   var l=coL();
   document.querySelectorAll('.co-err').forEach(function(e){e.textContent='';});
   document.getElementById('co_msg').style.display='none';
+  var pc=document.getElementById('co_payok');
+  if(!pc||!pc.checked){
+    var pe=document.querySelector('.co-err[data-for="co_payok"]'); if(pe) pe.textContent=l.mustAgreePay;
+    var mp=document.getElementById('co_msg'); mp.style.display='block'; mp.textContent=l.mustAgreePay;
+    return;
+  }
+  var tc=document.getElementById('co_terms');
+  if(!tc||!tc.checked){
+    var te=document.querySelector('.co-err[data-for="co_terms"]'); if(te) te.textContent=l.mustAgree;
+    var mm=document.getElementById('co_msg'); mm.style.display='block'; mm.textContent=l.mustAgree;
+    return;
+  }
   var t=coTotals();
   var customer={firstName:coVal('co_first'),lastName:coVal('co_last'),phone:coVal('co_phone'),email:coVal('co_email'),notes:coVal('co_notes'),
     city:coVal('co_city'),street:coVal('co_street'),houseNumber:coVal('co_house'),entrance:coVal('co_entrance'),floor:coVal('co_floor'),apartment:coVal('co_apt'),zip:coVal('co_zip')};
@@ -1757,6 +1783,56 @@ function coSubmit(btn){
       btn.disabled=false; btn.textContent=l.submit;
     }
   }).catch(function(){ var m3=document.getElementById('co_msg'); m3.style.display='block'; m3.textContent='שגיאת תקשורת'; btn.disabled=false; btn.textContent=l.submit; });
+}
+function openTerms(){
+  var bg=document.getElementById('termsOverlay');
+  if(!bg){
+    bg=document.createElement('div');
+    bg.id='termsOverlay';
+    bg.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(20,16,12,.55);display:none;align-items:center;justify-content:center;padding:1rem';
+    bg.addEventListener('click',function(e){ if(e.target===bg) closeTerms(); });
+    document.body.appendChild(bg);
+  }
+  bg.innerHTML='<div style="background:#F3F1EC;max-width:640px;width:100%;max-height:88vh;overflow:auto;border-radius:14px;padding:1.6rem 1.5rem;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3)">'+
+    '<button onclick="closeTerms()" aria-label="סגירה" style="position:absolute;top:.7rem;left:.9rem;background:none;border:none;font-size:1.6rem;line-height:1;cursor:pointer;color:var(--ink)">&times;</button>'+
+    termsHTML()+
+    '<button onclick="closeTerms()" style="width:100%;margin-top:1.2rem;padding:.7rem;border:none;border-radius:9px;background:var(--ink);color:#fff;font-family:inherit;font-weight:500;cursor:pointer">חזרה לאישור ההזמנה</button>'+
+  '</div>';
+  bg.style.display='flex';
+}
+function closeTerms(){ var bg=document.getElementById('termsOverlay'); if(bg) bg.style.display='none'; }
+function termsHTML(){
+  var h='font-family:var(--font-display);font-size:1.2rem;margin:1.1rem 0 .4rem';
+  var p='font-size:.9rem;color:var(--ink-mid);line-height:1.7;margin:.4rem 0';
+  var li='font-size:.88rem;color:var(--ink-mid);line-height:1.65;margin:.4rem 0';
+  return ''+
+   '<h3 style="font-family:var(--font-display);font-size:1.45rem;margin-bottom:.3rem">תקנון משלוחים, החלפות והחזרות – Rafael</h3>'+
+   '<p style="'+p+'">ברוכים הבאים לחנות הדיגיטלית של Rafael. להלן מדיניות המשלוחים, האספקה והחזרת המוצרים עבור הזמנות המבוצעות ישירות דרך האתר. ביצוע הזמנה באתר מהווה הסכמה לתנאים המפורטים להלן:</p>'+
+   '<h4 style="'+h+'">1. מדיניות משלוחים, עלויות וזמני אספקה</h4>'+
+   '<ul style="padding-inline-start:1.1rem;margin:0">'+
+     '<li style="'+li+'"><b>משלוח חינם:</b> בהזמנות מעל <b>1,500 ש"ח</b>, המשלוח עם שליח עד הבית ללא עלות.</li>'+
+     '<li style="'+li+'"><b>עלות משלוח רגיל:</b> עבור הזמנות מתחת לסכום זה, עלות המשלוח <b>40 ש"ח</b> ותתווסף אוטומטית בקופה.</li>'+
+     '<li style="'+li+'"><b>זמני אספקה:</b> המשלוח יסופק בחברת שליחויות לכתובת שהוקלדה, בתוך <b>3–5 ימי עסקים</b> (לא כולל שישי, שבת, ערבי חג וחגים).</li>'+
+     '<li style="'+li+'"><b>יישובים מרוחקים:</b> מעבר לקו הירוק, יישובי הערבה, ים המלח ואילת — עד <b>7 ימי עסקים</b>.</li>'+
+     '<li style="'+li+'"><b>איסוף עצמי (חינם):</b> מהסטודיו בכתובת <b>הבונים 3, נתניה</b>. ההזמנה מוכנה תוך <b>יום עסקים אחד</b>, בתיאום ב-SMS או WhatsApp.</li>'+
+   '</ul>'+
+   '<h4 style="'+h+'">2. מדיניות החלפת מוצרים</h4>'+
+   '<ul style="padding-inline-start:1.1rem;margin:0">'+
+     '<li style="'+li+'"><b>תקופת ההחלפה:</b> ניתן להחליף פריט בתוך <b>14 ימים</b> מקבלת המשלוח.</li>'+
+     '<li style="'+li+'"><b>תנאי ההחלפה:</b> פריט במצבו המקורי בלבד — ללא שימוש, ללא כביסה, ללא פגם, עם תווית ואריזה מקוריות ושלמות.</li>'+
+     '<li style="'+li+'"><b>פריטים בהתאמה אישית:</b> פריטים שעברו מכפלת/הצרה/תיקון לפי מידות הלקוח — <b>אינם ניתנים להחלפה או החזרה</b>.</li>'+
+     '<li style="'+li+'"><b>איך מחליפים?</b> 1) הגעה עצמית לסטודיו בנתניה (ללא עלות). 2) החלפה עם שליח עד אליך (בעלות <b>80 ש"ח</b> — משלוח כפול).</li>'+
+   '</ul>'+
+   '<h4 style="'+h+'">3. ביטול עסקה והחזר כספי (חוק הגנת הצרכן)</h4>'+
+   '<ul style="padding-inline-start:1.1rem;margin:0">'+
+     '<li style="'+li+'"><b>זכות הביטול:</b> בעסקת מכר מרחוק — ביטול והחזר בתוך <b>14 ימים</b> מקבלת המוצר.</li>'+
+     '<li style="'+li+'"><b>תנאי ההחזר:</b> המוצר חדש לחלוטין, באריזתו המקורית, ללא שימוש.</li>'+
+     '<li style="'+li+'"><b>דמי ביטול:</b> ינוכו כחוק בגובה <b>5% מסכום העסקה או 100 ש"ח</b> (הנמוך מביניהם).</li>'+
+     '<li style="'+li+'"><b>עלות שילוח חזרה:</b> באחריות הלקוח. שליח מטעמנו לאיסוף — <b>40 ש"ח</b> ינוכו מהזיכוי.</li>'+
+     '<li style="'+li+'"><b>אופן הזיכוי:</b> ישירות לאמצעי התשלום, בתוך 14 ימי עסקים מרגע קבלת הפריט ובדיקתו.</li>'+
+   '</ul>'+
+   '<h4 style="'+h+'">4. שירות לקוחות ותמיכה</h4>'+
+   '<p style="'+p+'"><b>טלפון ו-WhatsApp:</b> 054-639-8638<br><b>כתובת למשלוחים ואיסוף:</b> הבונים 3, נתניה</p>';
 }
 function openSizeGuide(){
   const isShoe=pdState.sub==='shoes';
@@ -1797,15 +1873,47 @@ function renderPage(){
 }
 
 /* ========== INIT ========== */
+var IMG_SUBS={suits:'חליפות',pants:'מכנסיים',shirts:'חולצות מכופתרות',vests:'וסטים',shoes:'נעליים',accessories:'אביזרים'};
+var IMG_CATN={youth:'נוער',children:'ילדים'};
+function buildImgCatalog(){
+  var variants=[];
+  Object.keys(CATALOG).forEach(function(cat){ Object.keys(CATALOG[cat]).forEach(function(sub){
+    var grp=(IMG_CATN[cat]||cat)+' · '+(IMG_SUBS[sub]||sub);
+    CATALOG[cat][sub].forEach(function(p){
+      var add=function(key,colorName){
+        var imgs=(getImages(Object.assign({},p,{_variantKey:key}))||[]).map(function(u){return String(u).split('?')[0];});
+        variants.push({key:key,label:(p.name_he||p.id)+(colorName?(' · '+colorName):''),group:grp,images:imgs});
+      };
+      if(p.colors&&p.colors.length>1&&!p.noExplode) p.colors.forEach(function(c){add(p.id+'__'+c.id,c.name_he);});
+      else add(p.id,(p.colors&&p.colors[0]&&p.colors[0].name_he)||'');
+    });
+  }); });
+  var covers=[];
+  Object.keys(IMG_CATN).forEach(function(c){ Object.keys(IMG_SUBS).forEach(function(s){
+    var key=c+'/'+s; var cur=(window.COVER_SRV&&COVER_SRV[key])||SUBCAT_COVERS[key]||'';
+    covers.push({catSub:key,label:(IMG_CATN[c])+' · '+(IMG_SUBS[s]),url:String(cur).split('?')[0]});
+  }); });
+  return {variants:variants,covers:covers};
+}
+function syncImages(){
+  fetch('/api/images').then(function(r){return r.json();}).then(function(d){
+    window.IMG_SRV=d.variants||{}; window.COVER_SRV=d.covers||{};
+    renderPage();
+    try{ fetch('/api/_imgcatalog',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(buildImgCatalog())}); }catch(e){}
+  }).catch(function(){});
+}
 function init(){
+  fetch('/api/settings').then(function(r){return r.json();}).then(function(s){
+    if(s&&s.prices){ PRICE_OVERRIDES=s.prices; applyCatalogPrices(); renderPage(); }
+    if(s){
+      if(s.bannerHe) document.querySelectorAll('.announcement .lang-he').forEach(function(e){e.textContent=s.bannerHe;});
+      if(s.bannerEn) document.querySelectorAll('.announcement .lang-en').forEach(function(e){e.textContent=s.bannerEn;});
+      if(s.bannerFr) document.querySelectorAll('.announcement .lang-fr').forEach(function(e){e.textContent=s.bannerFr;});
+    }
+  }).catch(function(){});
+  syncImages();
   if(window.RFStore){
-    try{
-      buildSnapshot();
-      const s=RFStore.getSettings();
-      document.querySelectorAll('.announcement .lang-he').forEach(e=>e.textContent=s.banner_he);
-      document.querySelectorAll('.announcement .lang-en').forEach(e=>e.textContent=s.banner_en);
-      document.querySelectorAll('.announcement .lang-fr').forEach(e=>e.textContent=s.banner_fr);
-    }catch(e){ console.warn('store init',e); }
+    try{ buildSnapshot(); }catch(e){ console.warn('store init',e); }
   }
   applyLang();
   updateBadges();
