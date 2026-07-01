@@ -591,9 +591,14 @@ body[data-lang="he"] .lang-en,body[data-lang="he"] .lang-fr,body[data-lang="en"]
   body{background:transparent}
   .phone-col{display:block;container-type:inline-size;width:var(--phw);margin:0 auto;min-height:100vh;background:var(--bg);box-shadow:0 0 0 1px rgba(31,27,22,.05),0 26px 90px rgba(31,27,22,.22)}
   /* anchor the viewport-fixed chrome (header / drawers / fabs) onto the phone column */
-  .announcement,.navbar,.search-overlay,.mobile-menu-backdrop,.sidebar-backdrop,.modal-backdrop{left:var(--gut);right:var(--gut);width:auto;max-width:none}
-  .mobile-menu{left:var(--gut)}
-  .sidebar{left:var(--gut);width:var(--phw)}
+  .announcement,.navbar,.search-overlay,.mobile-menu-backdrop{left:var(--gut);right:var(--gut);width:auto;max-width:none}
+  /* drawers & menu: rest on the phone column when open, fully off-screen when closed (backdrops stay full-viewport) */
+  .mobile-menu{left:var(--gut);transform:translateX(calc(-100% - var(--gut)))}
+  .mobile-menu.active{transform:translateX(0)}
+  .sidebar{left:var(--gut);right:auto;width:var(--phw);transform:translateX(calc(-100% - var(--gut)))}
+  .sidebar.active{transform:translateX(0)}
+  [dir="ltr"] .sidebar{left:auto;right:var(--gut);transform:translateX(calc(100% + var(--gut)))}
+  [dir="ltr"] .sidebar.active{transform:translateX(0)}
   .fab-wa{left:calc(var(--gut) + 1rem)}
   .fab-top,.fab-access{right:calc(var(--gut) + 1rem)}
   .a11y-panel{right:calc(var(--gut) + 1rem);width:calc(var(--phw) - 2rem);max-width:280px}
