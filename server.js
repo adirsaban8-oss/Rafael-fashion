@@ -51,6 +51,32 @@ const CATALOG = PRODUCTS.map((p) => ({
 }));
 const productById = new Map(CATALOG.map((p) => [p.id, p]));
 
+/* Per-product (per-card) control. The rich storefront (index.html) publishes its
+ * full product list here; the admin edits price/stock PER product; the site reads
+ * the overrides back. Falls back to the 14 product-type prices when not overridden. */
+let siteProducts = [];       // [{ id, name, cat, sub, catalogId }] published by the storefront
+const productOverrides = {}; // id -> { price?: number, stockStatus?: 'in_stock' | 'out_of_stock' }
+function typePriceOf(catalogId) { const p = productById.get(catalogId); return p ? p.price : null; }
+function effectivePrice(prod) {
+  const ov = productOverrides[prod.id];
+  if (ov && ov.price != null) return ov.price;
+  return typePriceOf(prod.catalogId);
+}
+function effectiveStock(id) {
+  const ov = productOverrides[id];
+  return ov && ov.stockStatus ? ov.stockStatus : 'in_stock';
+}
+function productPriceMap() {
+  const m = {};
+  Object.keys(productOverrides).forEach((id) => { if (productOverrides[id].price != null) m[id] = productOverrides[id].price; });
+  return m;
+}
+function productStockMap() {
+  const m = {};
+  Object.keys(productOverrides).forEach((id) => { if (productOverrides[id].stockStatus) m[id] = productOverrides[id].stockStatus; });
+  return m;
+}
+
 function isValidSize(product, size) {
   if (!product) return false;
   if (product.oneSize) return true;
@@ -266,6 +292,8 @@ app.get('/api/settings', (_req, res) => res.json({
   freeThreshold: SETTINGS.freeThreshold, flatFee: SETTINGS.flatFee,
   studioAddress: SETTINGS.studioAddress, whatsapp: SETTINGS.whatsapp,
   prices: priceMap(),
+  productPrices: productPriceMap(),
+  productStock: productStockMap(),
 }));
 
 // Live totals for the cart UI.
@@ -346,6 +374,8 @@ function catalogIdFor(id) {
   return null;
 }
 function priceForId(id) {
+  const ov = productOverrides[String(id || '')];
+  if (ov && ov.price != null) return ov.price;
   const cid = catalogIdFor(id);
   if (!cid) return null;
   const p = productById.get(cid);
@@ -373,6 +403,7 @@ app.post('/api/store/submit', (req, res) => {
     for (const it of raw) {
       const price = priceForId(it.productId);
       if (price == null) return res.status(400).json({ error: `מוצר לא קיים: ${it.name || it.productId}` });
+      if (effectiveStock(it.productId) === 'out_of_stock') return res.status(400).json({ error: `${it.name || it.productId} אזל מהמלאי` });
       const quantity = Math.max(1, parseInt(it.quantity, 10) || 1);
       items.push({
         productId: String(it.productId),
@@ -500,6 +531,40 @@ app.post('/api/_imgcatalog', (req, res) => {           // storefront publishes i
   const b = req.body || {};
   if (Array.isArray(b.variants)) imgCatalog.variants = b.variants;
   if (Array.isArray(b.covers)) imgCatalog.covers = b.covers;
+  res.json({ ok: true });
+});
+
+// Storefront publishes its full per-product list so the admin can price each card.
+app.post('/api/_products', (req, res) => {
+  const b = req.body;
+  if (Array.isArray(b)) {
+    siteProducts = b
+      .filter((p) => p && p.id)
+      .map((p) => ({ id: String(p.id), name: String(p.name || p.id), cat: String(p.cat || ''), sub: String(p.sub || ''), catalogId: p.catalogId ? String(p.catalogId) : null }));
+  }
+  res.json({ ok: true, count: siteProducts.length });
+});
+// Admin: every product on the site, with its effective (override-or-type) price & stock.
+app.get('/api/admin/site-products', adminAuth, (_req, res) => {
+  res.json({ products: siteProducts.map((p) => ({
+    id: p.id, name: p.name, cat: p.cat, sub: p.sub, catalogId: p.catalogId,
+    price: effectivePrice(p), stockStatus: effectiveStock(p.id),
+  })) });
+});
+// Admin: set price and/or stock for a single product (card).
+app.post('/api/admin/site-products/:id', adminAuth, (req, res) => {
+  const id = String(req.params.id);
+  const { price, stockStatus } = req.body || {};
+  const ov = productOverrides[id] || (productOverrides[id] = {});
+  if (price !== undefined) {
+    const p = Number(price);
+    if (!Number.isFinite(p) || p < 0) return res.status(400).json({ error: 'מחיר לא תקין' });
+    ov.price = round2(p);
+  }
+  if (stockStatus !== undefined) {
+    if (!STOCK_STATUSES.includes(stockStatus)) return res.status(400).json({ error: 'סטטוס מלאי לא תקין' });
+    ov.stockStatus = stockStatus;
+  }
   res.json({ ok: true });
 });
 app.get('/api/images', (_req, res) => res.json(imgState)); // site reads overrides

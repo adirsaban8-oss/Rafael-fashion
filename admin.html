@@ -151,6 +151,29 @@
   .var-block:last-child{border-bottom:none}
   .var-h{font-weight:500;font-size:.92rem;margin-bottom:.55rem}
   .upl{cursor:pointer}
+
+  /* ---------- products (per-card rows) ---------- */
+  .cat-title{font-family:'Frank Ruhl Libre',serif;font-weight:600;font-size:1rem;color:var(--gold);margin:1.15rem 0 .55rem}
+  .pid{font-size:.64rem;color:var(--mute);font-family:monospace;direction:ltr;text-align:right;margin-top:.15rem}
+  .prow{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding:.7rem .85rem;border:1px solid var(--line);border-radius:11px;margin-bottom:.55rem;background:var(--soft)}
+  .prow-info{min-width:150px;flex:1}
+  .prow-name{font-weight:500;font-size:.95rem}
+  .prow-ctrls{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+  .price-fld{display:flex;align-items:center;gap:.4rem}
+  .price-fld label{margin:0;font-size:.72rem;white-space:nowrap;color:var(--ink2)}
+  .price-fld input{width:92px;text-align:center;font-weight:600}
+
+  /* ---------- narrow phones ---------- */
+  @media(max-width:560px){
+    .content{padding:1rem}
+    .topbar{padding:.85rem 1rem}
+    .prow{flex-direction:column;align-items:stretch;gap:.65rem}
+    .prow-ctrls{justify-content:space-between;gap:.6rem}
+    .price-fld{flex:1}
+    .price-fld input{width:100%}
+    .token-wrap{width:100%}
+    .token-wrap input{flex:1;width:auto!important}
+  }
 </style>
 </head>
 <body>
@@ -313,32 +336,45 @@ function exportCSV(){
 }
 
 /* ---------- products ---------- */
+var _siteProducts=[];
+var CATLBL={youth:'נוער',children:'ילדים'};
 function viewProducts(){
-  if(!_catalog.length){ $('view').innerHTML='<div class="card"><div class="empty">טוען מוצרים…</div></div>'; loadCatalog(viewProducts); return; }
-  var cats={};_catalog.forEach(function(p){(cats[p.category]=cats[p.category]||[]).push(p);});
-  var html='<div class="card"><div class="card-h"><h2>מוצרים ותמחור</h2><span class="muted">שינוי מחיר/מלאי משתקף מיד באתר ובהזמנות</span></div>';
-  Object.keys(cats).forEach(function(cat){
-    html+='<div class="cat-group"><div class="cat-title">'+esc(cat)+'</div>'+
-      '<table class="ptable"><thead><tr><th>מוצר</th><th>מחיר (₪)</th><th>מלאי</th><th></th></tr></thead><tbody>'+
-      cats[cat].map(function(p){
+  $('view').innerHTML='<div class="card"><div class="empty">טוען מוצרים…</div></div>';
+  fetch('/api/admin/site-products',{headers:hdrs()}).then(function(r){return r.json();}).then(function(d){
+    _siteProducts=d.products||[];
+    if(!_siteProducts.length){
+      $('view').innerHTML='<div class="card"><div class="card-h"><h2>מוצרים ותמחור</h2></div>'+
+        '<div class="note">רשימת המוצרים נטענת מהאתר. פתחו את <a href="/" target="_blank" rel="noopener">האתר</a> פעם אחת, ואז לחצו רענון.</div>'+
+        '<div style="margin-top:1rem"><button class="btn" onclick="viewProducts()">רענון</button></div></div>';
+      return;
+    }
+    var groups={};_siteProducts.forEach(function(p){(groups[p.cat]=groups[p.cat]||[]).push(p);});
+    var html='<div class="card"><div class="card-h"><h2>מוצרים ותמחור</h2><span class="muted">כל מוצר באתר · '+_siteProducts.length+' פריטים · שינוי משתקף מיד</span></div>';
+    Object.keys(groups).forEach(function(cat){
+      html+='<div class="cat-title">'+esc(CATLBL[cat]||cat)+'</div>';
+      html+=groups[cat].map(function(p){
         var inStock=p.stockStatus!=='out_of_stock';
-        return '<tr>'+
-          '<td><div class="pname">'+esc(p.name)+'</div><div class="pid">'+esc(p.id)+'</div></td>'+
-          '<td class="price-in"><label class="sr-only" for="pr-'+p.id+'">מחיר '+esc(p.name)+'</label><input id="pr-'+p.id+'" type="number" min="0" value="'+p.price+'"></td>'+
-          '<td><label class="switch"><input type="checkbox" id="sk-'+p.id+'" '+(inStock?'checked':'')+' onchange="stkLabel(\''+p.id+'\')" aria-label="מלאי '+esc(p.name)+'"><span class="track"></span><span class="stk" id="skl-'+p.id+'" style="color:'+(inStock?'var(--green)':'var(--red)')+'">'+(inStock?'במלאי':'אזל')+'</span></label></td>'+
-          '<td style="text-align:left"><button class="btn green sm" onclick="saveProduct(\''+p.id+'\')">שמירה</button></td>'+
-        '</tr>';
-      }).join('')+'</tbody></table></div>';
-  });
-  html+='</div>';
-  $('view').innerHTML=html;
+        return '<div class="prow">'+
+          '<div class="prow-info"><div class="prow-name">'+esc(p.name)+'</div><div class="pid">'+esc(p.id)+'</div></div>'+
+          '<div class="prow-ctrls">'+
+            '<div class="price-fld"><label for="pr-'+p.id+'">מחיר ₪</label><input id="pr-'+p.id+'" type="number" min="0" inputmode="numeric" value="'+(p.price==null?'':p.price)+'"></div>'+
+            '<label class="switch"><input type="checkbox" id="sk-'+p.id+'" '+(inStock?'checked':'')+' onchange="stkLabel(\''+p.id+'\')" aria-label="מלאי '+esc(p.name)+'"><span class="track"></span><span class="stk" id="skl-'+p.id+'" style="color:'+(inStock?'var(--green)':'var(--red)')+'">'+(inStock?'במלאי':'אזל')+'</span></label>'+
+            '<button class="btn green sm" onclick="saveSiteProduct(\''+p.id+'\')">שמירה</button>'+
+          '</div>'+
+        '</div>';
+      }).join('');
+    });
+    html+='</div>';
+    $('view').innerHTML=html;
+  }).catch(function(){ $('view').innerHTML='<div class="card"><div class="empty">שגיאה בטעינת המוצרים</div></div>'; });
 }
 function stkLabel(id){var on=$('sk-'+id).checked;var l=$('skl-'+id);l.textContent=on?'במלאי':'אזל';l.style.color=on?'var(--green)':'var(--red)';}
-function saveProduct(id){
+function saveSiteProduct(id){
   var price=Number($('pr-'+id).value), stockStatus=$('sk-'+id).checked?'in_stock':'out_of_stock';
-  fetch('/api/admin/products/'+id,{method:'POST',headers:hdrs(),body:JSON.stringify({price:price,stockStatus:stockStatus})})
+  if(!isFinite(price)||price<0){toast('מחיר לא תקין',true);return;}
+  fetch('/api/admin/site-products/'+encodeURIComponent(id),{method:'POST',headers:hdrs(),body:JSON.stringify({price:price,stockStatus:stockStatus})})
   .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});})
-  .then(function(res){ if(res.ok){toast('נשמר ✓');loadCatalog();} else toast(res.d.error||'שגיאה',true); })
+  .then(function(res){ if(res.ok)toast('נשמר ✓'); else toast(res.d.error||'שגיאה',true); })
   .catch(function(){toast('שגיאת תקשורת',true);});
 }
 
