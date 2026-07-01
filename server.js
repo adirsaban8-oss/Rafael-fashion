@@ -242,7 +242,7 @@ const orderRepository = {
  *   (localhost links won't work on a customer's device).
  * ========================================================================= */
 const PORT = process.env.PORT || 3000;
-const SMS_API_KEY = process.env.SMS_API_KEY || '0XB736D664890D32C955F2E141D5FE136FE5A92EF012B802A0CEEAB0A4FB951C87471A7B1617BF02F829C48124BA17DAD0';
+const SMS_API_KEY = process.env.SMS_API_KEY || '0X7215132E07B28A0F796096F4B6B86FB96D100751A12656F6C18B1C964B598C1CB9E6A575D07E5211FFCF3EFA8AC03EEE';
 const PUBLIC_URL  = process.env.PUBLIC_URL  || `http://localhost:${PORT}`;
 
 // Sends one SMS via ActiveTrail (api/smscampaign/OperationalMessage).
