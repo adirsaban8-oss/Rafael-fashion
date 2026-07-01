@@ -81,6 +81,11 @@ function productSizeStockMap() {
   Object.keys(productOverrides).forEach((id) => { const so = productOverrides[id].sizesOut; if (so && so.length) m[id] = so; });
   return m;
 }
+function productDiscountMap() {
+  const m = {};
+  Object.keys(productOverrides).forEach((id) => { if (productOverrides[id].discountPct) m[id] = productOverrides[id].discountPct; });
+  return m;
+}
 
 function isValidSize(product, size) {
   if (!product) return false;
@@ -300,6 +305,7 @@ app.get('/api/settings', (_req, res) => res.json({
   productPrices: productPriceMap(),
   productStock: productStockMap(),
   sizeStock: productSizeStockMap(),
+  productDiscounts: productDiscountMap(),
 }));
 
 // Live totals for the cart UI.
@@ -380,12 +386,20 @@ function catalogIdFor(id) {
   return null;
 }
 function priceForId(id) {
-  const ov = productOverrides[String(id || '')];
-  if (ov && ov.price != null) return ov.price;
-  const cid = catalogIdFor(id);
-  if (!cid) return null;
-  const p = productById.get(cid);
-  return p ? p.price : null;
+  id = String(id || '');
+  const ov = productOverrides[id];
+  let base;
+  if (ov && ov.price != null) base = ov.price;
+  else {
+    const cid = catalogIdFor(id);
+    if (!cid) return null;
+    const p = productById.get(cid);
+    base = p ? p.price : null;
+  }
+  if (base == null) return null;
+  const baseId = id.split('__')[0];
+  const pct = (ov && ov.discountPct) || (productOverrides[baseId] && productOverrides[baseId].discountPct) || 0;
+  return pct > 0 ? round2(base * (1 - pct / 100)) : base;   // charged price includes discount
 }
 // Price map (catalog id → price) for the storefront to display admin-edited prices.
 function priceMap() {
@@ -559,6 +573,7 @@ app.get('/api/admin/site-products', adminAuth, (_req, res) => {
     id: p.id, name: p.name, cat: p.cat, sub: p.sub, catalogId: p.catalogId,
     baseId: p.baseId, sizes: p.sizes || [],
     price: effectivePrice(p), stockStatus: effectiveStock(p.id),
+    discountPct: (productOverrides[p.id] && productOverrides[p.id].discountPct) || 0,
     sizesOut: (productOverrides[p.baseId] && productOverrides[p.baseId].sizesOut) || [],
   })) });
 });
@@ -577,7 +592,7 @@ app.post('/api/admin/size-stock/:baseId', adminAuth, (req, res) => {
 // Admin: set price and/or stock for a single product (card).
 app.post('/api/admin/site-products/:id', adminAuth, (req, res) => {
   const id = String(req.params.id);
-  const { price, stockStatus } = req.body || {};
+  const { price, stockStatus, discountPct } = req.body || {};
   const ov = productOverrides[id] || (productOverrides[id] = {});
   if (price !== undefined) {
     const p = Number(price);
@@ -587,6 +602,11 @@ app.post('/api/admin/site-products/:id', adminAuth, (req, res) => {
   if (stockStatus !== undefined) {
     if (!STOCK_STATUSES.includes(stockStatus)) return res.status(400).json({ error: 'סטטוס מלאי לא תקין' });
     ov.stockStatus = stockStatus;
+  }
+  if (discountPct !== undefined) {
+    const d = Number(discountPct);
+    if (!Number.isFinite(d) || d < 0 || d > 95) return res.status(400).json({ error: 'הנחה לא תקינה (0–95%)' });
+    ov.discountPct = Math.round(d);
   }
   res.json({ ok: true });
 });

@@ -336,7 +336,13 @@ select{font-family:inherit}
 .pd-size .pd-size-oos{display:block;font-size:.5rem;letter-spacing:.06em;text-decoration:none;margin-top:1px;opacity:.9}
 /* product extra details (fabric & care) */
 .product-extra-details{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--line)}
-.product-extra-details__title{font-family:var(--font-display);font-size:1.05rem;font-weight:500;margin-bottom:.85rem}
+.product-extra-details__summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:1rem;cursor:pointer;font-family:var(--font-display);font-size:1.05rem;font-weight:500;user-select:none;outline:none}
+.product-extra-details__summary::-webkit-details-marker{display:none}
+.product-extra-details__summary:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
+.product-extra-details .ped-chev{width:18px;height:18px;flex-shrink:0;transition:transform .3s var(--ease)}
+.product-extra-details[open] .ped-chev{transform:rotate(180deg)}
+.product-extra-details__body{padding-top:1rem;animation:pedFade .35s var(--ease)}
+@keyframes pedFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .product-extra-details__fabric{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:.85rem}
 .product-extra-details__row{display:flex;gap:.9rem;padding:.6rem 0;border-bottom:1px solid var(--line);font-size:.86rem;line-height:1.65}
 .product-extra-details__row:last-child{border-bottom:none}
@@ -859,6 +865,7 @@ var PRICE_OVERRIDES={};
 var PRODUCT_PRICES={};   /* per-product (per-card) price overrides from admin */
 var PRODUCT_STOCK={};    /* per-product stock: id -> 'in_stock' | 'out_of_stock' */
 var PRODUCT_SIZE_STOCK={};/* per-base-product size out-of-stock: baseId -> [size,...] */
+var PRODUCT_DISCOUNTS={}; /* per-product discount percent: id/baseId -> pct */
 function catalogIdForId(id){
   if(!id) return null;
   var youth=id.indexOf('y-')===0;
@@ -1316,8 +1323,8 @@ function renderProductGrid(){
   base.forEach(p=>{
     const vis=visibleColors(p);
     if(!vis.length) return; // no image → hide the whole card
-    if(!p.colors||p.colors.length<=1||p.noExplode){ const o=ov(Object.assign({},p,{_variantKey:p.id}),p.id); o.price=productPrice(p.id); o.inStock=productStockStatus(p.id)!=='out_of_stock'; expanded.push(o); return; }
-    vis.forEach(c=>{ const key=p.id+"__"+c.id; const o=ov(Object.assign({},p,{_variantColor:c,_linkId:p.id+"/"+c.id,_variantKey:key}),key); o.price=productPrice(key); o.inStock=productStockStatus(key)!=='out_of_stock'; expanded.push(o); });
+    if(!p.colors||p.colors.length<=1||p.noExplode){ const o=ov(Object.assign({},p,{_variantKey:p.id}),p.id); o.price=productPrice(p.id); o.salePrice=productSalePrice(p.id); o.inStock=productStockStatus(p.id)!=='out_of_stock'; expanded.push(o); return; }
+    vis.forEach(c=>{ const key=p.id+"__"+c.id; const o=ov(Object.assign({},p,{_variantColor:c,_linkId:p.id+"/"+c.id,_variantKey:key}),key); o.price=productPrice(key); o.salePrice=productSalePrice(key); o.inStock=productStockStatus(key)!=='out_of_stock'; expanded.push(o); });
   });
   let list=expanded.filter(p=>!(window.RFStore && RFStore.isRemoved(p._variantKey||p.id)));
   if(gridState.sort==='name') list.sort((a,b)=>tr(a,'name').localeCompare(tr(b,'name')));
@@ -1403,6 +1410,7 @@ function pdApplied(p,color){
   var key=pdVariantKey(p,color);
   var out=window.RFStore?RFStore.applyWithKey(Object.assign({},p),key):Object.assign({},p);
   out.price=productPrice(key);                                  /* server per-variant price is authoritative */
+  out.salePrice=productSalePrice(key);
   out.inStock=productStockStatus(key)!=='out_of_stock';
   return out;
 }
@@ -1428,14 +1436,29 @@ function getProductFabricDetails(p){
 function renderProductExtraDetails(p){
   var f=getProductFabricDetails(p); if(!f) return '';
   var L=STATE.lang;
-  return '<div class="product-extra-details">'+
-    '<div class="product-extra-details__title">'+({he:'פרטים נוספים על המוצר',en:'Product Details',fr:'Détails du produit'}[L])+'</div>'+
-    '<div class="product-extra-details__fabric">'+f.title[L]+'</div>'+
-    '<div class="product-extra-details__row"><span class="ped-k">'+({he:'סוג בד',en:'Fabric',fr:'Tissu'}[L])+'</span><span class="ped-v">'+f.type[L]+'</span></div>'+
-    '<div class="product-extra-details__row"><span class="ped-k">'+({he:'הוראות כביסה',en:'Care',fr:'Entretien'}[L])+'</span><span class="ped-v">'+f.care[L]+'</span></div>'+
-  '</div>';
+  return '<details class="product-extra-details">'+
+    '<summary class="product-extra-details__summary">'+
+      '<span>'+({he:'פרטים נוספים על המוצר',en:'Product Details',fr:'Détails du produit'}[L])+'</span>'+
+      '<svg class="ped-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'+
+    '</summary>'+
+    '<div class="product-extra-details__body">'+
+      '<div class="product-extra-details__fabric">'+f.title[L]+'</div>'+
+      '<div class="product-extra-details__row"><span class="ped-k">'+({he:'סוג בד',en:'Fabric',fr:'Tissu'}[L])+'</span><span class="ped-v">'+f.type[L]+'</span></div>'+
+      '<div class="product-extra-details__row"><span class="ped-k">'+({he:'הוראות כביסה',en:'Care',fr:'Entretien'}[L])+'</span><span class="ped-v">'+f.care[L]+'</span></div>'+
+    '</div>'+
+  '</details>';
 }
 function sizeOutOfStock(baseId,size){ return (PRODUCT_SIZE_STOCK[baseId]||[]).indexOf(String(size))>=0; }
+function productDiscountPct(id){
+  if(PRODUCT_DISCOUNTS[id]!=null) return PRODUCT_DISCOUNTS[id];
+  var base=String(id).split('__')[0];
+  if(base!==String(id)&&PRODUCT_DISCOUNTS[base]!=null) return PRODUCT_DISCOUNTS[base];
+  return 0;
+}
+/* sale price after discount, or null when no discount */
+function productSalePrice(id){ var reg=productPrice(id); if(reg==null) return null; var pct=productDiscountPct(id); return pct>0?Math.round(reg*(1-pct/100)):null; }
+/* the amount actually charged (sale price if discounted, else regular) */
+function productChargedPrice(id){ var sp=productSalePrice(id); return sp!=null?sp:productPrice(id); }
 function pdPriceHTML(vp){
   if(vp.price===null||vp.price===undefined) return t('priceInquire');
   if(vp.salePrice) return '₪'+Number(vp.salePrice).toLocaleString()+' <span class="old-price">₪'+Number(vp.price).toLocaleString()+'</span>';
@@ -1623,7 +1646,7 @@ function renderCart(){
     if(!found) return '';
     const p=found.product;
     const color=p.colors.find(c=>c.id===item.colorId)||p.colors[0];
-    const _pr=productPrice(variantKeyOf(item.productId,item.colorId));
+    const _pr=productChargedPrice(variantKeyOf(item.productId,item.colorId));
     const unit=typeof _pr==='number'?_pr:null;
     const priceLabel=unit?'₪'+(unit*item.quantity).toLocaleString():t('priceInquireShort');
     const priceClass=unit?'sidebar-item-price':'sidebar-item-price inquire';
@@ -1646,7 +1669,7 @@ function renderCart(){
   STATE.cart.forEach(item=>{
     const f=findProductById(item.productId);
     if(!f) return;
-    const _pr=productPrice(variantKeyOf(item.productId,item.colorId));
+    const _pr=productChargedPrice(variantKeyOf(item.productId,item.colorId));
     const unit=typeof _pr==='number'?_pr:null;
     if(unit===null){ hasPrices=false; return; }
     subtotal+=unit*item.quantity;
@@ -1785,7 +1808,7 @@ function coLines(){
     var p=RFStore?RFStore.applyToProduct(f.product):f.product;
     var color=p.colors.find(function(c){return c.id===item.colorId;})||p.colors[0];
     var vk=variantKeyOf(item.productId,item.colorId);
-    var _pr=productPrice(vk);
+    var _pr=productChargedPrice(vk);
     var unit=typeof _pr==='number'?_pr:0;
     return {productId:vk,name:tr(p,'name'),color:color?tr(color,'name'):'',size:item.size,quantity:item.quantity,price:unit};
   }).filter(Boolean);
@@ -2047,7 +2070,8 @@ function init(){
       if(s.productPrices) PRODUCT_PRICES=s.productPrices;
       if(s.productStock) PRODUCT_STOCK=s.productStock;
       if(s.sizeStock) PRODUCT_SIZE_STOCK=s.sizeStock;
-      if(s.prices||s.productPrices||s.productStock||s.sizeStock){ applyCatalogPrices(); renderPage(); }
+      if(s.productDiscounts) PRODUCT_DISCOUNTS=s.productDiscounts;
+      if(s.prices||s.productPrices||s.productStock||s.sizeStock||s.productDiscounts){ applyCatalogPrices(); renderPage(); }
     }
     if(s){
       if(s.bannerHe) document.querySelectorAll('.announcement .lang-he').forEach(function(e){e.textContent=s.bannerHe;});
