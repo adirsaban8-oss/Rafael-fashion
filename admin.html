@@ -163,6 +163,15 @@
   .price-fld label{margin:0;font-size:.72rem;white-space:nowrap;color:var(--ink2)}
   .price-fld input{width:92px;text-align:center;font-weight:600}
   .prod-filter{margin-bottom:1rem;max-width:340px}
+  .base-block{border:1px solid var(--line);border-radius:12px;padding:.85rem;margin-bottom:.9rem;background:#fff}
+  .base-title{font-weight:600;font-size:.98rem;margin-bottom:.6rem;color:var(--ink)}
+  .base-block .prow{background:var(--soft);margin-bottom:.45rem}
+  .size-stock{margin-top:.55rem;padding-top:.7rem;border-top:1px dashed var(--line)}
+  .size-stock-lbl{display:block;font-size:.76rem;color:var(--mute);margin-bottom:.5rem}
+  .size-chips{display:flex;flex-wrap:wrap;gap:.4rem}
+  .szchip{min-width:38px;padding:.35rem .5rem;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:.82rem;font-weight:500;cursor:pointer;transition:all .15s}
+  .szchip:hover{border-color:var(--ink)}
+  .szchip.out{background:var(--red-bg);border-color:var(--red);color:var(--red);text-decoration:line-through}
 
   /* ---------- narrow phones ---------- */
   @media(max-width:560px){
@@ -350,21 +359,35 @@ function viewProducts(){
       return;
     }
     var groups={};_siteProducts.forEach(function(p){(groups[p.cat]=groups[p.cat]||[]).push(p);});
-    var html='<div class="card"><div class="card-h"><h2>מוצרים ותמחור</h2><span class="muted">כל מוצר וצבע באתר · '+_siteProducts.length+' פריטים · שינוי משתקף מיד</span></div>';
+    var html='<div class="card"><div class="card-h"><h2>מוצרים ותמחור</h2><span class="muted">כל מוצר, צבע ומידה · '+_siteProducts.length+' פריטים · שינוי משתקף מיד</span></div>';
     html+='<input id="prodFilter" class="prod-filter" type="search" placeholder="חיפוש לפי שם / צבע…" oninput="filterProducts()" aria-label="חיפוש מוצר">';
     Object.keys(groups).forEach(function(cat){
-      html+='<div class="cat-title" data-cat="'+esc(cat)+'">'+esc(CATLBL[cat]||cat)+' · '+groups[cat].length+'</div>';
-      html+=groups[cat].map(function(p){
-        var inStock=p.stockStatus!=='out_of_stock';
-        return '<div class="prow" data-name="'+esc(p.name)+'">'+
-          '<div class="prow-info"><div class="prow-name">'+esc(p.name)+'</div><div class="pid">'+esc(p.id)+'</div></div>'+
-          '<div class="prow-ctrls">'+
-            '<div class="price-fld"><label for="pr-'+p.id+'">מחיר ₪</label><input id="pr-'+p.id+'" type="number" min="0" inputmode="numeric" value="'+(p.price==null?'':p.price)+'"></div>'+
-            '<label class="switch"><input type="checkbox" id="sk-'+p.id+'" '+(inStock?'checked':'')+' onchange="stkLabel(\''+p.id+'\')" aria-label="מלאי '+esc(p.name)+'"><span class="track"></span><span class="stk" id="skl-'+p.id+'" style="color:'+(inStock?'var(--green)':'var(--red)')+'">'+(inStock?'במלאי':'אזל')+'</span></label>'+
-            '<button class="btn green sm" onclick="saveSiteProduct(\''+p.id+'\')">שמירה</button>'+
-          '</div>'+
-        '</div>';
-      }).join('');
+      var byBase={},bases=[];
+      groups[cat].forEach(function(p){ if(!byBase[p.baseId]){byBase[p.baseId]=[];bases.push(p.baseId);} byBase[p.baseId].push(p); });
+      html+='<div class="cat-title" data-cat="'+esc(cat)+'">'+esc(CATLBL[cat]||cat)+' · '+bases.length+' דגמים</div>';
+      bases.forEach(function(bid){
+        var vs=byBase[bid], first=vs[0], baseName=String(first.name).split(' · ')[0];
+        html+='<div class="base-block" data-name="'+esc(baseName)+'"><div class="base-title">'+esc(baseName)+'</div>';
+        html+=vs.map(function(p){
+          var inStock=p.stockStatus!=='out_of_stock';
+          var colorName=String(p.name).indexOf(' · ')>=0?String(p.name).split(' · ').slice(1).join(' · '):baseName;
+          return '<div class="prow">'+
+            '<div class="prow-info"><div class="prow-name">'+esc(colorName)+'</div><div class="pid">'+esc(p.id)+'</div></div>'+
+            '<div class="prow-ctrls">'+
+              '<div class="price-fld"><label for="pr-'+p.id+'">מחיר ₪</label><input id="pr-'+p.id+'" type="number" min="0" inputmode="numeric" value="'+(p.price==null?'':p.price)+'"></div>'+
+              '<label class="switch"><input type="checkbox" id="sk-'+p.id+'" '+(inStock?'checked':'')+' onchange="stkLabel(\''+p.id+'\')" aria-label="מלאי '+esc(p.name)+'"><span class="track"></span><span class="stk" id="skl-'+p.id+'" style="color:'+(inStock?'var(--green)':'var(--red)')+'">'+(inStock?'במלאי':'אזל')+'</span></label>'+
+              '<button class="btn green sm" onclick="saveSiteProduct(\''+p.id+'\')">שמירה</button>'+
+            '</div>'+
+          '</div>';
+        }).join('');
+        if(first.sizes && first.sizes.length>1){
+          var out=first.sizesOut||[];
+          html+='<div class="size-stock"><span class="size-stock-lbl">מלאי לפי מידה — לחצו לסימון "אזל":</span><div class="size-chips">'+
+            first.sizes.map(function(sz){ var isOut=out.indexOf(String(sz))>=0; return '<button type="button" class="szchip'+(isOut?' out':'')+'" onclick="toggleSizeStock(\''+esc(bid)+'\',\''+esc(sz)+'\',this)" aria-pressed="'+(isOut?'true':'false')+'" title="מידה '+esc(sz)+'">'+esc(sz)+'</button>'; }).join('')+
+          '</div></div>';
+        }
+        html+='</div>';
+      });
     });
     html+='</div>';
     $('view').innerHTML=html;
@@ -379,9 +402,16 @@ function saveSiteProduct(id){
   .then(function(res){ if(res.ok)toast('נשמר ✓'); else toast(res.d.error||'שגיאה',true); })
   .catch(function(){toast('שגיאת תקשורת',true);});
 }
+function toggleSizeStock(baseId,size,el){
+  var out=!el.classList.contains('out');
+  fetch('/api/admin/size-stock/'+encodeURIComponent(baseId),{method:'POST',headers:hdrs(),body:JSON.stringify({size:size,out:out})})
+  .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});})
+  .then(function(res){ if(res.ok){ el.classList.toggle('out',out); el.setAttribute('aria-pressed',out?'true':'false'); toast(out?('מידה '+size+' סומנה כאזלה'):('מידה '+size+' חזרה למלאי')); } else toast(res.d.error||'שגיאה',true); })
+  .catch(function(){toast('שגיאת תקשורת',true);});
+}
 function filterProducts(){
   var q=(($('prodFilter')||{}).value||'').trim().toLowerCase();
-  document.querySelectorAll('#view .prow').forEach(function(r){
+  document.querySelectorAll('#view .base-block').forEach(function(r){
     var n=(r.getAttribute('data-name')||'').toLowerCase();
     r.style.display=(!q||n.indexOf(q)>=0)?'':'none';
   });

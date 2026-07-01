@@ -76,6 +76,11 @@ function productStockMap() {
   Object.keys(productOverrides).forEach((id) => { if (productOverrides[id].stockStatus) m[id] = productOverrides[id].stockStatus; });
   return m;
 }
+function productSizeStockMap() {
+  const m = {};
+  Object.keys(productOverrides).forEach((id) => { const so = productOverrides[id].sizesOut; if (so && so.length) m[id] = so; });
+  return m;
+}
 
 function isValidSize(product, size) {
   if (!product) return false;
@@ -294,6 +299,7 @@ app.get('/api/settings', (_req, res) => res.json({
   prices: priceMap(),
   productPrices: productPriceMap(),
   productStock: productStockMap(),
+  sizeStock: productSizeStockMap(),
 }));
 
 // Live totals for the cart UI.
@@ -404,6 +410,9 @@ app.post('/api/store/submit', (req, res) => {
       const price = priceForId(it.productId);
       if (price == null) return res.status(400).json({ error: `מוצר לא קיים: ${it.name || it.productId}` });
       if (effectiveStock(it.productId) === 'out_of_stock') return res.status(400).json({ error: `${it.name || it.productId} אזל מהמלאי` });
+      const _base = String(it.productId).split('__')[0];
+      const _so = productOverrides[_base] && productOverrides[_base].sizesOut;
+      if (_so && it.size && _so.indexOf(String(it.size)) >= 0) return res.status(400).json({ error: `${it.name || it.productId} · מידה ${it.size} אזלה מהמלאי` });
       const quantity = Math.max(1, parseInt(it.quantity, 10) || 1);
       items.push({
         productId: String(it.productId),
@@ -540,7 +549,7 @@ app.post('/api/_products', (req, res) => {
   if (Array.isArray(b)) {
     siteProducts = b
       .filter((p) => p && p.id)
-      .map((p) => ({ id: String(p.id), name: String(p.name || p.id), cat: String(p.cat || ''), sub: String(p.sub || ''), catalogId: p.catalogId ? String(p.catalogId) : null }));
+      .map((p) => ({ id: String(p.id), name: String(p.name || p.id), cat: String(p.cat || ''), sub: String(p.sub || ''), catalogId: p.catalogId ? String(p.catalogId) : null, baseId: String(p.baseId || p.id), sizes: Array.isArray(p.sizes) ? p.sizes.map(String) : [] }));
   }
   res.json({ ok: true, count: siteProducts.length });
 });
@@ -548,8 +557,22 @@ app.post('/api/_products', (req, res) => {
 app.get('/api/admin/site-products', adminAuth, (_req, res) => {
   res.json({ products: siteProducts.map((p) => ({
     id: p.id, name: p.name, cat: p.cat, sub: p.sub, catalogId: p.catalogId,
+    baseId: p.baseId, sizes: p.sizes || [],
     price: effectivePrice(p), stockStatus: effectiveStock(p.id),
+    sizesOut: (productOverrides[p.baseId] && productOverrides[p.baseId].sizesOut) || [],
   })) });
+});
+// Admin: mark a single size of a product (base) as out of stock / back in stock.
+app.post('/api/admin/size-stock/:baseId', adminAuth, (req, res) => {
+  const baseId = String(req.params.baseId);
+  const size = String((req.body && req.body.size) != null ? req.body.size : '');
+  const out = !!(req.body && req.body.out);
+  if (!size) return res.status(400).json({ error: 'מידה חסרה' });
+  const ov = productOverrides[baseId] || (productOverrides[baseId] = {});
+  const list = ov.sizesOut || (ov.sizesOut = []);
+  const i = list.indexOf(size);
+  if (out) { if (i < 0) list.push(size); } else if (i >= 0) { list.splice(i, 1); }
+  res.json({ ok: true, sizesOut: list });
 });
 // Admin: set price and/or stock for a single product (card).
 app.post('/api/admin/site-products/:id', adminAuth, (req, res) => {

@@ -323,6 +323,25 @@ select{font-family:inherit}
 .pd-selector-label .size-guide-link{margin-right:auto;color:var(--mute);font-size:.6rem;cursor:pointer;letter-spacing:.25em;border-bottom:1px solid var(--mute);padding-bottom:1px;font-weight:500}
 [dir="ltr"] .pd-selector-label .size-guide-link{margin-right:0;margin-left:auto}
 .pd-selector-label .size-guide-link:hover{color:var(--ink);border-color:var(--ink)}
+/* size guide modal table */
+.size-guide-intro{font-size:.82rem;color:var(--mute);text-align:center;margin:-.2rem 0 1.1rem;line-height:1.6}
+.size-guide-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.size-guide-table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:340px}
+.size-guide-table th{font-weight:600;text-align:center;padding:.55rem .5rem;border-bottom:2px solid var(--ink);white-space:nowrap;font-size:.66rem;letter-spacing:.03em;text-transform:uppercase}
+.size-guide-table td{text-align:center;padding:.5rem .5rem;border-bottom:1px solid var(--line)}
+.size-guide-table tbody tr:hover{background:var(--wash)}
+/* out-of-stock size option */
+.pd-size.size-option--disabled{opacity:.45;cursor:not-allowed;text-decoration:line-through;height:auto;min-height:38px;padding-top:.15rem;padding-bottom:.15rem;line-height:1.1}
+.pd-size.size-option--disabled:hover{background:transparent;color:inherit;border-color:var(--line)}
+.pd-size .pd-size-oos{display:block;font-size:.5rem;letter-spacing:.06em;text-decoration:none;margin-top:1px;opacity:.9}
+/* product extra details (fabric & care) */
+.product-extra-details{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--line)}
+.product-extra-details__title{font-family:var(--font-display);font-size:1.05rem;font-weight:500;margin-bottom:.85rem}
+.product-extra-details__fabric{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:.85rem}
+.product-extra-details__row{display:flex;gap:.9rem;padding:.6rem 0;border-bottom:1px solid var(--line);font-size:.86rem;line-height:1.65}
+.product-extra-details__row:last-child{border-bottom:none}
+.product-extra-details__row .ped-k{flex:0 0 5.5rem;color:var(--mute);font-weight:500}
+.product-extra-details__row .ped-v{flex:1;color:var(--ink)}
 .pd-colors{display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:2rem}
 .pd-color{width:30px;height:30px;border-radius:50%;cursor:pointer;position:relative;transition:all .3s;border:1px solid var(--line)}
 .pd-color:hover{transform:scale(1.08)}
@@ -775,7 +794,8 @@ const BELT_COLORS=[{id:'black',name_he:'שחור',name_en:'Black',name_fr:'Noir'
 const BOWTIE_COLORS=[{id:'mint-green',name_he:'ירוק מנטה',name_en:'Mint Green',name_fr:'Vert Menthe',hex:'#98D8B8'},{id:'stone',name_he:'אבן',name_en:'Stone',name_fr:'Pierre',hex:'#C8B99C'},{id:'sky-blue',name_he:'תכלת',name_en:'Sky Blue',name_fr:'Bleu Ciel',hex:'#87CEEB'},{id:'black',name_he:'שחור',name_en:'Black',name_fr:'Noir',hex:'#1A1815'},{id:'navy',name_he:'כחול נייבי',name_en:'Navy',name_fr:'Marine',hex:'#1F2F4F'}];
 
 const mkRange=(a,b)=>Array.from({length:b-a+1},(_,i)=>String(a+i));
-const YOUTH_CLOTHING_SIZES=mkRange(8,22);    // נוער 8–22
+const YOUTH_SIZES=[8,10,12,14,16,18,20,22];  // נוער — זוגיות בלבד, 8–22
+const YOUTH_CLOTHING_SIZES=YOUTH_SIZES.map(String);
 const CHILDREN_CLOTHING_SIZES=mkRange(0,7);  // ילדים 0–7
 const YOUTH_SHOE_SIZES=mkRange(20,46);       // נעליים 20–46
 const CHILDREN_SHOE_SIZES=mkRange(20,46);    // נעליים 20–46
@@ -838,6 +858,7 @@ var DEFAULT_PRICES={'suit-kids':550,'suit-youth':650,'linen-shirt-kids':249,'shi
 var PRICE_OVERRIDES={};
 var PRODUCT_PRICES={};   /* per-product (per-card) price overrides from admin */
 var PRODUCT_STOCK={};    /* per-product stock: id -> 'in_stock' | 'out_of_stock' */
+var PRODUCT_SIZE_STOCK={};/* per-base-product size out-of-stock: baseId -> [size,...] */
 function catalogIdForId(id){
   if(!id) return null;
   var youth=id.indexOf('y-')===0;
@@ -1386,6 +1407,35 @@ function pdApplied(p,color){
   return out;
 }
 function soldOutText(){ return STATE.lang==='he'?'אזל מהמלאי':(STATE.lang==='fr'?'Épuisé':'Sold out'); }
+/* ===== Fabric & care templates (Part 1) ===== */
+var FABRIC_TEMPLATES={
+  linen:{
+    title:{he:'בד דמוי פשתן',en:'Linen-Look Fabric',fr:'Tissu aspect lin'},
+    type:{he:'70% ויסקוזה, 30% פוליאסטר',en:'70% Viscose, 30% Polyester',fr:'70% Viscose, 30% Polyester'},
+    care:{he:'כביסה במכונת כביסה ב-30 מעלות ללא סחיטה. יש לתלות הפוך. יש להוציא אביזרים נלווים לפני הכביסה.',en:'Machine wash at 30°C without spin. Hang to dry inside-out. Remove accessories before washing.',fr:'Lavage en machine à 30°C sans essorage. Suspendre à l’envers. Retirer les accessoires avant le lavage.'}
+  },
+  prada:{
+    title:{he:'בד פרדה',en:'Parade Fabric',fr:'Tissu Parade'},
+    type:{he:'בד פרדה יוקרתי ומחויט, עמיד לקמטוטים',en:'Premium tailored Parade fabric, wrinkle-resistant',fr:'Tissu Parade haut de gamme et ajusté, résistant aux plis'},
+    care:{he:'ניקוי יבש בלבד או כביסה ידנית עדינה במים קרים. גיהוץ בחום נמוך בלבד. יש להוציא אביזרים נלווים לפני הכביסה.',en:'Dry clean only, or gentle hand wash in cold water. Iron on low heat only. Remove accessories before washing.',fr:'Nettoyage à sec uniquement, ou lavage à la main délicat à l’eau froide. Repasser à basse température. Retirer les accessoires avant le lavage.'}
+  }
+};
+function getProductFabricDetails(p){
+  var ft=p&&p.fabricType;
+  if(!ft){ var id=(p&&p.id)||''; if(id.indexOf('linen')>=0) ft='linen'; else if(id.indexOf('parade')>=0) ft='prada'; }
+  return (ft&&FABRIC_TEMPLATES[ft])?FABRIC_TEMPLATES[ft]:null;
+}
+function renderProductExtraDetails(p){
+  var f=getProductFabricDetails(p); if(!f) return '';
+  var L=STATE.lang;
+  return '<div class="product-extra-details">'+
+    '<div class="product-extra-details__title">'+({he:'פרטים נוספים על המוצר',en:'Product Details',fr:'Détails du produit'}[L])+'</div>'+
+    '<div class="product-extra-details__fabric">'+f.title[L]+'</div>'+
+    '<div class="product-extra-details__row"><span class="ped-k">'+({he:'סוג בד',en:'Fabric',fr:'Tissu'}[L])+'</span><span class="ped-v">'+f.type[L]+'</span></div>'+
+    '<div class="product-extra-details__row"><span class="ped-k">'+({he:'הוראות כביסה',en:'Care',fr:'Entretien'}[L])+'</span><span class="ped-v">'+f.care[L]+'</span></div>'+
+  '</div>';
+}
+function sizeOutOfStock(baseId,size){ return (PRODUCT_SIZE_STOCK[baseId]||[]).indexOf(String(size))>=0; }
 function pdPriceHTML(vp){
   if(vp.price===null||vp.price===undefined) return t('priceInquire');
   if(vp.salePrice) return '₪'+Number(vp.salePrice).toLocaleString()+' <span class="old-price">₪'+Number(vp.price).toLocaleString()+'</span>';
@@ -1425,11 +1475,15 @@ function renderProduct(id,preselectColorId){
     const lb=(c.hex==='#FFFFFF'||c.hex==='#FAFAFA')?';border:1px solid #ccc':'';
     return '<div class="pd-color '+(i===colorIdx?'active':'')+'" style="background:'+c.hex+lb+'" data-color="'+i+'" title="'+tr(c,'name')+'"></div>';
   }).join('');
+  const _oosShort={he:'אזל',en:'Out',fr:'Épuisé'}[STATE.lang];
   const sizesHTML=p.sizes.map(s=>{
     const label=typeof s==='string'?s:(s['name_'+STATE.lang]||s.name_en||s.name_he);
     const val=typeof s==='string'?s:s.id;
-    return '<button class="pd-size" data-size="'+val+'">'+label+'</button>';
+    const out=sizeOutOfStock(p.id,val);
+    return '<button class="pd-size'+(out?' size-option--disabled':'')+'" data-size="'+val+'"'+(out?' disabled aria-disabled="true"':'')+'>'+label+(out?'<span class="pd-size-oos">'+_oosShort+'</span>':'')+'</button>';
   }).join('');
+  const showSizeGuide=(found.sub==='shoes')||p.sizes.some(function(s){return typeof s==='string'&&/^\d+$/.test(s);});
+  const sgLabel={he:'לטבלת המידות',en:'Size chart',fr:'Guide des tailles'}[STATE.lang];
   const variantNote='';
   const vpActive=pdApplied(p,activeColor);
   const priceDisplay=vpActive.inStock?pdPriceHTML(vpActive):soldOutText();
@@ -1455,7 +1509,7 @@ function renderProduct(id,preselectColorId){
           variantNote+
           '<div class="pd-selector-label"><span>'+t('color')+'</span> <strong id="pdColorName">'+tr(p.colors[colorIdx],'name')+'</strong></div>'+
           '<div class="pd-colors" id="pdColors">'+colorsHTML+'</div>'+
-          '<div class="pd-selector-label"><span>'+t('size')+'</span></div>'+
+          '<div class="pd-selector-label"><span>'+t('size')+'</span>'+(showSizeGuide?'<span class="size-guide-link" id="sizeGuideBtn" role="button" tabindex="0">'+sgLabel+'</span>':'')+'</div>'+
           '<div class="pd-sizes" id="pdSizes">'+sizesHTML+'</div>'+
           '<div class="pd-selector-label"><span>'+t('qty')+'</span></div>'+
           '<div class="pd-qty"><button id="qtyMinus">−</button><input type="text" id="qtyInput" value="1" readonly><button id="qtyPlus">+</button></div>'+
@@ -1464,6 +1518,7 @@ function renderProduct(id,preselectColorId){
             '<button class="pd-btn pd-btn-secondary" id="pdWish"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'+t('addToWishlist')+'</button>'+
             '<a href="https://wa.me/972546398638?text='+encodeURIComponent('שלום, אני מתעניין ב: '+tr(p,'name'))+'" target="_blank" class="pd-btn pd-btn-wa"><svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1s-1.3-.5-2.4-1.5c-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.1-.2-.5-.5-.4-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.2.2 2.1 3.2 5 4.4.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.1-.5-.2z"/></svg>'+t('consultWA')+'</a>'+
           '</div>'+
+          renderProductExtraDetails(p)+
         '</div>'+
       '</section>'+
     '</div>';
@@ -1525,7 +1580,7 @@ function attachProductDetailEvents(){
     toggleWishlist(p.id);
     toast(STATE.wishlist.indexOf(p.id)>=0?t('addedToWish'):t('removedFromWish'));
   });
-  var _sgBtn=document.getElementById('sizeGuideBtn'); if(_sgBtn) _sgBtn.addEventListener('click',openSizeGuide);
+  var _sgBtn=document.getElementById('sizeGuideBtn'); if(_sgBtn){ _sgBtn.addEventListener('click',openSizeGuide); _sgBtn.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openSizeGuide(); } }); }
 }
 function checkAddReady(){
   var p=pdState.product, key=pdVariantKey(p,p.colors[pdState.colorIdx]);
@@ -1712,8 +1767,8 @@ function toast(msg){
 }
 
 /* ========== MODAL / SIZE GUIDE ========== */
-function openModal(html){ document.getElementById('modal').innerHTML='<button class="modal-close" onclick="closeModal()">&times;</button>'+html; document.getElementById('modalBackdrop').classList.add('active'); }
-function closeModal(){ document.getElementById('modalBackdrop').classList.remove('active'); }
+function openModal(html){ var m=document.getElementById('modal'); m.setAttribute('role','dialog'); m.setAttribute('aria-modal','true'); m.innerHTML='<button class="modal-close" onclick="closeModal()" aria-label="'+(STATE.lang==='he'?'סגירה':'Close')+'">&times;</button>'+html; document.getElementById('modalBackdrop').classList.add('active'); document.body.classList.add('no-scroll'); m.setAttribute('tabindex','-1'); try{m.focus();}catch(e){} }
+function closeModal(){ document.getElementById('modalBackdrop').classList.remove('active'); document.body.classList.remove('no-scroll'); }
 
 /* ===================== CHECKOUT → real order (/api/store/submit) ===================== */
 var CO={method:'courier'};
@@ -1890,15 +1945,26 @@ function termsHTML(){
    '<p style="'+p+'"><b>טלפון ו-WhatsApp:</b> 054-639-8638<br><b>כתובת למשלוחים ואיסוף:</b> הבונים 3, נתניה</p>';
 }
 function openSizeGuide(){
+  const L=STATE.lang;
   const isShoe=pdState.sub==='shoes';
-  const title=STATE.lang==='he'?'מדריך מידות':(STATE.lang==='fr'?'Guide des Tailles':'Size Guide');
-  let body;
+  let title,intro,body;
   if(isShoe){
-    body='<table><thead><tr><th>EU</th><th>US</th><th>'+(STATE.lang==='he'?'אורך':(STATE.lang==='fr'?'Longueur':'Length'))+'</th></tr></thead><tbody><tr><td>40</td><td>7</td><td>25.5</td></tr><tr><td>41</td><td>8</td><td>26.5</td></tr><tr><td>42</td><td>8.5</td><td>27</td></tr><tr><td>43</td><td>9.5</td><td>27.5</td></tr><tr><td>44</td><td>10</td><td>28</td></tr><tr><td>45</td><td>11</td><td>29</td></tr></tbody></table>';
+    title={he:'טבלת מידות נעליים',en:'Shoe Size Chart',fr:'Guide des pointures'}[L];
+    intro={he:'המידות הן לפי סנטימטרים ומיועדות לעזור בבחירת המידה המתאימה.',en:'Measurements are in centimetres, to help you choose the right size.',fr:'Les mesures sont en centimètres, pour vous aider à choisir la bonne taille.'}[L];
+    body='<table class="size-guide-table"><thead><tr><th>EU</th><th>US</th><th>'+({he:'אורך (ס״מ)',en:'Length (cm)',fr:'Longueur (cm)'}[L])+'</th></tr></thead><tbody><tr><td>40</td><td>7</td><td>25.5</td></tr><tr><td>41</td><td>8</td><td>26.5</td></tr><tr><td>42</td><td>8.5</td><td>27</td></tr><tr><td>43</td><td>9.5</td><td>27.5</td></tr><tr><td>44</td><td>10</td><td>28</td></tr><tr><td>45</td><td>11</td><td>29</td></tr></tbody></table>';
   } else {
-    body='<table><thead><tr><th>'+(STATE.lang==='he'?'מידה':(STATE.lang==='fr'?'Taille':'Size'))+'</th><th>'+(STATE.lang==='he'?'חזה':(STATE.lang==='fr'?'Poitrine':'Chest'))+'</th><th>'+(STATE.lang==='he'?'מותניים':(STATE.lang==='fr'?'Tour de taille':'Waist'))+'</th></tr></thead><tbody><tr><td>S</td><td>88-92</td><td>74-78</td></tr><tr><td>M</td><td>93-98</td><td>79-84</td></tr><tr><td>L</td><td>99-104</td><td>85-90</td></tr><tr><td>XL</td><td>105-110</td><td>91-96</td></tr><tr><td>XXL</td><td>111-116</td><td>97-102</td></tr></tbody></table>';
+    title={he:'טבלת מידות',en:'Size Chart',fr:'Guide des tailles'}[L];
+    intro={he:'המידות הן לפי סנטימטרים ומיועדות לעזור בבחירת המידה המתאימה.',en:'Measurements are in centimetres, to help you choose the right size.',fr:'Les mesures sont en centimètres, pour vous aider à choisir la bonne taille.'}[L];
+    const heads={he:['מידה','גיל מומלץ','היקף חזה (ס״מ)','אורך פריט (ס״מ)'],en:['Size','Recommended age','Chest (cm)','Length (cm)'],fr:['Taille','Âge recommandé','Poitrine (cm)','Longueur (cm)']}[L];
+    const rows=[['2','2-3','58','38'],['4','4-5','62','42'],['6','6-7','66','46'],['8','8-9','70','50'],['10','10-11','74','54'],['12','12-13','78','58'],['14','14-15','82','62'],['16','16-17','86','66'],['18','18-19','90','70'],['20','20-21','94','74'],['22','22+','98','78']];
+    body='<table class="size-guide-table"><thead><tr>'+heads.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr></thead><tbody>'+
+      rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table>';
   }
-  openModal('<h3>'+title+'</h3>'+body+'<p style="margin-top:1.5rem;font-size:.78rem;color:var(--mute);text-align:center;font-family:var(--font-display);font-style:italic;font-size:.92rem">'+(STATE.lang==='he'?'לייעוץ אישי':(STATE.lang==='fr'?'Pour un conseil personnel':'For personal advice'))+' · <a href="tel:0546398638" style="color:var(--ink);border-bottom:1px solid var(--ink)">054-639-8638</a></p>');
+  openModal('<h3 id="sizeGuideTitle">'+title+'</h3>'+
+    '<p class="size-guide-intro">'+intro+'</p>'+
+    '<div class="size-guide-scroll">'+body+'</div>'+
+    '<p style="margin-top:1.5rem;font-size:.78rem;color:var(--mute);text-align:center;font-family:var(--font-display);font-style:italic;font-size:.92rem">'+({he:'לייעוץ אישי',en:'For personal advice',fr:'Pour un conseil personnel'}[L])+' · <a href="tel:0546398638" style="color:var(--ink);border-bottom:1px solid var(--ink)">054-639-8638</a></p>');
+  var m=document.getElementById('modal'); if(m) m.setAttribute('aria-labelledby','sizeGuideTitle');
 }
 
 /* ========== LANG ========== */
@@ -1936,10 +2002,11 @@ function buildProductList(){
     CATALOG[cat][sub].forEach(function(p){
       var vis=visibleColors(p);
       if(!vis.length) return;                                   /* skip cards with no image (hidden on site) */
+      var szv=(p.sizes||[]).map(function(s){return typeof s==='string'?s:s.id;});
       if(!p.colors||p.colors.length<=1||p.noExplode){
-        out.push({id:p.id,name:p.name_he,cat:cat,sub:sub,catalogId:catalogIdForId(p.id)});
+        out.push({id:p.id,name:p.name_he,cat:cat,sub:sub,catalogId:catalogIdForId(p.id),baseId:p.id,sizes:szv});
       } else {
-        vis.forEach(function(c){ out.push({id:p.id+'__'+c.id,name:p.name_he+' · '+c.name_he,cat:cat,sub:sub,catalogId:catalogIdForId(p.id)}); });
+        vis.forEach(function(c){ out.push({id:p.id+'__'+c.id,name:p.name_he+' · '+c.name_he,cat:cat,sub:sub,catalogId:catalogIdForId(p.id),baseId:p.id,sizes:szv}); });
       }
     });
   }); });
@@ -1979,7 +2046,8 @@ function init(){
       if(s.prices) PRICE_OVERRIDES=s.prices;
       if(s.productPrices) PRODUCT_PRICES=s.productPrices;
       if(s.productStock) PRODUCT_STOCK=s.productStock;
-      if(s.prices||s.productPrices||s.productStock){ applyCatalogPrices(); renderPage(); }
+      if(s.sizeStock) PRODUCT_SIZE_STOCK=s.sizeStock;
+      if(s.prices||s.productPrices||s.productStock||s.sizeStock){ applyCatalogPrices(); renderPage(); }
     }
     if(s){
       if(s.bannerHe) document.querySelectorAll('.announcement .lang-he').forEach(function(e){e.textContent=s.bannerHe;});
