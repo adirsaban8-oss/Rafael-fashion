@@ -162,6 +162,7 @@
   .price-fld{display:flex;align-items:center;gap:.4rem}
   .price-fld label{margin:0;font-size:.72rem;white-space:nowrap;color:var(--ink2)}
   .price-fld input{width:92px;text-align:center;font-weight:600}
+  .prod-filter{margin-bottom:1rem;max-width:340px}
 
   /* ---------- narrow phones ---------- */
   @media(max-width:560px){
@@ -349,12 +350,13 @@ function viewProducts(){
       return;
     }
     var groups={};_siteProducts.forEach(function(p){(groups[p.cat]=groups[p.cat]||[]).push(p);});
-    var html='<div class="card"><div class="card-h"><h2>מוצרים ותמחור</h2><span class="muted">כל מוצר באתר · '+_siteProducts.length+' פריטים · שינוי משתקף מיד</span></div>';
+    var html='<div class="card"><div class="card-h"><h2>מוצרים ותמחור</h2><span class="muted">כל מוצר וצבע באתר · '+_siteProducts.length+' פריטים · שינוי משתקף מיד</span></div>';
+    html+='<input id="prodFilter" class="prod-filter" type="search" placeholder="חיפוש לפי שם / צבע…" oninput="filterProducts()" aria-label="חיפוש מוצר">';
     Object.keys(groups).forEach(function(cat){
-      html+='<div class="cat-title">'+esc(CATLBL[cat]||cat)+'</div>';
+      html+='<div class="cat-title" data-cat="'+esc(cat)+'">'+esc(CATLBL[cat]||cat)+' · '+groups[cat].length+'</div>';
       html+=groups[cat].map(function(p){
         var inStock=p.stockStatus!=='out_of_stock';
-        return '<div class="prow">'+
+        return '<div class="prow" data-name="'+esc(p.name)+'">'+
           '<div class="prow-info"><div class="prow-name">'+esc(p.name)+'</div><div class="pid">'+esc(p.id)+'</div></div>'+
           '<div class="prow-ctrls">'+
             '<div class="price-fld"><label for="pr-'+p.id+'">מחיר ₪</label><input id="pr-'+p.id+'" type="number" min="0" inputmode="numeric" value="'+(p.price==null?'':p.price)+'"></div>'+
@@ -376,6 +378,13 @@ function saveSiteProduct(id){
   .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});})
   .then(function(res){ if(res.ok)toast('נשמר ✓'); else toast(res.d.error||'שגיאה',true); })
   .catch(function(){toast('שגיאת תקשורת',true);});
+}
+function filterProducts(){
+  var q=(($('prodFilter')||{}).value||'').trim().toLowerCase();
+  document.querySelectorAll('#view .prow').forEach(function(r){
+    var n=(r.getAttribute('data-name')||'').toLowerCase();
+    r.style.display=(!q||n.indexOf(q)>=0)?'':'none';
+  });
 }
 
 /* ---------- settings ---------- */

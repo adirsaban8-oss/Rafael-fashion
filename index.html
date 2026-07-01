@@ -853,11 +853,20 @@ function catalogIdForId(id){
   if(id.indexOf('-bowtie')>=0)         return 'bowtie';
   return null;
 }
+function variantKeyOf(id,colorId){ return colorId?(String(id)+'__'+colorId):String(id); }
 function productPrice(id){
-  if(PRODUCT_PRICES[id]!=null) return PRODUCT_PRICES[id];   /* per-product override wins */
+  if(PRODUCT_PRICES[id]!=null) return PRODUCT_PRICES[id];        /* per-variant override wins */
+  var base=String(id).split('__')[0];
+  if(base!==String(id)&&PRODUCT_PRICES[base]!=null) return PRODUCT_PRICES[base];  /* per-product override */
   var cid=catalogIdForId(id); if(!cid) return null;
   if(PRICE_OVERRIDES[cid]!=null) return PRICE_OVERRIDES[cid];
   return DEFAULT_PRICES[cid]!=null?DEFAULT_PRICES[cid]:null;
+}
+function productStockStatus(id){
+  if(PRODUCT_STOCK[id]) return PRODUCT_STOCK[id];               /* per-variant stock */
+  var base=String(id).split('__')[0];
+  if(base!==String(id)&&PRODUCT_STOCK[base]) return PRODUCT_STOCK[base];
+  return 'in_stock';
 }
 function applyCatalogPrices(){
   Object.keys(CATALOG).forEach(function(cat){ Object.keys(CATALOG[cat]).forEach(function(sub){
@@ -1286,8 +1295,8 @@ function renderProductGrid(){
   base.forEach(p=>{
     const vis=visibleColors(p);
     if(!vis.length) return; // no image → hide the whole card
-    if(!p.colors||p.colors.length<=1||p.noExplode){ expanded.push(ov(Object.assign({},p,{_variantKey:p.id}),p.id)); return; }
-    vis.forEach(c=>{ const key=p.id+"__"+c.id; expanded.push(ov(Object.assign({},p,{_variantColor:c,_linkId:p.id+"/"+c.id,_variantKey:key}),key)); });
+    if(!p.colors||p.colors.length<=1||p.noExplode){ const o=ov(Object.assign({},p,{_variantKey:p.id}),p.id); o.price=productPrice(p.id); o.inStock=productStockStatus(p.id)!=='out_of_stock'; expanded.push(o); return; }
+    vis.forEach(c=>{ const key=p.id+"__"+c.id; const o=ov(Object.assign({},p,{_variantColor:c,_linkId:p.id+"/"+c.id,_variantKey:key}),key); o.price=productPrice(key); o.inStock=productStockStatus(key)!=='out_of_stock'; expanded.push(o); });
   });
   let list=expanded.filter(p=>!(window.RFStore && RFStore.isRemoved(p._variantKey||p.id)));
   if(gridState.sort==='name') list.sort((a,b)=>tr(a,'name').localeCompare(tr(b,'name')));
@@ -1369,7 +1378,14 @@ function attachProductCardEvents(){
 /* ========== RENDER: PRODUCT DETAIL ========== */
 let pdState={product:null,colorIdx:0,size:null,qty:1,cat:null,sub:null};
 function pdVariantKey(p,color){ return (p.colors&&p.colors.length>1&&!p.noExplode&&color)?(p.id+'__'+color.id):p.id; }
-function pdApplied(p,color){ return window.RFStore?RFStore.applyWithKey(Object.assign({},p),pdVariantKey(p,color)):p; }
+function pdApplied(p,color){
+  var key=pdVariantKey(p,color);
+  var out=window.RFStore?RFStore.applyWithKey(Object.assign({},p),key):Object.assign({},p);
+  out.price=productPrice(key);                                  /* server per-variant price is authoritative */
+  out.inStock=productStockStatus(key)!=='out_of_stock';
+  return out;
+}
+function soldOutText(){ return STATE.lang==='he'?'אזל מהמלאי':(STATE.lang==='fr'?'Épuisé':'Sold out'); }
 function pdPriceHTML(vp){
   if(vp.price===null||vp.price===undefined) return t('priceInquire');
   if(vp.salePrice) return '₪'+Number(vp.salePrice).toLocaleString()+' <span class="old-price">₪'+Number(vp.price).toLocaleString()+'</span>';
@@ -1416,8 +1432,8 @@ function renderProduct(id,preselectColorId){
   }).join('');
   const variantNote='';
   const vpActive=pdApplied(p,activeColor);
-  const priceDisplay=pdPriceHTML(vpActive);
-  const priceClass=(vpActive.price===null||vpActive.price===undefined)?'pd-price':'pd-price fixed';
+  const priceDisplay=vpActive.inStock?pdPriceHTML(vpActive):soldOutText();
+  const priceClass=(vpActive.price===null||vpActive.price===undefined||!vpActive.inStock)?'pd-price':'pd-price fixed';
 
   document.getElementById('pageContent').innerHTML=''+
     '<div class="page">'+
@@ -1463,7 +1479,7 @@ function updatePdGallery(){
   const nameEl=document.getElementById('pdName');
   if(nameEl) nameEl.textContent=displayName;
   const priceEl=document.getElementById('pdPrice');
-  if(priceEl){ const vp=pdApplied(p,activeColor); priceEl.innerHTML=pdPriceHTML(vp); priceEl.className=(vp.price===null||vp.price===undefined)?'pd-price':'pd-price fixed'; }
+  if(priceEl){ const vp=pdApplied(p,activeColor); priceEl.innerHTML=vp.inStock?pdPriceHTML(vp):soldOutText(); priceEl.className=(vp.price===null||vp.price===undefined||!vp.inStock)?'pd-price':'pd-price fixed'; }
   const crumbCurrent=document.querySelector('.breadcrumb-current');
   if(crumbCurrent) crumbCurrent.textContent=displayName;
   document.title=displayName+' · '+tr(activeColor,'name')+' — Rafael';
@@ -1511,7 +1527,11 @@ function attachProductDetailEvents(){
   });
   var _sgBtn=document.getElementById('sizeGuideBtn'); if(_sgBtn) _sgBtn.addEventListener('click',openSizeGuide);
 }
-function checkAddReady(){ document.getElementById('pdAddCart').disabled=!pdState.size; }
+function checkAddReady(){
+  var p=pdState.product, key=pdVariantKey(p,p.colors[pdState.colorIdx]);
+  var oos=productStockStatus(key)==='out_of_stock';
+  document.getElementById('pdAddCart').disabled=!pdState.size||oos;
+}
 
 /* ========== CART ========== */
 function addToCart(productId,colorId,size,quantity){
@@ -1548,7 +1568,8 @@ function renderCart(){
     if(!found) return '';
     const p=found.product;
     const color=p.colors.find(c=>c.id===item.colorId)||p.colors[0];
-    const unit=typeof p.price==='number'?p.price:(p.price&&p.price.min?p.price.min:null);
+    const _pr=productPrice(variantKeyOf(item.productId,item.colorId));
+    const unit=typeof _pr==='number'?_pr:null;
     const priceLabel=unit?'₪'+(unit*item.quantity).toLocaleString():t('priceInquireShort');
     const priceClass=unit?'sidebar-item-price':'sidebar-item-price inquire';
     return ''+
@@ -1570,7 +1591,8 @@ function renderCart(){
   STATE.cart.forEach(item=>{
     const f=findProductById(item.productId);
     if(!f) return;
-    const unit=typeof f.product.price==='number'?f.product.price:(f.product.price&&f.product.price.min?f.product.price.min:null);
+    const _pr=productPrice(variantKeyOf(item.productId,item.colorId));
+    const unit=typeof _pr==='number'?_pr:null;
     if(unit===null){ hasPrices=false; return; }
     subtotal+=unit*item.quantity;
   });
@@ -1635,7 +1657,7 @@ function sendCartWhatsApp(){
     try{
       const items=STATE.cart.map(item=>{ const f=findProductById(item.productId); const prod=f?RFStore.applyToProduct(f.product):null;
         const color=prod&&(prod.colors.find(c=>c.id===item.colorId)||prod.colors[0]);
-        return {name:prod?tr(prod,'name'):item.productId, color:color?tr(color,'name'):'', size:item.size, qty:item.quantity, price:(prod?(prod.salePrice||prod.price):null)}; });
+        return {name:prod?tr(prod,'name'):item.productId, color:color?tr(color,'name'):'', size:item.size, qty:item.quantity, price:productPrice(variantKeyOf(item.productId,item.colorId))}; });
       const total=items.reduce((s,it)=>s+((Number(it.price)||0)*it.qty),0);
       RFStore.addOrder({date:new Date().toLocaleString('he-IL'),items:items,total:total||'',customer:{name:'',phone:''},source:'whatsapp'});
     }catch(e){}
@@ -1707,8 +1729,10 @@ function coLines(){
     var f=findProductById(item.productId); if(!f) return null;
     var p=RFStore?RFStore.applyToProduct(f.product):f.product;
     var color=p.colors.find(function(c){return c.id===item.colorId;})||p.colors[0];
-    var unit=typeof p.price==='number'?p.price:0;
-    return {productId:item.productId,name:tr(p,'name'),color:color?tr(color,'name'):'',size:item.size,quantity:item.quantity,price:unit};
+    var vk=variantKeyOf(item.productId,item.colorId);
+    var _pr=productPrice(vk);
+    var unit=typeof _pr==='number'?_pr:0;
+    return {productId:vk,name:tr(p,'name'),color:color?tr(color,'name'):'',size:item.size,quantity:item.quantity,price:unit};
   }).filter(Boolean);
 }
 function coTotals(){
@@ -1910,7 +1934,13 @@ function buildProductList(){
   var out=[];
   Object.keys(CATALOG).forEach(function(cat){ Object.keys(CATALOG[cat]).forEach(function(sub){
     CATALOG[cat][sub].forEach(function(p){
-      out.push({id:p.id,name:p.name_he,cat:cat,sub:sub,catalogId:catalogIdForId(p.id)});
+      var vis=visibleColors(p);
+      if(!vis.length) return;                                   /* skip cards with no image (hidden on site) */
+      if(!p.colors||p.colors.length<=1||p.noExplode){
+        out.push({id:p.id,name:p.name_he,cat:cat,sub:sub,catalogId:catalogIdForId(p.id)});
+      } else {
+        vis.forEach(function(c){ out.push({id:p.id+'__'+c.id,name:p.name_he+' · '+c.name_he,cat:cat,sub:sub,catalogId:catalogIdForId(p.id)}); });
+      }
     });
   }); });
   return out;
