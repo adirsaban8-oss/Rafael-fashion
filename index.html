@@ -708,11 +708,11 @@ body[data-lang="he"] .lang-en,body[data-lang="he"] .lang-fr,body[data-lang="en"]
     </div>
     <div class="footer-col">
       <h4><span class="lang-he">קולקציות</span><span class="lang-en">Collection</span><span class="lang-fr">Collection</span></h4>
-      <a onclick="location.hash='#/youth'"><span class="lang-he">בגדי נוער</span><span class="lang-en">Youth</span><span class="lang-fr">Jeunesse</span></a>
-      <a onclick="location.hash='#/children'"><span class="lang-he">בגדי ילדים</span><span class="lang-en">Children</span><span class="lang-fr">Enfants</span></a>
-      <a onclick="location.hash='#/youth/suits'"><span class="lang-he">חליפות</span><span class="lang-en">Suits</span><span class="lang-fr">Costumes</span></a>
-      <a onclick="location.hash='#/youth/shirts'"><span class="lang-he">חולצות</span><span class="lang-en">Shirts</span><span class="lang-fr">Chemises</span></a>
-      <a onclick="location.hash='#/youth/accessories'"><span class="lang-he">אביזרים</span><span class="lang-en">Accessories</span><span class="lang-fr">Accessoires</span></a>
+      <a href="/category/youth"><span class="lang-he">בגדי נוער</span><span class="lang-en">Youth</span><span class="lang-fr">Jeunesse</span></a>
+      <a href="/category/kids"><span class="lang-he">בגדי ילדים</span><span class="lang-en">Children</span><span class="lang-fr">Enfants</span></a>
+      <a href="/category/youth-suits"><span class="lang-he">חליפות</span><span class="lang-en">Suits</span><span class="lang-fr">Costumes</span></a>
+      <a href="/category/youth-shirts"><span class="lang-he">חולצות</span><span class="lang-en">Shirts</span><span class="lang-fr">Chemises</span></a>
+      <a href="/category/youth-accessories"><span class="lang-he">אביזרים</span><span class="lang-en">Accessories</span><span class="lang-fr">Accessoires</span></a>
     </div>
     <div class="footer-col">
       <h4><span class="lang-he">שירות</span><span class="lang-en">Service</span><span class="lang-fr">Service</span></h4>
@@ -1196,7 +1196,7 @@ function renderSubNav(crumbs){
   return '<div class="sub-nav"><div class="breadcrumb">' + crumbs.map((c,i)=>{
     const sep = i<crumbs.length-1 ? '<span class="breadcrumb-sep">·</span>' : '';
     if(c.current) return '<span class="breadcrumb-current">'+c.label+'</span>';
-    return '<a onclick="location.hash=\''+c.hash+'\'">'+c.label+'</a>'+sep;
+    return '<a href="'+hashToPath(c.hash)+'">'+c.label+'</a>'+sep;
   }).join(' ') + '</div></div>';
 }
 
@@ -1216,21 +1216,21 @@ function renderHome(){
           '<h1 class="hero-title">'+t('heroTitle')+'</h1>'+
           '<div class="hero-links">'+
             '<a class="hero-link call" href="tel:0546398638">'+t('heroCall')+'</a>'+
-            '<a class="hero-link" onclick="location.hash=\'#/youth\'">'+t('heroLink1')+' ›</a>'+
-            '<a class="hero-link" onclick="location.hash=\'#/children\'">'+t('heroLink2')+' ›</a>'+
+            '<a class="hero-link" href="/category/youth">'+t('heroLink1')+' ›</a>'+
+            '<a class="hero-link" href="/category/kids">'+t('heroLink2')+' ›</a>'+
           '</div>'+
         '</div>'+
       '</section>'+
       // SPLIT TILES
       '<section class="split-tiles">'+
-        '<div class="split-tile split-tile-youth" onclick="location.hash=\'#/youth\'">'+
+        '<div class="split-tile split-tile-youth" onclick="go(\'#/youth\')">'+
           '<div class="split-tile-bg"></div>'+
           '<div class="split-tile-overlay"></div>'+
           '<div class="split-tile-content">'+
             '<div class="split-tile-name is-mark">teen</div>'+
           '</div>'+
         '</div>'+
-        '<div class="split-tile split-tile-children" onclick="location.hash=\'#/children\'">'+
+        '<div class="split-tile split-tile-children" onclick="go(\'#/children\')">'+
           '<div class="split-tile-bg"></div>'+
           '<div class="split-tile-overlay"></div>'+
           '<div class="split-tile-content">'+
@@ -1266,9 +1266,9 @@ function setupHeroNavScroll(){
 
 /* ========== RENDER: CATEGORY ========== */
 function renderCategory(cat){
-  if(!CATS[cat]){ location.hash='#/'; return; }
+  if(!CATS[cat]){ navigate('/',true); return; }
   setMeta((CATS[cat][STATE.lang]||CATS[cat].he)+' · Rafael Fashion', DEFAULT_DESC); setProductSchema(null);
-  setBreadcrumb([{name:t('home'),url:SEO_BASE},{name:(CATS[cat][STATE.lang]||CATS[cat].he),url:SEO_BASE+'#/'+cat}]);
+  setBreadcrumb([{name:t('home'),url:SEO_BASE},{name:(CATS[cat][STATE.lang]||CATS[cat].he),url:absUrl(catPath(cat))}]);
   document.getElementById('navbar').classList.remove('transparent');
   const catData=CATS[cat];
   const title=catData[STATE.lang]||catData.en;
@@ -1282,7 +1282,7 @@ function renderCategory(cat){
       ?'<div class="sub-card-bg sub-card-bg-img" style="background-image:url(\''+cover+(cover.indexOf('data:')===0?'':'?'+IMG_VERSION)+'\')"></div>'
       :'<div class="sub-card-bg">'+(ICONS[{suits:'suit',pants:'pants',shirts:'shirt',vests:'vest',shoes:'shoe',accessories:'accessory'}[sub]]||'')+'</div>';
     return ''+
-      '<div class="sub-card" onclick="location.hash=\'#/'+cat+'/'+sub+'\'">'+
+      '<div class="sub-card" onclick="go(\'#/'+cat+'/'+sub+'\')">'+
         bgHtml+
         '<div class="sub-card-arrow">←</div>'+
         '<div class="sub-card-content">'+
@@ -1308,9 +1308,9 @@ function renderCategory(cat){
 /* ========== RENDER: SUBCATEGORY ========== */
 let gridState={cat:null,sub:null,filter:'all',sort:'popular'};
 function renderSubcategory(cat,sub){
-  if(!CATS[cat]||!SUBCATS[sub]){ location.hash='#/'; return; }
+  if(!CATS[cat]||!SUBCATS[sub]){ navigate('/',true); return; }
   setMeta((SUBCATS[sub][STATE.lang]||SUBCATS[sub].he)+' · '+(CATS[cat][STATE.lang]||CATS[cat].he)+' · Rafael Fashion', DEFAULT_DESC); setProductSchema(null);
-  setBreadcrumb([{name:t('home'),url:SEO_BASE},{name:(CATS[cat][STATE.lang]||CATS[cat].he),url:SEO_BASE+'#/'+cat},{name:(SUBCATS[sub][STATE.lang]||SUBCATS[sub].he),url:SEO_BASE+'#/'+cat+'/'+sub}]);
+  setBreadcrumb([{name:t('home'),url:SEO_BASE},{name:(CATS[cat][STATE.lang]||CATS[cat].he),url:absUrl(catPath(cat))},{name:(SUBCATS[sub][STATE.lang]||SUBCATS[sub].he),url:absUrl(catPath(cat,sub))}]);
   document.getElementById('navbar').classList.remove('transparent');
   gridState={cat,sub,filter:'all',sort:'popular'};
   const catTitle=CATS[cat][STATE.lang]||CATS[cat].en;
@@ -1418,7 +1418,7 @@ function attachProductCardEvents(){
   document.querySelectorAll('.product-card').forEach(card=>{
     card.addEventListener('click',function(e){
       if(e.target.closest('[data-wish]')) return;
-      location.hash='#/product/'+card.dataset.id;
+      go('#/product/'+card.dataset.id);
     });
   });
   document.querySelectorAll('[data-wish]').forEach(btn=>{
@@ -1496,9 +1496,9 @@ function pdPriceHTML(vp){
 }
 function renderProduct(id,preselectColorId){
   const found=findProductById(id);
-  if(!found){ location.hash='#/'; return; }
+  if(!found){ navigate('/',true); return; }
   const _vis=visibleColors(found.product);
-  if(!_vis.length){ location.hash='#/'+found.cat+'/'+found.sub; return; }
+  if(!_vis.length){ navigate(catPath(found.cat,found.sub),true); return; }
   document.getElementById('navbar').classList.remove('transparent');
   const p=Object.assign({},found.product,{colors:_vis});
   let colorIdx=0;
@@ -1542,7 +1542,7 @@ function renderProduct(id,preselectColorId){
   const priceDisplay=vpActive.inStock?pdPriceHTML(vpActive):soldOutText();
   setMeta(displayName+' · Rafael Fashion', tr(p,'description'));
   setProductSchema(Object.assign({},p,{_variantKey:pdVariantKey(p,activeColor),_seoName:displayName,_seoDesc:tr(p,'description'),_seoPrice:(vpActive.salePrice||vpActive.price),_seoInStock:vpActive.inStock}));
-  setBreadcrumb([{name:t('home'),url:SEO_BASE},{name:catTitle,url:SEO_BASE+'#/'+found.cat},{name:subTitle,url:SEO_BASE+'#/'+found.cat+'/'+found.sub},{name:displayName}]);
+  setBreadcrumb([{name:t('home'),url:SEO_BASE},{name:catTitle,url:absUrl(catPath(found.cat))},{name:subTitle,url:absUrl(catPath(found.cat,found.sub))},{name:displayName,url:cleanUrl()}]);
   const priceClass=(vpActive.price===null||vpActive.price===undefined||!vpActive.inStock)?'pd-price':'pd-price fixed';
 
   document.getElementById('pageContent').innerHTML=''+
@@ -1670,7 +1670,7 @@ function renderCart(){
         '<div class="sidebar-empty-mark"></div>'+
         '<div class="sidebar-empty-title">'+t('cartEmpty')+'</div>'+
         '<div class="sidebar-empty-desc">'+t('cartEmptyDesc')+'</div>'+
-        '<button class="sidebar-empty-btn" onclick="location.hash=\'#/\';closeCart()">'+t('explore')+'</button>'+
+        '<button class="sidebar-empty-btn" onclick="go(\'#/\');closeCart()">'+t('explore')+'</button>'+
       '</div>';
     return;
   }
@@ -1720,7 +1720,7 @@ function renderWishlist(){
         '<div class="sidebar-empty-mark"></div>'+
         '<div class="sidebar-empty-title">'+t('wishEmpty')+'</div>'+
         '<div class="sidebar-empty-desc">'+t('wishEmptyDesc')+'</div>'+
-        '<button class="sidebar-empty-btn" onclick="location.hash=\'#/\';closeWishlist()">'+t('explore')+'</button>'+
+        '<button class="sidebar-empty-btn" onclick="go(\'#/\');closeWishlist()">'+t('explore')+'</button>'+
       '</div>';
     return;
   }
@@ -1734,7 +1734,7 @@ function renderWishlist(){
     const details=color?tr(color,'name'):tr(p,'subcategory_tag');
     const hash=colorId?'#/product/'+productId+'/'+colorId:'#/product/'+productId;
     return ''+
-      '<div class="sidebar-item" style="cursor:pointer" onclick="location.hash=\''+hash+'\';closeWishlist()">'+
+      '<div class="sidebar-item" style="cursor:pointer" onclick="go(\''+hash+'\');closeWishlist()">'+
         '<div class="sidebar-item-img"></div>'+
         '<div class="sidebar-item-info">'+
           '<div class="sidebar-item-name">'+tr(p,'name')+'</div>'+
@@ -1798,7 +1798,7 @@ function doSearch(q){
     const imgStyle=sImgs?' style="background-image:url(\''+sImgs[0]+'\');background-size:cover;background-position:center"':'';
     return '<div class="search-result" data-id="'+p.id+'"><div class="search-result-img"'+imgStyle+'></div><div class="search-result-info"><div class="search-result-name">'+tr(p,'name')+'</div><div class="search-result-cat">'+catTitle+' · '+subTitle+'</div></div></div>';
   }).join('');
-  document.querySelectorAll('.search-result').forEach(el=>el.addEventListener('click',function(){ location.hash='#/product/'+el.dataset.id; closeSearch(); }));
+  document.querySelectorAll('.search-result').forEach(el=>el.addEventListener('click',function(){ go('#/product/'+el.dataset.id); closeSearch(); }));
 }
 
 /* ========== MOBILE MENU ========== */
@@ -1807,7 +1807,7 @@ function closeMobileMenu(){ document.getElementById('mobileMenu').classList.remo
 function buildMobileMenu(){
   let html=Object.keys(CATS).map(cat=>{
     const c=CATS[cat];
-    return '<div class="mobile-menu-group"><div class="mobile-menu-title" onclick="location.hash=\'#/'+cat+'\';closeMobileMenu()">'+(c[STATE.lang]||c.en)+'</div><div class="mobile-menu-sub">'+Object.keys(SUBCATS).map(sub=>'<a onclick="location.hash=\'#/'+cat+'/'+sub+'\';closeMobileMenu()">'+(SUBCATS[sub][STATE.lang]||SUBCATS[sub].en)+'</a>').join('')+'</div></div>';
+    return '<div class="mobile-menu-group"><div class="mobile-menu-title" onclick="go(\'#/'+cat+'\');closeMobileMenu()">'+(c[STATE.lang]||c.en)+'</div><div class="mobile-menu-sub">'+Object.keys(SUBCATS).map(sub=>'<a href="'+catPath(cat,sub)+'" onclick="closeMobileMenu()">'+(SUBCATS[sub][STATE.lang]||SUBCATS[sub].en)+'</a>').join('')+'</div></div>';
   }).join('');
   html+='<div class="mobile-menu-foot"><a href="tel:0546398638" class="sidebar-btn sidebar-btn-primary" style="width:auto;padding:0 2rem">'+t('callNow')+'</a><button class="lang-toggle" onclick="toggleLang()">EN · עב</button></div>';
   document.getElementById('mobileMenuContent').innerHTML=html;
@@ -2041,18 +2041,24 @@ var SEO_BASE='https://rafael-fashion.com/';
 var DEFAULT_TITLE='Rafael Fashion · חליפות ובגדי טקס יוקרה לנוער ולילדים';
 var DEFAULT_DESC='חליפות יוקרה ובגדי טקס לנוער ולילדים. תפירה מדויקת, עיצוב נצחי. נתניה.';
 function _setMetaC(sel,val){var e=document.querySelector(sel);if(e&&val)e.setAttribute('content',val);}
+function absUrl(path){ return SEO_BASE.replace(/\/+$/,'')+(path||'/'); }
+function cleanUrl(){ return absUrl(location.pathname||'/'); }
 function setMeta(title,desc){
   if(title){document.title=title;_setMetaC('meta[property="og:title"]',title);_setMetaC('meta[name="twitter:title"]',title);}
   if(desc){_setMetaC('meta[name="description"]',desc);_setMetaC('meta[property="og:description"]',desc);_setMetaC('meta[name="twitter:description"]',desc);}
+  var url=cleanUrl();
+  var c=document.querySelector('link[rel="canonical"]'); if(c) c.setAttribute('href',url);
+  _setMetaC('meta[property="og:url"]',url);
 }
 function setProductSchema(p){
   var old=document.getElementById('pdSchema'); if(old) old.remove();
   if(!p) return;
   var img=(getImages(p)||[])[0];
-  var d={"@context":"https://schema.org","@type":"Product","name":p._seoName,"brand":{"@type":"Brand","name":"Rafael Fashion"}};
+  var url=cleanUrl();
+  var d={"@context":"https://schema.org","@type":"Product","name":p._seoName,"brand":{"@type":"Brand","name":"Rafael Fashion"},"url":url,"sku":p.baseId||p.id};
   if(p._seoDesc) d.description=p._seoDesc;
-  if(img) d.image=SEO_BASE+String(img).split('?')[0];
-  if(typeof p._seoPrice==='number') d.offers={"@type":"Offer","price":p._seoPrice,"priceCurrency":"ILS","availability":"https://schema.org/"+(p._seoInStock?"InStock":"OutOfStock")};
+  if(img) d.image=SEO_BASE.replace(/\/+$/,'')+'/'+String(img).split('?')[0];
+  if(typeof p._seoPrice==='number') d.offers={"@type":"Offer","price":p._seoPrice,"priceCurrency":"ILS","availability":"https://schema.org/"+(p._seoInStock?"InStock":"OutOfStock"),"url":url};
   var s=document.createElement('script');s.type='application/ld+json';s.id='pdSchema';s.textContent=JSON.stringify(d);document.head.appendChild(s);
 }
 function setBreadcrumb(crumbs){
@@ -2061,15 +2067,41 @@ function setBreadcrumb(crumbs){
   var d={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":crumbs.map(function(c,i){var o={"@type":"ListItem","position":i+1,"name":c.name};if(c.url)o.item=c.url;return o;})};
   var s=document.createElement('script');s.type='application/ld+json';s.id='bcSchema';s.textContent=JSON.stringify(d);document.head.appendChild(s);
 }
+/* ===== Real-URL routing (History API) — clean crawlable URLs, legacy #/ hashes still work ===== */
+var CAT_SLUG={youth:'youth',children:'kids'};
+var SLUG_CAT={youth:'youth',kids:'children'};
+function catPath(cat,sub){ return '/category/'+(CAT_SLUG[cat]||cat)+(sub?('-'+sub):''); }
+function hashToPath(h){
+  var parts=String(h||'').replace(/^#\/?/,'').split('/').filter(Boolean);
+  if(!parts.length) return '/';
+  if(parts[0]==='product') return '/product/'+parts.slice(1).join('/');
+  if(parts.length===1) return catPath(parts[0]);
+  return catPath(parts[0],parts[1]);
+}
+function routeFromPath(pathname){
+  var parts=String(pathname||'/').replace(/\/+$/,'').split('/').filter(Boolean);
+  if(!parts.length) return {view:'home'};
+  if(parts[0]==='product'&&parts[1]) return {view:'product',id:parts[1],color:parts[2]};
+  if(parts[0]==='category'&&parts[1]){
+    var seg=parts[1].split('-'), cat=SLUG_CAT[seg[0]], sub=seg.slice(1).join('-');
+    if(!cat) return {view:'home'};
+    if(sub&&SUBCATS[sub]) return {view:'sub',cat:cat,sub:sub};
+    return {view:'cat',cat:cat};
+  }
+  return {view:'home'};
+}
+function navigate(path,replace){
+  try{ history[replace?'replaceState':'pushState'](null,'',path); }catch(e){ location.href=path; return; }
+  renderPage();
+}
+function go(hashLike){ navigate(hashToPath(hashLike)); }   /* legacy hash-style nav → clean URL */
 function renderPage(){
-  const hash=location.hash.slice(1)||'/';
-  const parts=hash.split('/').filter(Boolean);
+  var r=routeFromPath(location.pathname);
   closeCart(); closeWishlist(); closeMobileMenu(); closeSearch();
   document.getElementById('navbar').classList.remove('transparent');
-  if(parts.length===0) renderHome();
-  else if(parts[0]==='product'&&parts[1]) renderProduct(parts[1],parts[2]);
-  else if(parts.length===1) renderCategory(parts[0]);
-  else if(parts.length===2) renderSubcategory(parts[0],parts[1]);
+  if(r.view==='product') renderProduct(r.id,r.color);
+  else if(r.view==='sub') renderSubcategory(r.cat,r.sub);
+  else if(r.view==='cat') renderCategory(r.cat);
   else renderHome();
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -2145,7 +2177,7 @@ function init(){
   updateBadges();
 
   document.getElementById('langToggle').addEventListener('click',toggleLang);
-  document.getElementById('navLogoWrap').addEventListener('click',function(){ location.hash='#/'; });
+  document.getElementById('navLogoWrap').addEventListener('click',function(){ go('#/'); });
   document.getElementById('cartBtn').addEventListener('click',openCart);
   document.getElementById('wishlistBtn').addEventListener('click',openWishlist);
   document.getElementById('searchBtn').addEventListener('click',openSearch);
@@ -2191,7 +2223,17 @@ function init(){
   document.addEventListener('keydown',function(e){
     if(e.key==='Escape'){ closeCart(); closeWishlist(); closeMobileMenu(); closeSearch(); closeModal(); }
   });
-  window.addEventListener('hashchange',renderPage);
+  window.addEventListener('popstate',renderPage);
+  // legacy #/ hashes → clean URL (backward compatibility for old shared links)
+  window.addEventListener('hashchange',function(){ if(location.hash&&location.hash.indexOf('#/')===0){ history.replaceState(null,'',hashToPath(location.hash)); renderPage(); } });
+  // intercept internal clean-URL links → SPA navigation (no full reload)
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a'); if(!a) return;
+    if(a.target==='_blank'||a.hasAttribute('download')) return;
+    var href=a.getAttribute('href'); if(!href||href.charAt(0)!=='/') return;
+    if(href==='/'||href.indexOf('/product/')===0||href.indexOf('/category/')===0){ e.preventDefault(); navigate(href); }
+  });
+  if(location.hash&&location.hash.indexOf('#/')===0){ history.replaceState(null,'',hashToPath(location.hash)); }
   renderPage();
 }
 

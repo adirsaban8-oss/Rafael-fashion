@@ -659,6 +659,93 @@ app.get('/api/order/:id', (req, res) => {
   res.json({ order: o });
 });
 
+/* ===== SEO: real category/product URLs — SSR-lite meta injection + dynamic sitemap ===== */
+const SEO_ORIGIN = process.env.SEO_ORIGIN || 'https://rafael-fashion.com';
+const CAT_SLUG = { youth: 'youth', children: 'kids' };
+const CAT_NAME = { youth: 'נוער', children: 'ילדים' };
+const SUB_NAME = { suits: 'חליפות', pants: 'מכנסיים', shirts: 'חולצות מכופתרות', vests: 'וסטים', shoes: 'נעליים', accessories: 'אביזרים' };
+const SUB_KEYS = ['suits', 'pants', 'shirts', 'vests', 'shoes', 'accessories'];
+function seoCatPath(cat, sub) { return '/category/' + (CAT_SLUG[cat] || cat) + (sub ? '-' + sub : ''); }
+function seoEsc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+const PRODUCT_SEED = (() => {
+  const defs = [
+    ['suits', 'suit-parade', 'חליפת פרדה'], ['suits', 'suit-linen', 'חליפת פשתן'],
+    ['pants', 'pants-parade', 'מכנסי פרדה'], ['pants', 'pants-linen', 'מכנסי פשתן'], ['pants', 'pants-oversized', 'מכנסי אוברסייז'],
+    ['shirts', 'shirt-classic', 'חולצה קלאסית'], ['shirts', 'shirt-linen', 'חולצת פשתן'],
+    ['vests', 'vest-parade', 'וסט פרדה'], ['vests', 'vest-linen', 'וסט פשתן'],
+    ['shoes', 'shoes-icon', 'נעלי Icon London'], ['shoes', 'shoes-moccasin', 'מוקסינים'],
+    ['accessories', 'belt-1', 'חגורת עור שחורה'], ['accessories', 'belt-2', 'חגורת עור שחורה'], ['accessories', 'belt-3', 'חגורת עור שחורה'], ['accessories', 'belt-4', 'חגורת עור שחורה'], ['accessories', 'belt-5', 'חגורת עור שחורה'],
+    ['accessories', 'bowtie', 'פפיון'],
+  ];
+  const out = [];
+  [['y', 'youth'], ['c', 'children']].forEach(([pfx, cat]) => defs.forEach(([sub, key, name]) => out.push({ id: pfx + '-' + key, name, cat, sub })));
+  return out;
+})();
+function baseProducts() {
+  if (siteProducts.length) {
+    const seen = {}, out = [];
+    siteProducts.forEach((p) => { const b = p.baseId || p.id; if (!seen[b]) { seen[b] = 1; out.push({ id: b, name: String(p.name || b).split(' · ')[0], cat: p.cat, sub: p.sub }); } });
+    return out;
+  }
+  return PRODUCT_SEED; // fallback so the sitemap is never empty before the storefront publishes
+}
+function imageForBase(baseId) {
+  const v = (imgCatalog.variants || []).find((x) => String(x.key || '').split('__')[0] === baseId && (imgState.variants[x.key] || x.images || []).length);
+  if (v) { const imgs = imgState.variants[v.key] || v.images || []; if (imgs[0]) return String(imgs[0]).split('?')[0]; }
+  return null;
+}
+function metaFor(pathname) {
+  const m = { title: 'Rafael Fashion · חליפות ובגדי טקס יוקרה לנוער ולילדים', desc: 'חליפות יוקרה ובגדי טקס לנוער ולילדים. תפירה מדויקת, עיצוב נצחי. נתניה.', canonical: SEO_ORIGIN + (pathname || '/'), image: SEO_ORIGIN + '/photos/home-hero.jpeg', jsonld: '' };
+  const parts = String(pathname || '/').replace(/\/+$/, '').split('/').filter(Boolean);
+  if (parts[0] === 'product' && parts[1]) {
+    const p = baseProducts().find((x) => x.id === parts[1]); if (!p) return m;
+    m.canonical = SEO_ORIGIN + '/product/' + p.id;
+    m.title = p.name + ' | חליפות ילדים ונוער | Rafael Fashion';
+    m.desc = p.name + ' — אופנת יוקרה לנוער ולילדים מבית Rafael Fashion, נתניה. תפירה מדויקת ומשלוח עד הבית.';
+    const img = imageForBase(p.id); if (img) m.image = SEO_ORIGIN + '/' + img;
+    const product = { '@context': 'https://schema.org', '@type': 'Product', name: p.name, brand: { '@type': 'Brand', name: 'Rafael Fashion' }, sku: p.id, url: m.canonical, image: m.image };
+    const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'בית', item: SEO_ORIGIN + '/' },
+      { '@type': 'ListItem', position: 2, name: CAT_NAME[p.cat] || p.cat, item: SEO_ORIGIN + seoCatPath(p.cat) },
+      { '@type': 'ListItem', position: 3, name: SUB_NAME[p.sub] || p.sub, item: SEO_ORIGIN + seoCatPath(p.cat, p.sub) },
+      { '@type': 'ListItem', position: 4, name: p.name, item: m.canonical },
+    ] };
+    m.jsonld = '<script type="application/ld+json">' + JSON.stringify(product) + '</script>\n<script type="application/ld+json">' + JSON.stringify(crumbs) + '</script>';
+  } else if (parts[0] === 'category' && parts[1]) {
+    const seg = parts[1].split('-'), catKey = Object.keys(CAT_SLUG).find((k) => CAT_SLUG[k] === seg[0]), sub = seg.slice(1).join('-');
+    if (!catKey) return m;
+    const catN = CAT_NAME[catKey], hasSub = sub && SUB_NAME[sub];
+    const name = hasSub ? (SUB_NAME[sub] + ' ל' + catN) : ('קולקציית ' + catN);
+    m.canonical = SEO_ORIGIN + seoCatPath(catKey, hasSub ? sub : '');
+    m.title = name + ' | Rafael Fashion';
+    m.desc = name + ' — אופנת יוקרה, בגדי טקס ובר מצווה. תפירה מדויקת, נתניה, משלוח עד הבית.';
+    const coll = { '@context': 'https://schema.org', '@type': 'CollectionPage', name, url: m.canonical, isPartOf: { '@type': 'WebSite', name: 'Rafael Fashion', url: SEO_ORIGIN + '/' } };
+    const el = [
+      { '@type': 'ListItem', position: 1, name: 'בית', item: SEO_ORIGIN + '/' },
+      { '@type': 'ListItem', position: 2, name: catN, item: SEO_ORIGIN + seoCatPath(catKey) },
+    ];
+    if (hasSub) el.push({ '@type': 'ListItem', position: 3, name: SUB_NAME[sub], item: m.canonical });
+    m.jsonld = '<script type="application/ld+json">' + JSON.stringify(coll) + '</script>\n<script type="application/ld+json">' + JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: el }) + '</script>';
+  }
+  return m;
+}
+function injectMeta(pathname) {
+  let html; try { html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8'); } catch (e) { return null; }
+  const m = metaFor(pathname);
+  html = html.replace(/<title>[^<]*<\/title>/, '<title>' + seoEsc(m.title) + '</title>');
+  html = html.replace(/(<meta name="description" content=")[^"]*(">)/, '$1' + seoEsc(m.desc) + '$2');
+  html = html.replace(/(<link rel="canonical" href=")[^"]*(">)/, '$1' + seoEsc(m.canonical) + '$2');
+  html = html.replace(/(<meta property="og:title" content=")[^"]*(">)/, '$1' + seoEsc(m.title) + '$2');
+  html = html.replace(/(<meta property="og:description" content=")[^"]*(">)/, '$1' + seoEsc(m.desc) + '$2');
+  html = html.replace(/(<meta property="og:url" content=")[^"]*(">)/, '$1' + seoEsc(m.canonical) + '$2');
+  html = html.replace(/(<meta property="og:image" content=")[^"]*(">)/, '$1' + seoEsc(m.image) + '$2');
+  html = html.replace(/(<meta name="twitter:title" content=")[^"]*(">)/, '$1' + seoEsc(m.title) + '$2');
+  html = html.replace(/(<meta name="twitter:description" content=")[^"]*(">)/, '$1' + seoEsc(m.desc) + '$2');
+  html = html.replace(/(<meta name="twitter:image" content=")[^"]*(">)/, '$1' + seoEsc(m.image) + '$2');
+  if (m.jsonld) html = html.replace('</head>', m.jsonld + '\n</head>');
+  return html;
+}
+
 app.get('/', (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));        // beautiful catalog
 app.get('/checkout', (_req, res) => res.sendFile(path.join(__dirname, 'checkout.html'))); // simple checkout
 app.get('/admin', (_req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
@@ -677,17 +764,32 @@ Disallow: /checkout
 Disallow: /order
 Disallow: /api/
 
-Sitemap: ${PUBLIC_URL}/sitemap.xml
+Sitemap: ${SEO_ORIGIN}/sitemap.xml
 `);
 });
 app.get('/sitemap.xml', (_req, res) => {
-  // Only real crawlable URLs — the storefront itself is a hash-routed SPA (one URL), plus the static legal pages.
-  const urls = ['/', '/terms.html', '/accessibility.html', '/cancel-order.html'];
-  const body = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-    urls.map((u) => `  <url><loc>${PUBLIC_URL}${u}</loc><changefreq>weekly</changefreq></url>`).join('\n') +
-    '\n</urlset>\n';
+  const B = SEO_ORIGIN;
+  const now = new Date().toISOString().slice(0, 10);
+  const items = [{ loc: '/', priority: '1.0', cf: 'daily' }];
+  Object.keys(CAT_SLUG).forEach((cat) => {
+    items.push({ loc: seoCatPath(cat), priority: '0.9', cf: 'weekly' });
+    SUB_KEYS.forEach((sub) => items.push({ loc: seoCatPath(cat, sub), priority: '0.9', cf: 'weekly' }));
+  });
+  baseProducts().forEach((p) => { const img = imageForBase(p.id); items.push({ loc: '/product/' + p.id, priority: '0.8', cf: 'weekly', img: img ? (B + '/' + img) : null, title: p.name }); });
+  ['/terms.html', '/accessibility.html', '/cancel-order.html'].forEach((u) => items.push({ loc: u, priority: '0.3', cf: 'monthly' }));
+  const body = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n' +
+    items.map((it) => {
+      let u = '  <url><loc>' + B + it.loc + '</loc><lastmod>' + now + '</lastmod><changefreq>' + it.cf + '</changefreq><priority>' + it.priority + '</priority>';
+      if (it.img) u += '<image:image><image:loc>' + seoEsc(it.img) + '</image:loc><image:title>' + seoEsc(it.title) + '</image:title></image:image>';
+      return u + '</url>';
+    }).join('\n') + '\n</urlset>\n';
   res.type('application/xml').send(body);
 });
+
+// SPA fallback with SSR-lite meta for real category/product URLs (direct load + refresh)
+app.get('/product/*', (req, res) => { const h = injectMeta(req.path); if (h == null) return res.status(500).send('error'); res.type('html').send(h); });
+app.get('/category/*', (req, res) => { const h = injectMeta(req.path); if (h == null) return res.status(500).send('error'); res.type('html').send(h); });
 
 // static assets (photos, rf-store.js, css, etc.) — must come after the explicit page routes
 app.use(express.static(__dirname, { index: false }));
