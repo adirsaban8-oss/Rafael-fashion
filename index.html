@@ -32,7 +32,7 @@
 <meta name="twitter:description" content="חליפות יוקרה ובגדי טקס לנוער ולילדים. נתניה.">
 <meta name="twitter:image" content="https://rafael-fashion.com/photos/home-hero.jpeg">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"ClothingStore","name":"Rafael Fashion","description":"חליפות יוקרה ובגדי טקס לנוער ולילדים. תפירה מדויקת, עיצוב נצחי.","url":"https://rafael-fashion.com/","image":"https://rafael-fashion.com/photos/home-hero.jpeg","telephone":"+972546398638","priceRange":"₪₪","address":{"@type":"PostalAddress","streetAddress":"הבונים 3","addressLocality":"נתניה","addressCountry":"IL"},"areaServed":"IL"}
+{"@context":"https://schema.org","@type":"ClothingStore","name":"Rafael Fashion","description":"חליפות יוקרה ובגדי טקס לנוער ולילדים. תפירה מדויקת, עיצוב נצחי.","url":"https://rafael-fashion.com/","image":"https://rafael-fashion.com/photos/home-hero.jpeg","logo":"https://rafael-fashion.com/photos/raf1.jpeg","telephone":"+972546398638","priceRange":"₪₪","address":{"@type":"PostalAddress","streetAddress":"הבונים 3","addressLocality":"נתניה","addressCountry":"IL"},"areaServed":"IL","openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Sunday","Monday","Tuesday","Wednesday","Thursday"],"opens":"10:00","closes":"19:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Friday","opens":"10:00","closes":"14:00"}]}
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebSite","name":"Rafael Fashion","url":"https://rafael-fashion.com/","inLanguage":"he-IL"}
@@ -391,6 +391,16 @@ select{font-family:inherit}
 .product-extra-details__row:last-child{border-bottom:none}
 .product-extra-details__row .ped-k{flex:0 0 5.5rem;color:var(--mute);font-weight:500}
 .product-extra-details__row .ped-v{flex:1;color:var(--ink)}
+/* SEO FAQ — minimal collapsed accordion at the bottom of home/category */
+.seo-faq{max-width:900px;margin:0 auto;padding:2.5rem var(--edge) 3.5rem;border-top:1px solid var(--line)}
+.seo-faq h2{font-family:var(--font-display);font-size:1.3rem;font-weight:500;text-align:center;margin:0 0 1.4rem;color:var(--ink);letter-spacing:.02em}
+.seo-faq details{border-bottom:1px solid var(--line)}
+.seo-faq summary{list-style:none;cursor:pointer;padding:.95rem .2rem;font-size:.95rem;font-weight:500;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:1rem;outline:none}
+.seo-faq summary::-webkit-details-marker{display:none}
+.seo-faq summary::after{content:'+';color:var(--gold);font-size:1.15rem;font-weight:400}
+.seo-faq details[open] summary::after{content:'−'}
+.seo-faq summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:3px}
+.seo-faq details p{padding:0 .2rem 1.1rem;color:var(--mute);font-size:.88rem;line-height:1.75;margin:0}
 .pd-colors{display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:2rem}
 .pd-color{width:30px;height:30px;border-radius:50%;cursor:pointer;position:relative;transition:all .3s;border:1px solid var(--line)}
 .pd-color:hover{transform:scale(1.08)}
@@ -1651,6 +1661,7 @@ function addToCart(productId,colorId,size,quantity){
   if(existing) existing.quantity+=quantity;
   else STATE.cart.push({productId,colorId,size,quantity,addedAt:Date.now()});
   saveCart(); renderCart();
+  if(typeof gtag==='function'){ try{ gtag('event','add_to_cart',{currency:'ILS',value:productChargedPrice(variantKeyOf(productId,colorId))||undefined,items:[{item_id:variantKeyOf(productId,colorId),quantity:quantity}]}); }catch(e){} }
 }
 function removeFromCart(idx){ STATE.cart.splice(idx,1); saveCart(); renderCart(); }
 function updateCartQty(idx,delta){ STATE.cart[idx].quantity=Math.max(1,STATE.cart[idx].quantity+delta); saveCart(); renderCart(); }
@@ -1859,6 +1870,7 @@ function coField(id,label,req,ph){
 }
 function openCheckout(){
   if(!STATE.cart.length) return;
+  if(typeof gtag==='function'){ try{ gtag('event','begin_checkout',{currency:'ILS'}); }catch(e){} }
   closeCart(); CO.method='courier';
   var l=coL();
   openModal(
@@ -2068,6 +2080,32 @@ function setBreadcrumb(crumbs){
   var d={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":crumbs.map(function(c,i){var o={"@type":"ListItem","position":i+1,"name":c.name};if(c.url)o.item=c.url;return o;})};
   var s=document.createElement('script');s.type='application/ld+json';s.id='bcSchema';s.textContent=JSON.stringify(d);document.head.appendChild(s);
 }
+/* ===== SEO FAQ (collapsed, brand-styled, bottom of home/category) + FAQPage schema ===== */
+var FAQ_DATA=[
+  {q:'מהם זמני ותנאי המשלוח?',a:'משלוח עד הבית תוך 3–5 ימי עסקים. משלוח חינם בהזמנות מעל ₪1,500, אחרת דמי משלוח ₪40. ניתן גם באיסוף עצמי ללא עלות מהסטודיו ברחוב הבונים 3, נתניה.'},
+  {q:'מה מדיניות ההחזרות והביטולים?',a:'ניתן לבטל עסקה ולהחזיר מוצר תוך 14 יום מקבלת ההזמנה, בהתאם לחוק הגנת הצרכן, כשהמוצר שלם וללא שימוש.'},
+  {q:'איך בוחרים מידה?',a:'מידות נוער הן 8–22 ומידות ילדים בהתאמה. בכל עמוד מוצר יש טבלת מידות מפורטת, ונשמח לייעץ אישית בטלפון 054-639-8638.'},
+  {q:'אילו אמצעי תשלום זמינים?',a:'התשלום במזומן — לשליח בעת המשלוח, או בסטודיו בעת האיסוף העצמי.'},
+  {q:'לאילו אזורים אתם שולחים?',a:'אנו שולחים לכל הארץ. הסטודיו והחנות שלנו ממוקמים ברחוב הבונים 3, נתניה.'}
+];
+function faqHTML(){
+  var title={he:'שאלות נפוצות',en:'Frequently Asked Questions',fr:'Questions fréquentes'}[STATE.lang]||'שאלות נפוצות';
+  return '<section class="seo-faq" aria-label="'+title+'"><h2>'+title+'</h2>'+
+    FAQ_DATA.map(function(f){ return '<details><summary>'+f.q+'</summary><p>'+f.a+'</p></details>'; }).join('')+'</section>';
+}
+function setFaqSchema(on){
+  var old=document.getElementById('faqSchema'); if(old) old.remove();
+  if(!on) return;
+  var d={"@context":"https://schema.org","@type":"FAQPage","mainEntity":FAQ_DATA.map(function(f){return {"@type":"Question","name":f.q,"acceptedAnswer":{"@type":"Answer","text":f.a}};})};
+  var s=document.createElement('script');s.type='application/ld+json';s.id='faqSchema';s.textContent=JSON.stringify(d);document.head.appendChild(s);
+}
+function mountFaq(){
+  var pc=document.getElementById('pageContent'); if(!pc) return;
+  var old=pc.querySelector('.seo-faq'); if(old) old.remove();
+  var v=routeFromPath(location.pathname).view;
+  if(v==='home'||v==='cat'||v==='sub'){ pc.insertAdjacentHTML('beforeend',faqHTML()); setFaqSchema(true); }
+  else setFaqSchema(false);
+}
 /* ===== Real-URL routing (History API) — clean crawlable URLs, legacy #/ hashes still work ===== */
 var CAT_SLUG={youth:'youth',children:'kids'};
 var SLUG_CAT={youth:'youth',kids:'children'};
@@ -2105,6 +2143,7 @@ function renderPage(){
   else if(r.view==='cat') renderCategory(r.cat);
   else renderHome();
   window.scrollTo({top:0,behavior:'smooth'});
+  try{ mountFaq(); }catch(e){}
 }
 
 /* ========== INIT ========== */
@@ -2233,6 +2272,14 @@ function init(){
     if(a.target==='_blank'||a.hasAttribute('download')) return;
     var href=a.getAttribute('href'); if(!href||href.charAt(0)!=='/') return;
     if(href==='/'||href.indexOf('/product/')===0||href.indexOf('/category/')===0){ e.preventDefault(); navigate(href); }
+  });
+  // GA4 events: WhatsApp / phone clicks (delegated — covers dynamically rendered links)
+  document.addEventListener('click',function(e){
+    if(typeof gtag!=='function') return;
+    var a=e.target.closest&&e.target.closest('a'); if(!a) return;
+    var h=a.getAttribute('href')||'';
+    if(h.indexOf('wa.me')>=0||h.indexOf('whatsapp')>=0) gtag('event','whatsapp_click',{transport_type:'beacon'});
+    else if(h.indexOf('tel:')===0) gtag('event','phone_click',{transport_type:'beacon'});
   });
   if(location.hash&&location.hash.indexOf('#/')===0){ history.replaceState(null,'',hashToPath(location.hash)); }
   renderPage();

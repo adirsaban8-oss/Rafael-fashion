@@ -820,6 +820,9 @@ app.get('/feed.xml', (_req, res) => {
       '    <g:condition>new</g:condition>\n' +
       '    <g:brand>Rafael Fashion</g:brand>\n' +
       '    <g:google_product_category>' + seoEsc(GPC[p.sub] || 'Apparel & Accessories > Clothing') + '</g:google_product_category>\n' +
+      '    <g:product_type>' + seoEsc((CAT_NAME[p.cat] || p.cat) + ' > ' + (SUB_NAME[p.sub] || p.sub)) + '</g:product_type>\n' +
+      '    <g:age_group>kids</g:age_group>\n' +
+      '    <g:gender>male</g:gender>\n' +
       '    <g:identifier_exists>false</g:identifier_exists>\n' +
       '  </item>';
   }).join('\n');
