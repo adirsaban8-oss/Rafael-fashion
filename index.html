@@ -16,7 +16,7 @@
 <meta name="theme-color" content="#0A0A0A">
 <meta name="description" content="Rafael — Luxury Fashion. חליפות יוקרה, בגדי טקס לנוער ולילדים. תפירה מדויקת, עיצוב נצחי. נתניה.">
 <title>Rafael Fashion · חליפות ובגדי טקס יוקרה לנוער ולילדים</title>
-<link rel="canonical" href="https://rafael-fashion-production.up.railway.app/">
+<link rel="canonical" href="https://rafael-fashion.com/">
 <meta name="robots" content="index, follow">
 <!-- Open Graph (WhatsApp / Instagram / Facebook) -->
 <meta property="og:type" content="website">
@@ -24,22 +24,23 @@
 <meta property="og:locale" content="he_IL">
 <meta property="og:title" content="Rafael Fashion · אופנת יוקרה לנוער ולילדים">
 <meta property="og:description" content="חליפות יוקרה ובגדי טקס לנוער ולילדים. תפירה מדויקת, עיצוב נצחי. נתניה.">
-<meta property="og:url" content="https://rafael-fashion-production.up.railway.app/">
-<meta property="og:image" content="https://rafael-fashion-production.up.railway.app/photos/home-hero.jpeg">
+<meta property="og:url" content="https://rafael-fashion.com/">
+<meta property="og:image" content="https://rafael-fashion.com/photos/home-hero.jpeg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Rafael Fashion · אופנת יוקרה לנוער ולילדים">
 <meta name="twitter:description" content="חליפות יוקרה ובגדי טקס לנוער ולילדים. נתניה.">
-<meta name="twitter:image" content="https://rafael-fashion-production.up.railway.app/photos/home-hero.jpeg">
+<meta name="twitter:image" content="https://rafael-fashion.com/photos/home-hero.jpeg">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"ClothingStore","name":"Rafael Fashion","description":"חליפות יוקרה ובגדי טקס לנוער ולילדים. תפירה מדויקת, עיצוב נצחי.","url":"https://rafael-fashion-production.up.railway.app/","image":"https://rafael-fashion-production.up.railway.app/photos/home-hero.jpeg","telephone":"+972546398638","priceRange":"₪₪","address":{"@type":"PostalAddress","streetAddress":"הבונים 3","addressLocality":"נתניה","addressCountry":"IL"},"areaServed":"IL"}
+{"@context":"https://schema.org","@type":"ClothingStore","name":"Rafael Fashion","description":"חליפות יוקרה ובגדי טקס לנוער ולילדים. תפירה מדויקת, עיצוב נצחי.","url":"https://rafael-fashion.com/","image":"https://rafael-fashion.com/photos/home-hero.jpeg","telephone":"+972546398638","priceRange":"₪₪","address":{"@type":"PostalAddress","streetAddress":"הבונים 3","addressLocality":"נתניה","addressCountry":"IL"},"areaServed":"IL"}
 </script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","name":"Rafael Fashion","url":"https://rafael-fashion-production.up.railway.app/","inLanguage":"he-IL"}
+{"@context":"https://schema.org","@type":"WebSite","name":"Rafael Fashion","url":"https://rafael-fashion.com/","inLanguage":"he-IL"}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;600&family=Cormorant+Garamond:wght@300;400;500&family=Italiana&family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Suez+One&family=Bellefair&display=swap">
 <link rel="icon" href="photos/raf1.jpeg" type="image/jpeg">
+<link rel="apple-touch-icon" href="photos/raf1.jpeg">
 <script src="rf-store.js"></script>
 <style>
 /* ============================================================
@@ -1201,7 +1202,7 @@ function renderSubNav(crumbs){
 
 /* ========== RENDER: HOME ========== */
 function renderHome(){
-  setMeta(DEFAULT_TITLE,DEFAULT_DESC); setProductSchema(null);
+  setMeta(DEFAULT_TITLE,DEFAULT_DESC); setProductSchema(null); setBreadcrumb(null);
   document.title = STATE.lang==='he' ? 'רפאל אופנת יוקרה' : (STATE.lang==='fr'?'Rafael — Mode de Luxe':'Rafael — Luxury Fashion');
   document.getElementById('navbar').classList.remove('transparent');
 
@@ -1267,6 +1268,7 @@ function setupHeroNavScroll(){
 function renderCategory(cat){
   if(!CATS[cat]){ location.hash='#/'; return; }
   setMeta((CATS[cat][STATE.lang]||CATS[cat].he)+' · Rafael Fashion', DEFAULT_DESC); setProductSchema(null);
+  setBreadcrumb([{name:t('home'),url:SEO_BASE},{name:(CATS[cat][STATE.lang]||CATS[cat].he),url:SEO_BASE+'#/'+cat}]);
   document.getElementById('navbar').classList.remove('transparent');
   const catData=CATS[cat];
   const title=catData[STATE.lang]||catData.en;
@@ -1308,6 +1310,7 @@ let gridState={cat:null,sub:null,filter:'all',sort:'popular'};
 function renderSubcategory(cat,sub){
   if(!CATS[cat]||!SUBCATS[sub]){ location.hash='#/'; return; }
   setMeta((SUBCATS[sub][STATE.lang]||SUBCATS[sub].he)+' · '+(CATS[cat][STATE.lang]||CATS[cat].he)+' · Rafael Fashion', DEFAULT_DESC); setProductSchema(null);
+  setBreadcrumb([{name:t('home'),url:SEO_BASE},{name:(CATS[cat][STATE.lang]||CATS[cat].he),url:SEO_BASE+'#/'+cat},{name:(SUBCATS[sub][STATE.lang]||SUBCATS[sub].he),url:SEO_BASE+'#/'+cat+'/'+sub}]);
   document.getElementById('navbar').classList.remove('transparent');
   gridState={cat,sub,filter:'all',sort:'popular'};
   const catTitle=CATS[cat][STATE.lang]||CATS[cat].en;
@@ -1539,6 +1542,7 @@ function renderProduct(id,preselectColorId){
   const priceDisplay=vpActive.inStock?pdPriceHTML(vpActive):soldOutText();
   setMeta(displayName+' · Rafael Fashion', tr(p,'description'));
   setProductSchema(Object.assign({},p,{_variantKey:pdVariantKey(p,activeColor),_seoName:displayName,_seoDesc:tr(p,'description'),_seoPrice:(vpActive.salePrice||vpActive.price),_seoInStock:vpActive.inStock}));
+  setBreadcrumb([{name:t('home'),url:SEO_BASE},{name:catTitle,url:SEO_BASE+'#/'+found.cat},{name:subTitle,url:SEO_BASE+'#/'+found.cat+'/'+found.sub},{name:displayName}]);
   const priceClass=(vpActive.price===null||vpActive.price===undefined||!vpActive.inStock)?'pd-price':'pd-price fixed';
 
   document.getElementById('pageContent').innerHTML=''+
@@ -2033,7 +2037,7 @@ function applyLang(){
 
 /* ========== ROUTER ========== */
 /* ---- dynamic SEO meta per route (Googlebot renders JS) ---- */
-var SEO_BASE='https://rafael-fashion-production.up.railway.app/';
+var SEO_BASE='https://rafael-fashion.com/';
 var DEFAULT_TITLE='Rafael Fashion · חליפות ובגדי טקס יוקרה לנוער ולילדים';
 var DEFAULT_DESC='חליפות יוקרה ובגדי טקס לנוער ולילדים. תפירה מדויקת, עיצוב נצחי. נתניה.';
 function _setMetaC(sel,val){var e=document.querySelector(sel);if(e&&val)e.setAttribute('content',val);}
@@ -2050,6 +2054,12 @@ function setProductSchema(p){
   if(img) d.image=SEO_BASE+String(img).split('?')[0];
   if(typeof p._seoPrice==='number') d.offers={"@type":"Offer","price":p._seoPrice,"priceCurrency":"ILS","availability":"https://schema.org/"+(p._seoInStock?"InStock":"OutOfStock")};
   var s=document.createElement('script');s.type='application/ld+json';s.id='pdSchema';s.textContent=JSON.stringify(d);document.head.appendChild(s);
+}
+function setBreadcrumb(crumbs){
+  var old=document.getElementById('bcSchema'); if(old) old.remove();
+  if(!crumbs||!crumbs.length) return;
+  var d={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":crumbs.map(function(c,i){var o={"@type":"ListItem","position":i+1,"name":c.name};if(c.url)o.item=c.url;return o;})};
+  var s=document.createElement('script');s.type='application/ld+json';s.id='bcSchema';s.textContent=JSON.stringify(d);document.head.appendChild(s);
 }
 function renderPage(){
   const hash=location.hash.slice(1)||'/';

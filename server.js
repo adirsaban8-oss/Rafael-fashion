@@ -670,6 +670,9 @@ app.get('/robots.txt', (_req, res) => {
 `User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /dashboard
+Disallow: /login
+Disallow: /cart
 Disallow: /checkout
 Disallow: /order
 Disallow: /api/
