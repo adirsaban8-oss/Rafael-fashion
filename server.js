@@ -233,6 +233,12 @@ const orderRepository = {
   getById(id) {
     return orders.find((o) => o.id === id) || null;
   },
+  remove(id) {
+    const i = orders.findIndex((o) => o.id === id);
+    if (i < 0) return false;
+    orders.splice(i, 1);
+    return true;
+  },
 };
 
 /* =========================================================================
@@ -509,6 +515,13 @@ app.post('/api/admin/orders/:id/status', adminAuth, (req, res) => {
   order.status = status;
   order.updatedAt = new Date().toISOString();
   res.json({ ok: true, order });
+});
+
+// Delete an order permanently.
+app.delete('/api/admin/orders/:id', adminAuth, (req, res) => {
+  const ok = orderRepository.remove(String(req.params.id));
+  if (!ok) return res.status(404).json({ error: 'הזמנה לא נמצאה' });
+  res.json({ ok: true });
 });
 
 app.post('/api/admin/products/:id', adminAuth, (req, res) => {

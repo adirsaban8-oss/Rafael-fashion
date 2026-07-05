@@ -92,6 +92,7 @@
   .who b{color:var(--ink);font-weight:600}
   .items{font-size:.85rem;color:var(--ink2);margin:.4rem 0;line-height:1.7}
   .totals{display:flex;gap:1.1rem;flex-wrap:wrap;font-size:.85rem;border-top:1px dashed var(--line);padding-top:.6rem;margin-top:.5rem;color:var(--ink2)}
+  .ord-actions{margin-top:.7rem;display:flex;justify-content:flex-start}
   .totals .g{font-weight:700;color:var(--ink)}
 
   /* ---------- products ---------- */
@@ -359,7 +360,15 @@ function orderRow(o){
     '<div class="who"><b>'+esc(c.fullName||'')+'</b> · '+esc(c.phone||'')+'<br><span class="muted">'+esc(addr)+'</span>'+(c.notes?'<br><span class="muted">הערה: '+esc(c.notes)+'</span>':'')+'</div>'+
     '<div class="items">'+items+'</div>'+
     '<div class="totals"><span>ביניים: '+money(o.subtotal)+'</span><span>משלוח: '+(o.shipping===0?'חינם':money(o.shipping))+'</span><span class="g">סה"כ: '+money(o.grandTotal)+'</span><span class="muted">'+esc(o.paymentLabel||'')+'</span></div>'+
+    '<div class="ord-actions"><button class="btn danger sm" onclick="deleteOrder(\''+o.id+'\')">מחיקת הזמנה</button></div>'+
   '</div>';
+}
+function deleteOrder(id){
+  if(!confirm('למחוק לצמיתות את הזמנה '+id+'? פעולה זו אינה הפיכה.')) return;
+  fetch('/api/admin/orders/'+encodeURIComponent(id),{method:'DELETE',headers:hdrs()})
+  .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});})
+  .then(function(res){ if(res.ok){toast('ההזמנה נמחקה');loadOrders();} else toast(res.d.error||'שגיאה',true); })
+  .catch(function(){toast('שגיאת תקשורת',true);});
 }
 function setStatus(id,status){
   fetch('/api/admin/orders/'+id+'/status',{method:'POST',headers:hdrs(),body:JSON.stringify({status:status})})
