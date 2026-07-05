@@ -663,7 +663,36 @@ app.get('/', (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));  
 app.get('/checkout', (_req, res) => res.sendFile(path.join(__dirname, 'checkout.html'))); // simple checkout
 app.get('/admin', (_req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 app.get('/order', (_req, res) => res.sendFile(path.join(__dirname, 'order.html')));    // order detail (SMS link)
+
+// --- SEO: robots.txt & sitemap.xml ---
+app.get('/robots.txt', (_req, res) => {
+  res.type('text/plain').send(
+`User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /checkout
+Disallow: /order
+Disallow: /api/
+
+Sitemap: ${PUBLIC_URL}/sitemap.xml
+`);
+});
+app.get('/sitemap.xml', (_req, res) => {
+  // Only real crawlable URLs — the storefront itself is a hash-routed SPA (one URL), plus the static legal pages.
+  const urls = ['/', '/terms.html', '/accessibility.html', '/cancel-order.html'];
+  const body = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    urls.map((u) => `  <url><loc>${PUBLIC_URL}${u}</loc><changefreq>weekly</changefreq></url>`).join('\n') +
+    '\n</urlset>\n';
+  res.type('application/xml').send(body);
+});
+
 // static assets (photos, rf-store.js, css, etc.) — must come after the explicit page routes
 app.use(express.static(__dirname, { index: false }));
+
+// Custom 404 — JSON for the API, a branded page for everything else.
+app.use((req, res) => {
+  if (req.path.startsWith('/api/')) return res.status(404).json({ error: 'לא נמצא' });
+  res.status(404).sendFile(path.join(__dirname, '404.html'));
+});
 
 app.listen(PORT, () => console.log(`Refael Fashion server → http://localhost:${PORT}  (admin: /admin)`));
