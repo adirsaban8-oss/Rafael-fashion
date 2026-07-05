@@ -791,6 +791,45 @@ app.get('/sitemap.xml', (_req, res) => {
 app.get('/product/*', (req, res) => { const h = injectMeta(req.path); if (h == null) return res.status(500).send('error'); res.type('html').send(h); });
 app.get('/category/*', (req, res) => { const h = injectMeta(req.path); if (h == null) return res.status(500).send('error'); res.type('html').send(h); });
 
+// Google Merchant product feed (RSS 2.0) — auto-reflects live products/prices/stock.
+const GPC = {
+  suits: 'Apparel & Accessories > Clothing > Suits',
+  pants: 'Apparel & Accessories > Clothing > Pants',
+  shirts: 'Apparel & Accessories > Clothing > Shirts & Tops',
+  vests: 'Apparel & Accessories > Clothing > Outerwear > Vests',
+  shoes: 'Apparel & Accessories > Shoes',
+  accessories: 'Apparel & Accessories > Clothing Accessories',
+};
+app.get('/feed.xml', (_req, res) => {
+  const B = SEO_ORIGIN;
+  const items = baseProducts().map((p) => {
+    const price = priceForId(p.id);
+    const avail = effectiveStock(p.id) === 'out_of_stock' ? 'out of stock' : 'in stock';
+    const img = imageForBase(p.id);
+    const imageLink = img ? (B + '/' + img) : (B + '/photos/home-hero.jpeg');
+    const title = p.name + ' · ' + (CAT_NAME[p.cat] || p.cat);
+    const desc = p.name + ' — אופנת יוקרה לנוער ולילדים מבית Rafael Fashion, נתניה. תפירה מדויקת ומשלוח עד הבית.';
+    return '  <item>\n' +
+      '    <g:id>' + seoEsc(p.id) + '</g:id>\n' +
+      '    <g:title>' + seoEsc(title) + '</g:title>\n' +
+      '    <g:description>' + seoEsc(desc) + '</g:description>\n' +
+      '    <g:link>' + B + '/product/' + seoEsc(p.id) + '</g:link>\n' +
+      '    <g:image_link>' + seoEsc(imageLink) + '</g:image_link>\n' +
+      '    <g:availability>' + avail + '</g:availability>\n' +
+      (price != null ? '    <g:price>' + Number(price).toFixed(2) + ' ILS</g:price>\n' : '') +
+      '    <g:condition>new</g:condition>\n' +
+      '    <g:brand>Rafael Fashion</g:brand>\n' +
+      '    <g:google_product_category>' + seoEsc(GPC[p.sub] || 'Apparel & Accessories > Clothing') + '</g:google_product_category>\n' +
+      '    <g:identifier_exists>false</g:identifier_exists>\n' +
+      '  </item>';
+  }).join('\n');
+  const xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">\n<channel>\n' +
+    '  <title>Rafael Fashion</title>\n  <link>' + B + '/</link>\n  <description>חליפות ובגדי טקס יוקרה לנוער ולילדים</description>\n' +
+    items + '\n</channel>\n</rss>\n';
+  res.type('application/xml').send(xml);
+});
+
 // static assets (photos, rf-store.js, css, etc.) — must come after the explicit page routes
 app.use(express.static(__dirname, { index: false }));
 
