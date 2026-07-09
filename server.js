@@ -750,6 +750,7 @@ app.get('/', (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));  
 app.get('/checkout', (_req, res) => res.sendFile(path.join(__dirname, 'checkout.html'))); // simple checkout
 app.get('/admin', (_req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 app.get('/order', (_req, res) => res.sendFile(path.join(__dirname, 'order.html')));    // order detail (SMS link)
+app.get('/about', (_req, res) => res.sendFile(path.join(__dirname, 'about.html')));    // SEO about page (clean URL)
 
 // --- SEO: robots.txt & sitemap.xml ---
 app.get('/robots.txt', (_req, res) => {
@@ -776,6 +777,7 @@ app.get('/sitemap.xml', (_req, res) => {
     SUB_KEYS.forEach((sub) => items.push({ loc: seoCatPath(cat, sub), priority: '0.9', cf: 'weekly' }));
   });
   baseProducts().forEach((p) => { const img = imageForBase(p.id); items.push({ loc: '/product/' + p.id, priority: '0.8', cf: 'weekly', img: img ? (B + '/' + img) : null, title: p.name }); });
+  items.push({ loc: '/about', priority: '0.6', cf: 'monthly' });
   ['/terms.html', '/accessibility.html', '/cancel-order.html'].forEach((u) => items.push({ loc: u, priority: '0.3', cf: 'monthly' }));
   const body = '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n' +
